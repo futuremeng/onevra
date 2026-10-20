@@ -1,0 +1,19 @@
+---
+title: 关系图
+description: 由节点和边组成的力导向图，可平移、缩放和拖动。
+---
+
+<Example name="graph" height={440} />
+
+`graph.View` 用力导向算法布置节点，并把布局和视角保存在 `graph.State` 中。节点需要稳定的 ID；分组决定它们的初始位置和颜色。可以拖动节点、用滚轮或双指捏合缩放，并双击可打开的节点。悬停在节点上会高亮其相邻节点。
+
+## API
+
+<GoAPI name="graph.View" />
+<GoAPI name="graph.Data" />
+<GoAPI name="graph.Node" />
+<GoAPI name="graph.Edge" />
+<GoAPI name="graph.Options" />
+<GoAPI name="graph.State" />
+<GoAPI name="graph.DefaultPalette" />
+<GoAPI name="graph.DefaultGroupColor" />

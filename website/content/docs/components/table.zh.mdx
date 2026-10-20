@@ -1,0 +1,22 @@
+---
+title: Table
+description: 位于可排序、可移动、可调整宽度的列下方的行，可直接构建或虚拟化。
+---
+
+<Example name="table" height={280} />
+
+列是带稳定 ID 的 MyGo `ui.TableColumn` 值。点击可排序的列标题会设置排序方式，由应用对自己的行进行排序。拖动列标题可以移动列，拖动其边缘可以调整宽度；`TableState.Columns` 保存这种布局，应用可以将其持久化。
+
+## 大型表格
+
+`components.TableVirtualized` 只构建总行数中可见的行，并为每一列调用 `cell`。当列宽之和超过表格宽度时，它会在表头下方横向滚动。
+
+<Example name="table-virtualized" height={380} />
+
+## API
+
+<GoAPI name="components.Table" />
+<GoAPI name="components.TableRow" />
+<GoAPI name="components.TableState" />
+<GoAPI name="components.TableVirtualized" />
+<GoAPI name="components.TableVirtualizedState" />

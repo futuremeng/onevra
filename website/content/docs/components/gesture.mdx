@@ -1,0 +1,18 @@
+---
+title: Gestures
+description: Pan and zoom for custom canvases, from wheels, touchpads and pinches.
+---
+
+<Example name="gesture" height={360} />
+
+`gesture.Navigation` turns an element's scrolling into pan and zoom events: a touchpad pans and a pinch zooms, and a mouse wheel zooms. Keep one navigation per element and apply the events to your own camera. Graphs and flow diagrams use it for theirs.
+
+Browsers do not report touchpad pinches, so in these docs a pinch arrives as Control-scroll, as it does on Windows.
+
+## API
+
+<GoAPI name="gesture.Navigation" />
+<GoAPI name="gesture.Event" />
+<GoAPI name="gesture.Kind" />
+<GoAPI name="gesture.Classify" />
+<GoAPI name="gesture.DeviceOf" />

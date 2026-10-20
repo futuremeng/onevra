@@ -1,0 +1,46 @@
+---
+title: Localization
+description: Translate your application's text with MyGo catalogs; Onevra's own labels follow the window's language.
+---
+
+Onevra components show text in two ways. Text you pass, such as a button's label, is the application's: translate it before passing it in. Text a component adds itself, such as a calendar's month names or a dialog's close button, comes from Onevra's own catalog and follows the window's language.
+
+## Your application's text
+
+Keep messages in MyGo catalogs. Point `i18n` in `mygo.json` at a directory of JSON files, one per language:
+
+```json title="mygo.json"
+{
+  "i18n": { "dir": "locales", "source": "en" }
+}
+```
+
+```json title="locales/en.json"
+{
+  "@@locale": "en",
+  "settings": "Settings…",
+  "save": "Save"
+}
+```
+
+`go tool mygo generate` writes a typed function for each message, which a builder calls when it builds:
+
+```go
+components.Button(c, locales.Save(), components.ButtonPrimary)
+```
+
+MyGo's [internationalization guide](https://mygo.egoist.dev/docs/i18n) covers plurals, arguments and formatting.
+
+## The window's language
+
+Choose the language with MyGo; an empty tag follows the user's preferred languages:
+
+```go
+mygo.App.SetLocale("zh-Hans")
+```
+
+Onevra's catalog includes English, Simplified Chinese, Traditional Chinese, Japanese and Korean. To change one of its labels, or add a language, define the same key under the `onevra.` prefix in your own catalog, such as `onevra.today`. Calendar dates and the first day of the week follow the user's regional formats.
+
+Keep keys and stored values independent of translated text: save a setting as `"zh-Hans"`, not as the word shown for it.
+
+The [desktop starter](/docs/starter-apps) shows a complete setup with a language setting.

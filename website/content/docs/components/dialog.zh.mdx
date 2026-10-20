@@ -1,0 +1,23 @@
+---
+title: 对话框
+description: 承载任意内容的模态面板，以及请求用户做出决定的警告对话框。
+---
+
+<Example name="dialog" height={360} />
+
+`components.Dialog` 在其 `*bool` 为真时于模态面板中构建内容。每帧都要调用它；MyGo 会把焦点限制在面板内，并在关闭时恢复。对话框可以嵌套：按从后到前的顺序构建各层，下面的页面保持打开。点击背景或按 Escape 会关闭当前层，除非选项禁用了这些行为。
+
+## 警告对话框
+
+`components.AlertDialog` 用确认和取消按钮提出问题，并在用户做出选择的那一帧返回结果。它从不阻塞 UI 线程；如果之后还需要结果，请把它保存下来。`HideCancel` 生成只有一个按钮的提示。
+
+<Example name="alert-dialog" height={320} />
+
+## API
+
+<GoAPI name="components.Dialog" />
+<GoAPI name="components.DialogOptions" />
+<GoAPI name="components.AlertDialog" />
+<GoAPI name="components.AlertDialogOptions" />
+<GoAPI name="components.DialogResult" />
+<GoAPI name="components.WithDialogWindowDrag" />

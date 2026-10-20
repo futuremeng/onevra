@@ -1,0 +1,26 @@
+---
+title: TextBox
+description: A text field, single-line or multiline, with optional icons and prefixes.
+---
+
+<Example name="text-box" height={260} />
+
+`components.TextBox` edits a `*string`. Chain MyGo's input methods on it, such as `Label`, `Placeholder` and `Password`. `LeadingIcon` and `LeadingText` add a decoration or a prefix that is not part of the value, and `ReadOnly` keeps the text selectable but not editable.
+
+## Multiline
+
+`Multiline` accepts line breaks. `Lines(min, max)` grows the field with its text and scrolls past the maximum.
+
+<Example name="text-box-multiline" height={240} />
+
+## Buffers
+
+`components.TextBoxBuffer` edits a `*ui.TextBuffer` the application keeps, so editing a long document does not copy it into a string every frame.
+
+<Example name="text-box-buffer" height={240} />
+
+## API
+
+<GoAPI name="components.TextBox" />
+<GoAPI name="components.TextBoxOptions" />
+<GoAPI name="components.TextBoxBuffer" />

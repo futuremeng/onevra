@@ -1,0 +1,42 @@
+---
+title: 对话
+description: 包含工具活动、折叠摘要和玻璃质感输入框的对话轮次。
+---
+
+<Example name="chat" height={520} />
+
+发送一条消息即可看到一个轮次的运行过程：活动分组显示正在进行的工作，回复以流式方式出现，轮次完成后步骤会折叠到摘要之后。轮次、带稳定 ID 的步骤、请求以及所有标签都由应用掌控；构建函数从不访问网络。
+
+`chat.FloatingConversation` 让对话记录在 `chat.GlassComposer` 后方滚动，同时保证最新的轮次不被遮挡。Enter 发送，Shift+Enter 换行。回复请用 MyGo 的 `markdown.Stream` 流式显示，完成后改用 `markdown.View`。
+
+输入框的插槽可以放置附件、选择器、上下文用量和底部栏；该包提供了适配这些插槽的标签、选择器、用量表和配额组件。[Gallery](/zh/docs/starter-apps#gallery) 展示了一个完整的输入框。
+
+## API
+
+<GoAPI name="chat.FloatingConversation" />
+<GoAPI name="chat.Conversation" />
+<GoAPI name="chat.Turn" />
+<GoAPI name="chat.TurnOptions" />
+<GoAPI name="chat.Step" />
+<GoAPI name="chat.Activity" />
+<GoAPI name="chat.Status" />
+<GoAPI name="chat.GlassComposer" />
+<GoAPI name="chat.ComposerOptions" />
+<GoAPI name="chat.ComposerResult" />
+<GoAPI name="chat.Attachment" />
+<GoAPI name="chat.Chip" />
+<GoAPI name="chat.Picker" />
+<GoAPI name="chat.EffortPicker" />
+<GoAPI name="chat.ContextMeter" />
+<GoAPI name="chat.QuotaSummary" />
+<GoAPI name="chat.FloatingConversationWith" />
+<GoAPI name="chat.Composer" />
+<GoAPI name="chat.Message" />
+<GoAPI name="chat.Bubble" />
+<GoAPI name="chat.ActivityRow" />
+<GoAPI name="chat.ResultSummary" />
+<GoAPI name="chat.AttachmentPreview" />
+<GoAPI name="chat.Quota" />
+<GoAPI name="chat.Shimmer" />
+<GoAPI name="chat.GlassPanel" />
+<GoAPI name="chat.IconAction" />

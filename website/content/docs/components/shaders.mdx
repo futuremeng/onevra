@@ -1,0 +1,16 @@
+---
+title: Shader backgrounds
+description: Quiet animated GPU fields for welcome and empty pages, following the pointer.
+---
+
+<Example name="shader-background" height={400} />
+
+A background fills its parent, and the page builds inside it with `Children`. `shaders.SignalField` breathes with slow noise, gathers light around the pointer and ripples where it is clicked; its middle stays calmer than its edges, where content sits.
+
+Backgrounds draw only on a GPU renderer and leave the theme background on the CPU renderer, including headless tests. Reduced Motion freezes the drift. Content that takes the pointer itself, such as a honeycomb, calls `shaders.Ripple` for its presses.
+
+## API
+
+<GoAPI name="shaders.SignalField" />
+<GoAPI name="shaders.Options" />
+<GoAPI name="shaders.Ripple" />

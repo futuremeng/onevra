@@ -1,0 +1,45 @@
+---
+title: 简介
+description: 基于 MyGo 构建、面向原生桌面应用的 Go 组件库。
+---
+
+Onevra 为使用 Go 编写的原生桌面应用提供主题化控件、窗口外壳、Lucide 图标和复杂组件。它构建在 [MyGo](https://mygo.egoist.dev) 之上，界面由 MyGo 直接绘制，因此应用不需要 Web 视图、标记语言或 JavaScript。
+
+<Example name="todo" height={300} />
+
+上面的示例就是真实的 Onevra 代码。文档中的每个示例都会编译为 WebAssembly 并在页面中运行，由 MyGo 在 Linux 上使用的同一个渲染器绘制；示例下方的源码正是正在运行的文件。
+
+## 设计原则
+
+Onevra 构建在 MyGo 之上，而不是取代它：
+
+- **改进内置组件。** Onevra 调整 MyGo 控件的样式，并把它们合并、精简为更小、更一致的 API。
+- **补齐缺口。** 提供 MyGo 没有的组件，例如图表、对话界面、设置面板和窗口外壳。
+- **服从上游。** 当 MyGo 官方提供了 Onevra 已有的功能时，Onevra 可能移除自己的实现，改用 MyGo 的版本。
+
+应用自己掌控状态、本地化文本、持久化和后台任务。组件保持与具体产品无关：它们通过插槽接收应用构建的内容，而不是提供面向特定业务的选项。
+
+## 包含什么
+
+<Cards>
+  <Card title="组件" href="/zh/docs/components">
+    按钮、输入、选择、集合、浮层、图表和对话界面。
+  </Card>
+  <Card title="窗口外壳" href="/zh/docs/shells">
+    带原生窗口控件的普通窗口和侧边栏窗口。
+  </Card>
+  <Card title="主题" href="/zh/docs/theming">
+    Onevra 温暖的浅色与深色配色，或者你自己的主题。
+  </Card>
+  <Card title="图标" href="/zh/docs/icons">
+    1800 多个以具名 Go 访问器提供的 Lucide 图标。
+  </Card>
+</Cards>
+
+## 其余部分直接使用 MyGo
+
+Onevra 覆盖日常控件，而不是 MyGo 的完整目录。布局原语（如 `ui.Row`、`ui.Column` 和 `ui.Grid`）、原生菜单、Web 视图、代码编辑器、Markdown 文档以及包括 Glass 在内的所有 MyGo 插件，请直接使用 MyGo。当 Onevra 为某个用途提供了组件时，请使用它而不是 MyGo 的带样式控件，让窗口保持统一的外观。
+
+## 下一步
+
+从[快速开始](/zh/docs/quick-start)入手，然后阅读[视图与状态](/zh/docs/views-and-state)，了解构建函数如何运行。

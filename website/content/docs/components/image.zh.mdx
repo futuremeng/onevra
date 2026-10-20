@@ -1,0 +1,20 @@
+---
+title: 图片
+description: 已解码的位图和 SVG，可适配、圆角或灰度显示，并支持前后对比。
+---
+
+<Example name="image" height={220} />
+
+`components.Image` 显示应用已解码的 `*ui.Bitmap` 或 `*ui.SVG`。默认按 contain 方式适配；`Fit(ui.Cover)` 会裁剪以填满。不要在构建函数中加载或解码图片。
+
+## 对比
+
+`components.ImageCompare` 把一个视图叠在另一个之上，并通过可拖动的分隔线显示前者。在任意位置按下即可把分隔线移到那里；对键盘而言，手柄是一个滑块。
+
+<Example name="image-compare" height={360} />
+
+## API
+
+<GoAPI name="components.Image" />
+<GoAPI name="components.ImageCompare" />
+<GoAPI name="components.ImageCompareOptions" />

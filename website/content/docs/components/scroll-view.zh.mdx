@@ -1,0 +1,16 @@
+---
+title: ScrollView
+description: 可纵向、横向或双向滚动的容器，使用 MyGo 的滚动条。
+---
+
+<Example name="scroll-view" height={260} />
+
+请为滚动视图指定尺寸，或让它填满有界的父容器。纵向和双向视图把子元素排成一列，横向视图排成一行。`ScrollbarInsets` 可以独立于内容内边距移动滚动条轨道，适合有栏条浮在边缘上的情况。
+
+请让滚动视图延伸到它所在区域的边缘，再用内容的内边距留白：缩进的视图会在滚动条和手势到达边缘之前就把它们裁掉。
+
+## API
+
+<GoAPI name="components.ScrollView" />
+<GoAPI name="components.ScrollViewOptions" />
+<GoAPI name="components.ScrollAxes" />

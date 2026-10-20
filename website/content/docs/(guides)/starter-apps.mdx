@@ -1,0 +1,27 @@
+---
+title: Starter applications
+description: Complete applications to run, read and copy.
+---
+
+The Onevra module includes small applications that show how the pieces fit together. Each one keeps its own lifecycle, messages and packaging configuration, so it can be copied without importing another. Run them from `source/` in a clone of the [repository](https://github.com/oneo-me/onevra):
+
+| Application | What it shows | Command |
+| --- | --- | --- |
+| Gallery | Every component, both shells and MyGo's own catalog | `go run ./examples/gallery` |
+| Desktop | A main window with settings, a language choice and a tray | `go run ./examples/desktop` |
+| Menu bar | A tray application with a quick-note panel | `go run ./examples/menubar` |
+| Launcher | A Spotlight-style panel that searches and opens installed apps | `go run ./examples/launcher` |
+| Documents | A document-based notes editor | `go run ./examples/documents` |
+| Lawn defense | A pixel-art tower-defense game | `go run ./examples/games/lawn` |
+
+## Gallery
+
+The Gallery is the reference for how every component looks and behaves in a real window. Append `-theme light` or `-theme dark` to preview one appearance:
+
+```sh
+go run ./examples/gallery -theme dark
+```
+
+## Copying one
+
+Copy a starter's directory into your own module, rename its module path, identifier and name in `mygo.json`, and replace its content. Keep the lifecycle it shows: windows created after `WhenReady`, settings as an application action, and background work kept out of builders.

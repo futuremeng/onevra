@@ -1,0 +1,14 @@
+---
+title: Popover
+description: 锚定在控件上的非模态面板，用于选项和简短表单。
+---
+
+<Example name="popover" height={340} />
+
+先构建锚点，然后每帧用它调用 `components.Popover`。面板在锚点下方打开，空间不足时翻转到上方。按 Escape 或在外部按下会关闭它；这次按下会继续传给指针下方的控件。
+
+如果只是不可交互的提示，请使用[工具提示](/zh/docs/components/tooltip)。
+
+## API
+
+<GoAPI name="components.Popover" />

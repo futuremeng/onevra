@@ -1,0 +1,78 @@
+---
+title: Window shells
+description: Native windows with a plain content area or a resizable sidebar.
+---
+
+A shell creates a native window and lays out its content: the title bar area, window controls and, for the sidebar shell, a collapsible navigation column. Shells own the window's presentation. The application keeps its lifecycle, state, theme and localized text.
+
+| Package | Layout |
+| --- | --- |
+| `shells/plain` | One content area below a header that shows the title and optional actions |
+| `shells/sidebar` | A collapsible, resizable sidebar beside the content, under a floating header |
+
+Shells open real windows, which these docs cannot show in the page; the [Gallery](/docs/starter-apps#gallery) runs both.
+
+## Plain window
+
+```go
+shell := plain.NewShell(plain.ShellOptions{
+	Title:     "Notes",
+	Width:     820,
+	Height:    740,
+	MinWidth:  820,
+	MinHeight: 740,
+	Theme:     theme.Onevra,
+	HeaderActions: func(c *ui.Context) {
+		if components.IconButton(c, lucide.Settings(), "Settings", components.IconButtonPlain).Clicked() {
+			app.openSettings()
+		}
+	},
+	Content: app.view,
+})
+shell.Window().OnClosed(func() { mygo.App.Quit() })
+```
+
+The header shows `Title` unless `HeaderLeading` replaces it, for example with a tab list that switches views. `HeaderActions` builds controls at its right. Content starts below the header; set `ContentBehindHeader` to let content scroll under it and pad it with `plain.HeaderHeight(c)`.
+
+## Sidebar window
+
+```go
+shell := sidebar.NewShell(sidebar.ShellOptions{
+	Title:    "Library",
+	StateKey: "main",
+	Theme:    theme.Onevra,
+	Left:     app.navigation,
+	Content:  app.page,
+	LeftToolbar: func(c *ui.Context) {
+		ui.Spacer(c)
+		if sidebar.IconButton(c, lucide.Settings(), "Settings").Clicked() {
+			app.openSettings()
+		}
+	},
+})
+```
+
+`Left` and `Content` build full-height regions behind the floating header, so their backgrounds reach the top of the window. Keep their controls clear of the header with `sidebar.HeaderHeight(c)` as top padding. The sidebar defaults to 220 points wide; users resize it by dragging its edge, and double-clicking the edge restores the default. Build the navigation with the [Sidebar](/docs/components/sidebar) component.
+
+`StateKey` asks MyGo to remember the window's size and position under that key. Sidebar width and the selected page remain application state.
+
+## Lifecycle
+
+- Create shells after `mygo.App.WhenReady`.
+- Use `shell.Window()` for native events, such as `OnClosed`, rather than adding a second lifecycle.
+- Pass `Hidden: true` to prepare content and handlers before showing the window, then call `Show`.
+- Give a new project's main window an 820 × 740 initial and minimum size. The sidebar shell defaults to it; size secondary windows, such as settings, to their content.
+
+## Theme
+
+Pass `theme.Onevra` as `Theme`, or a function returning your own `*ui.Theme`. The shell installs it before building anything, so its own surfaces and all content share it. See [theming](/docs/theming).
+
+## API
+
+<GoAPI name="plain.ShellOptions" />
+<GoAPI name="plain.NewShell" />
+<GoAPI name="sidebar.ShellOptions" />
+<GoAPI name="sidebar.NewShell" />
+<GoAPI name="plain.HeaderHeight" />
+<GoAPI name="sidebar.HeaderHeight" />
+<GoAPI name="sidebar.IconButton" />

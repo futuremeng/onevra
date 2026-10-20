@@ -20,15 +20,6 @@ var galleryImage = sync.OnceValues(func() (*ui.Bitmap, error) {
 	return loadGalleryImage(dir)
 })
 
-// currentGalleryImage uses the browser preview's generated image where a page
-// cannot read the application's resource directory.
-func currentGalleryImage() (*ui.Bitmap, error) {
-	if previewImage != nil {
-		return previewImage()
-	}
-	return galleryImage()
-}
-
 func loadGalleryImage(dir string) (*ui.Bitmap, error) {
 	data, err := os.ReadFile(filepath.Join(dir, "images", "avatar.jpeg"))
 	if err != nil {
@@ -38,7 +29,7 @@ func loadGalleryImage(dir string) (*ui.Bitmap, error) {
 }
 
 func controlImage(c *ui.Context, _ *controlState, variant string) {
-	bitmap, err := currentGalleryImage()
+	bitmap, err := galleryImage()
 	if err != nil {
 		components.Text(c, tr(c, "unableToLoadAvatarJpeg")).TextColor(c.Theme().TextMuted)
 		return

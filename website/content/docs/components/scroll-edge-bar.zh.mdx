@@ -1,0 +1,19 @@
+---
+title: ScrollEdgeBar
+description: 浮在滚动内容边缘上的控件栏，可使用玻璃、柔和边缘或模糊效果。
+---
+
+<Example name="scroll-edge-bar" height={400} />
+
+在内容之后、于一个会裁剪的有界容器内构建栏条：栏条会取样其下方已绘制的内容。用 `ScrollEdgeBarExtent` 为内容留出内边距，让第一行和滚动条从栏条下方开始。滚动时切换上方的样式即可对比它们。
+
+`ScrollEdgeGlass` 把整个栏条放在 Liquid Glass 上。其他样式的栏条是透明的，因此其中的控件需要自带表面，例如 `IconButtonToolbar`。`components.ScrollEdge` 只提供效果本身，供自行放置控件的宿主使用。
+
+## API
+
+<GoAPI name="components.ScrollEdgeBar" />
+<GoAPI name="components.ScrollEdgeBarOptions" />
+<GoAPI name="components.ScrollEdgeStyle" />
+<GoAPI name="components.ScrollEdgeBarExtent" />
+<GoAPI name="components.ScrollEdge" />
+<GoAPI name="components.ScrollEdgeOptions" />

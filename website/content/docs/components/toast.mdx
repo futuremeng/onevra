@@ -1,0 +1,17 @@
+---
+title: Toast
+description: Brief notifications that stack at an edge of the window, with optional actions.
+---
+
+<Example name="toast" height={300} />
+
+Add toasts with MyGo's `c.AddToast` and close them with `c.CloseToast`; MyGo owns the queue, timing, pausing on hover and Escape. Onevra draws them: set `Type` to `ToastInfo`, `ToastSuccess`, `ToastWarning` or `ToastError` for a status icon, and `Action` with `OnAction` for a button such as Undo.
+
+Shells build the toasts themselves; place them with `ShellOptions.Toasts`. A window without a shell calls `components.Toasts` after its content. Toasts with the same `ID` replace each other, which suits progress.
+
+## API
+
+<GoAPI name="components.Toasts" />
+<GoAPI name="components.ToastOptions" />
+<GoAPI name="components.ToastPlacement" />
+<GoAPI name="components.ToastContent" />

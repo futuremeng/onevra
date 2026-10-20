@@ -1,0 +1,40 @@
+---
+title: Button
+description: 触发一个操作，提供五种样式，可带图标、菜单或切换状态。
+---
+
+<Example name="button" height={160} />
+
+`components.Button` 接收标签和样式，并在点击发生的那一帧通过 `Clicked()` 报告。一个视图中的主要操作使用一个主按钮，其余操作使用更低调的样式。
+
+## 带图标
+
+传入空标签即可为按钮提供自定义内容，并用 `Label` 保留其无障碍名称。
+
+<Example name="button-icons" height={140} />
+
+## 图标按钮
+
+`components.IconButton` 只显示图标，标签作为工具提示显示。`IconButtonPlain` 适合列表行和标题栏；`IconButtonToolbar` 抬升按钮表面，与 `ButtonToolbar` 和分段标签页保持一致。
+
+<Example name="icon-button" height={180} />
+
+## 切换按钮
+
+`components.ToggleButton` 开关一个 `*bool`，打开时以强调色填充，适合格式与视图选项。
+
+<Example name="toggle-button" height={140} />
+
+## 菜单
+
+`Menu` 在点击按钮时打开菜单；`ContextMenu` 在右键点击时打开。通过每个菜单项的 `Chosen()` 判断它是否被选中。
+
+<Example name="button-menu" height={180} />
+
+## API
+
+<GoAPI name="components.Button" />
+<GoAPI name="components.ButtonVariant" />
+<GoAPI name="components.IconButton" />
+<GoAPI name="components.IconButtonStyle" />
+<GoAPI name="components.ToggleButton" />

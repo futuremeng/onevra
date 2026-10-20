@@ -1,0 +1,62 @@
+---
+title: 视图与状态
+description: 构建函数如何每帧运行、状态放在哪里，以及如何让耗时工作远离 UI 线程。
+---
+
+Onevra 的视图是一个构建函数：接收 `*ui.Context` 并创建窗口内容的 Go 函数。MyGo 在 UI 线程上为它绘制的每一帧运行这个函数，并在输入、动画或应用请求时重新绘制。
+
+<Example name="counter" height={160} />
+
+## 状态保存在你的值里
+
+构建函数在帧与帧之间不保存任何状态。请把状态放在生命周期长于构建函数的应用值中，并把指针传给控件：`components.Switch(c, &s.wifi, "Wi-Fi")` 会读写 `s.wifi`。控件会报告这一帧发生了什么，例如按钮的 `Clicked()`，构建函数直接据此行动。
+
+```go
+type settings struct {
+	wifi   bool
+	volume float64
+}
+
+func (s *settings) view(c *ui.Context) {
+	components.Switch(c, &s.wifi, "Wi-Fi")
+	components.Slider(c, &s.volume, 0, 100).Label("Volume")
+}
+```
+
+窗口显示的一切都来自这些值，因此修改它们就是应用改变界面的方式。
+
+## 构建函数要保持快速
+
+构建函数每帧都会运行，因此不能阻塞。不要在其中读取文件、访问网络或解析大量数据。把这些工作放到别处完成，再把结果交回 UI 线程：
+
+```go
+go func() {
+	result, err := load(path) // on another goroutine
+	window.Update(func() {    // back on the UI thread, with a redraw
+		s.result, s.err = result, err
+	})
+}()
+```
+
+大型数据集（例如图表的序列）同样要在构建函数之外准备好，并保存在状态中。
+
+## 元素只属于当前帧
+
+控件返回的 `ui.Element` 值只是当前构建过程的句柄。可以在它们上面链式调用方法，但不要把它们存进状态。当元素需要跨帧保持身份或几何信息时，请绑定一个 `ui.Handle`。
+
+当构建函数在循环中创建元素且列表项可能变化时，为每一项提供稳定的键，让它保留自己的交互状态：
+
+```go
+for i := range s.items {
+	item := &s.items[i]
+	ui.Box(c).Key(item.id).Children(func() {
+		components.Checkbox(c, &item.done, item.title)
+	})
+}
+```
+
+## 布局来自 MyGo
+
+Onevra 组件放在 MyGo 的布局原语中：`ui.Row`、`ui.Column`、`ui.Box`、`ui.Grid`、`ui.Spacer` 和 `ui.Overlay`。用 `Fill`、`Grow`、`Gap`、`Padding` 和 `AlignItems` 等方法调整尺寸和排列。MyGo 的[布局指南](https://mygo.egoist.dev/docs/ui/layout)对此有完整介绍。
+
+间距和内边距请使用主题的间距 `c.Theme().Space(3)`，让布局随用户的文字大小缩放。

@@ -1,0 +1,19 @@
+---
+title: CardStack
+description: 逐张审阅的卡片堆，向左或向右滑动，可撤销。
+---
+
+<Example name="card-stack" height={460} />
+
+拖动或甩动最上面的卡片，或使用按钮和方向键。甩出的卡片会带着指针的速度飞走，后面的卡片随之升起。撤销会让上一张卡片飞回来；所有卡片都决定后，可以重新开始。
+
+决定结果保存在应用状态中，应用也可以自行修改。
+
+## API
+
+<GoAPI name="components.CardStack" />
+<GoAPI name="components.CardStackOptions" />
+<GoAPI name="components.CardStackItem" />
+<GoAPI name="components.CardStackState" />
+<GoAPI name="components.CardStackEvent" />
+<GoAPI name="components.CardDecision" />

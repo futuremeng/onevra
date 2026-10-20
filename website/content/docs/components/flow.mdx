@@ -1,0 +1,19 @@
+---
+title: Flow diagram
+description: Directed diagrams laid out in ranks, with orthogonal edges and card nodes.
+---
+
+<Example name="flow" height={440} />
+
+`flow.View` ranks nodes so edges stay short, orders each rank to reduce crossings and routes edges between ranks. Nodes build their own content, or use `flow.Card`, whose regions are slots. Click a node to select it; the application owns selection and opening.
+
+## API
+
+<GoAPI name="flow.View" />
+<GoAPI name="flow.Data" />
+<GoAPI name="flow.Node" />
+<GoAPI name="flow.Edge" />
+<GoAPI name="flow.Options" />
+<GoAPI name="flow.Card" />
+<GoAPI name="flow.CardOptions" />
+<GoAPI name="flow.State" />

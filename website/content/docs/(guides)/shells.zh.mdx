@@ -1,0 +1,78 @@
+---
+title: 窗口外壳
+description: 只有内容区的普通窗口，或带可调整侧边栏的窗口。
+---
+
+外壳创建原生窗口并布置其中的内容：标题栏区域、窗口控件，以及侧边栏外壳中可折叠的导航列。外壳负责窗口的呈现；应用的生命周期、状态、主题和本地化文本仍由应用自己掌控。
+
+| 包 | 布局 |
+| --- | --- |
+| `shells/plain` | 标题栏下方的单一内容区，标题栏显示标题和可选操作 |
+| `shells/sidebar` | 浮动标题栏下，可折叠、可调整宽度的侧边栏与内容区并排 |
+
+外壳会打开真实窗口，文档页面无法直接展示；[Gallery](/zh/docs/starter-apps#gallery) 运行了这两种外壳。
+
+## 普通窗口
+
+```go
+shell := plain.NewShell(plain.ShellOptions{
+	Title:     "Notes",
+	Width:     820,
+	Height:    740,
+	MinWidth:  820,
+	MinHeight: 740,
+	Theme:     theme.Onevra,
+	HeaderActions: func(c *ui.Context) {
+		if components.IconButton(c, lucide.Settings(), "Settings", components.IconButtonPlain).Clicked() {
+			app.openSettings()
+		}
+	},
+	Content: app.view,
+})
+shell.Window().OnClosed(func() { mygo.App.Quit() })
+```
+
+除非 `HeaderLeading` 替换了标题（例如换成切换视图的标签页），标题栏会显示 `Title`。`HeaderActions` 在右侧构建控件。内容从标题栏下方开始；设置 `ContentBehindHeader` 可以让内容在标题栏下方滚动，并用 `plain.HeaderHeight(c)` 作为内边距。
+
+## 侧边栏窗口
+
+```go
+shell := sidebar.NewShell(sidebar.ShellOptions{
+	Title:    "Library",
+	StateKey: "main",
+	Theme:    theme.Onevra,
+	Left:     app.navigation,
+	Content:  app.page,
+	LeftToolbar: func(c *ui.Context) {
+		ui.Spacer(c)
+		if sidebar.IconButton(c, lucide.Settings(), "Settings").Clicked() {
+			app.openSettings()
+		}
+	},
+})
+```
+
+`Left` 和 `Content` 在浮动标题栏后方构建全高区域，因此它们的背景可以延伸到窗口顶部。用 `sidebar.HeaderHeight(c)` 作为顶部内边距，让控件避开标题栏。侧边栏默认宽 220 点；用户可以拖动边缘调整宽度，双击边缘恢复默认值。导航请用 [Sidebar](/zh/docs/components/sidebar) 组件构建。
+
+`StateKey` 让 MyGo 以该键记住窗口的大小和位置。侧边栏宽度和当前页面仍属于应用状态。
+
+## 生命周期
+
+- 在 `mygo.App.WhenReady` 之后创建外壳。
+- 原生事件（如 `OnClosed`）请通过 `shell.Window()` 处理，不要另建一套生命周期。
+- 传入 `Hidden: true` 可以在显示窗口前准备好内容和处理函数，之后再调用 `Show`。
+- 新项目的主窗口请使用 820 × 740 的初始尺寸和最小尺寸。侧边栏外壳默认如此；设置等次要窗口按内容确定尺寸。
+
+## 主题
+
+把 `theme.Onevra` 或返回你自己的 `*ui.Theme` 的函数传给 `Theme`。外壳会在构建任何内容之前安装它，因此外壳自身的界面和所有内容共享同一个主题。参见[主题](/zh/docs/theming)。
+
+## API
+
+<GoAPI name="plain.ShellOptions" />
+<GoAPI name="plain.NewShell" />
+<GoAPI name="sidebar.ShellOptions" />
+<GoAPI name="sidebar.NewShell" />
+<GoAPI name="plain.HeaderHeight" />
+<GoAPI name="sidebar.HeaderHeight" />
+<GoAPI name="sidebar.IconButton" />

@@ -1,0 +1,45 @@
+---
+title: Testing
+description: Test views headlessly with MyGo's tester; no window, focus or desktop session.
+---
+
+`go test ./...` should never show a window. Test views with MyGo's `ui.NewTester`, which renders a builder off screen and drives it with input.
+
+```go title="settings_test.go"
+func TestSaveButton(t *testing.T) {
+	for _, dark := range []bool{false, true} {
+		saved := false
+		tt := ui.NewTester(func(c *ui.Context) {
+			c.SetTheme(theme.Palette(dark))
+			if components.Button(c, "Save", components.ButtonPrimary).Clicked() {
+				saved = true
+			}
+		}, 300, 100)
+		if err := tt.Click("Save"); err != nil {
+			t.Fatal(err)
+		}
+		if !saved {
+			t.Errorf("dark=%v: the click was not reported", dark)
+		}
+	}
+}
+```
+
+Build the same view the application builds, and apply the theme yourself: no shell is present.
+
+## Driving a view
+
+- Find elements by their text or accessible label with `Find`, `HasText`, `Texts` and `Focused`.
+- Drive them with `Click`, `RightClick`, `Key`, `TypeKey`, `Type`, `Scroll`, `Move`, `Press` and `Release`.
+- Check the keyboard path too: `tt.Key(0, ui.KeyTab)`, then `ui.KeySpace` or `ui.KeyEnter`.
+- Inspect menus with `Menu` and `ChooseMenuItem`, and screen-reader output with `Announcements`.
+
+The tester's clock stands still until `tt.Advance(d)` moves it, running the frames due meanwhile. Advance it for animations, delays and tooltips instead of sleeping. After changing state outside the builder, call `tt.Frame()` before asserting.
+
+## Layers
+
+1. **Logic tests** for preferences, policies and other decisions, as plain functions that need no MyGo runtime.
+2. **Headless view tests** with `ui.NewTester`, the default for component and view behavior.
+3. **Native smoke tests**, opt-in behind an environment variable, for what a tester cannot reach: window lifecycle, trays, the Dock and native menus. Create their windows hidden.
+
+Headless tests do not prove pointer, input-method or assistive-technology behavior on a real desktop. Review interface changes in a desktop session on each platform you support.

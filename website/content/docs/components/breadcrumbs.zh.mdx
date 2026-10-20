@@ -1,0 +1,13 @@
+---
+title: Breadcrumbs
+description: 显示一条可选择上级的路径，空间不足时折叠中间部分。
+---
+
+<Example name="breadcrumbs" height={160} />
+
+激活某个上级会写入其索引并通过 `Changed()` 报告，由应用负责导航。路径会填满父容器的宽度，放不下时中间的上级会折叠进一个菜单。缩窄窗口即可看到效果。
+
+## API
+
+<GoAPI name="components.Breadcrumbs" />
+<GoAPI name="components.BreadcrumbsControl" />

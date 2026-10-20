@@ -1,0 +1,61 @@
+---
+title: 打包
+description: 用 MyGo 的 CLI 和 mygo.json 构建并打包应用。
+---
+
+Onevra 不提供打包工具。应用使用 MyGo 的 CLI 构建，配置写在 `go.mod` 旁边的 `mygo.json` 中。完整参考请见 MyGo 的[配置](https://mygo.egoist.dev/docs/configuration)和[分发](https://mygo.egoist.dev/docs/distribution)指南。
+
+## 固定 CLI 版本
+
+把 CLI 作为 Go 工具添加，版本与模块已经依赖的 MyGo 一致：
+
+```sh
+go get -tool github.com/egoist/mygo/cmd/mygo
+```
+
+## 配置
+
+```json title="mygo.json"
+{
+  "name": "My App",
+  "identifier": "com.example.myapp",
+  "version": "0.1.0",
+  "icon": "assets/icon.png",
+  "out": "../dist",
+  "macos": {
+    "icon": "assets/icon.icon",
+    "minimumSystemVersion": "13.0"
+  }
+}
+```
+
+- `resources/` 只放应用运行时读取的文件，其中的所有内容都会随应用发布。用 `mygo.App.Path(mygo.PathResources)` 定位它。小型固定数据请改用 `//go:embed` 嵌入。
+- 图标等构建时输入放在 `assets/` 中，并在 `mygo.json` 里指明。
+- 在 macOS 上，图标的源文件是 Icon Composer 文档 `assets/icon.icon`。从中导出 `assets/icon.png` 供其他平台使用，两者都要提交。
+
+## 构建
+
+```sh
+go tool mygo dev                                          # run with live reload
+go tool mygo build                                        # package for this machine
+go tool mygo build -platform darwin/arm64,windows/amd64   # or for other targets
+```
+
+构建会禁用 cgo，因此应用必须能以纯 Go 方式构建才能交叉编译。输出位于 `<out>/<os>-<arch>/`。
+
+## 项目结构
+
+Onevra 自己的仓库把文档放在根目录，把所有 Go 相关内容放在 `source/` 中。入门应用也采用同样的结构：
+
+```text
+my-app/
+├── README.md
+├── docs/
+└── source/            # Go module root; run Go and MyGo here
+    ├── go.mod
+    ├── mygo.json
+    ├── main.go
+    ├── assets/        # build-time inputs, not shipped
+    ├── locales/       # translation catalogs
+    └── resources/     # files read at run time
+```

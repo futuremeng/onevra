@@ -1,0 +1,61 @@
+---
+title: Packaging
+description: Build and package applications with MyGo's CLI and mygo.json.
+---
+
+Onevra adds no packager. Applications build with MyGo's CLI, configured by `mygo.json` beside `go.mod`. MyGo's [configuration](https://mygo.egoist.dev/docs/configuration) and [distribution](https://mygo.egoist.dev/docs/distribution) guides are the full reference.
+
+## Pin the CLI
+
+Add the CLI as a Go tool, at the MyGo version your module already requires:
+
+```sh
+go get -tool github.com/egoist/mygo/cmd/mygo
+```
+
+## Configure
+
+```json title="mygo.json"
+{
+  "name": "My App",
+  "identifier": "com.example.myapp",
+  "version": "0.1.0",
+  "icon": "assets/icon.png",
+  "out": "../dist",
+  "macos": {
+    "icon": "assets/icon.icon",
+    "minimumSystemVersion": "13.0"
+  }
+}
+```
+
+- `resources/` holds only the files the application reads at run time; all of it ships. Find it with `mygo.App.Path(mygo.PathResources)`. Embed small fixed data with `//go:embed` instead.
+- Build-time inputs, such as the icon, go in `assets/` and are named in `mygo.json`.
+- On macOS, the icon's source is an Icon Composer document, `assets/icon.icon`. Export `assets/icon.png` from it for the other platforms and commit both.
+
+## Build
+
+```sh
+go tool mygo dev                                          # run with live reload
+go tool mygo build                                        # package for this machine
+go tool mygo build -platform darwin/arm64,windows/amd64   # or for other targets
+```
+
+Builds disable cgo, so an application must build as pure Go to cross-compile. Outputs go to `<out>/<os>-<arch>/`.
+
+## Project layout
+
+Onevra's own repository keeps documentation at the root and everything Go in `source/`. The starter applications follow the same shape:
+
+```text
+my-app/
+├── README.md
+├── docs/
+└── source/            # Go module root; run Go and MyGo here
+    ├── go.mod
+    ├── mygo.json
+    ├── main.go
+    ├── assets/        # build-time inputs, not shipped
+    ├── locales/       # translation catalogs
+    └── resources/     # files read at run time
+```

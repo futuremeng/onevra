@@ -1,0 +1,17 @@
+---
+title: Toast
+description: 堆叠在窗口边缘的简短通知，可带操作按钮。
+---
+
+<Example name="toast" height={300} />
+
+用 MyGo 的 `c.AddToast` 添加通知，用 `c.CloseToast` 关闭；队列、计时、悬停暂停和 Escape 都由 MyGo 负责，Onevra 负责绘制。把 `Type` 设为 `ToastInfo`、`ToastSuccess`、`ToastWarning` 或 `ToastError` 以显示状态图标，用 `Action` 和 `OnAction` 添加例如撤销的按钮。
+
+外壳会自行构建通知；用 `ShellOptions.Toasts` 设置它们的位置。不使用外壳的窗口需要在内容之后调用 `components.Toasts`。`ID` 相同的通知会互相替换，适合显示进度。
+
+## API
+
+<GoAPI name="components.Toasts" />
+<GoAPI name="components.ToastOptions" />
+<GoAPI name="components.ToastPlacement" />
+<GoAPI name="components.ToastContent" />

@@ -4,11 +4,14 @@ Onevra is an experimental, product-neutral Go component library built on MyGo. I
 
 ## System boundaries
 
-- MyGo owns rendering, layout, input, native controls and desktop integration. The command component has a narrow AppKit adapter for optional input-source selection, the gesture package one for scroll devices and pinches, and the switch paints the Glass plugin's Clear effect with a thinner bezel than `glass.Paint` gives a knob-sized lens, which upstream does not expose; see [complex component composition](docs/architecture/components.md#complex-component-composition).
+- MyGo owns rendering, layout, input, native controls and desktop integration.
+- Three narrow exceptions fill upstream gaps: AppKit adapters for the command component's input-source selection and the gesture package's scroll devices and pinches, and the switch's thinner Glass bezel for a knob-sized lens. See [complex component composition](docs/architecture/components.md#complex-component-composition).
 - Onevra composes MyGo primitives, rather than wrapping every upstream API or maintaining a parallel UI system.
 - Onevra restyles, merges and simplifies MyGo's built-in components and adds components MyGo lacks. When MyGo officially provides an equivalent of an Onevra feature or component, Onevra may remove its own version in favor of MyGo's.
 - Applications own business state, localized text, persistence, background work and application lifetime.
-- Applications own the theme: `mygo.Theme.SetSource` selects light or dark for the whole app, including native chrome, and the application supplies the frame's `ui.Theme`. Onevra's light and dark palettes are an optional preset in the `theme` package. Components read the frame theme. MyGo and the operating system own native window behavior; Shell composes caption buttons on Windows.
+- Applications own the theme: `mygo.Theme.SetSource` selects light or dark for the whole app, including native chrome, and the application supplies the frame's `ui.Theme`.
+- Onevra's light and dark palettes are an optional preset in the `theme` package. Components read the frame theme.
+- MyGo and the operating system own native window behavior; Shell composes caption buttons on Windows.
 
 ## Components and flow
 
@@ -24,7 +27,9 @@ Shell configures and creates a MyGo window, installs its content container; Side
 
 The `icons/lucide` package supplies lazily parsed, shared MyGo SVGs independently of UI components. The `components.Icon` component accepts these named accessors or parsed SVGs while MyGo owns rendering, sizing, color and accessibility. Generated named accessors have no full-library runtime registry or eager parsing, so ordinary consumers need not retain every icon. Upstream resources and licenses are pinned and checked in; a Lucide checkout is only needed for [maintainer updates](docs/build.md#updating-lucide-icons), not consumer builds.
 
-The gallery is an independent consumer of the public API, not a dependency of the library. It keeps interactive demonstration values in memory, owns its presentation-state persistence and provides a place to review native behavior. See [Gallery](docs/architecture/gallery.md) for storage and verification. Its `web` entry compiles the same control demonstrations for the website using MyGo's browser backend; the website supplies navigation and the frame, while native window chrome and desktop integrations are unavailable. See [browser preview](docs/architecture/gallery.md#browser-preview).
+The gallery is an independent consumer of the public API, not a dependency of the library. It keeps interactive demonstration values in memory, owns its presentation-state persistence and provides a place to review native behavior. See [Gallery](docs/architecture/gallery.md) for storage and verification.
+
+The website is a second, browser-only consumer. Its examples are separate consumer-style files compiled to WebAssembly, and its API sections are read from the Go doc comments. See [Website](docs/architecture/website.md).
 
 The desktop, menu bar, launcher, documents and lawn defense starter applications are independent consumers under `source/examples/`. Each keeps its own lifecycle, preferences where it has them, MyGo message catalog and packaging configuration so it can be copied without importing another example. Their small application helpers are intentionally local, not a shared application framework.
 
@@ -38,9 +43,10 @@ There is one Go module under `source/`, with module path `github.com/oneo-me/one
 - `source/components/`: common controls and independent subpackages for complex components, usable without Shell; see [complex component composition](docs/architecture/components.md#complex-component-composition).
 - `source/icons/lucide/`: public icon assets and upstream provenance.
 - `source/tools/`: library maintenance commands such as the Lucide importer; these share the Go module but are not runtime library dependencies. Applications are packaged with MyGo's CLI, pinned as a Go tool.
-- `source/examples/gallery/`: standalone example, with presentation, native review tests and MyGo inventory tooling under its own `internal/` directory; its `web` entry serves the website's browser preview.
+- `source/examples/gallery/`: standalone example, with presentation, native review tests and MyGo inventory tooling under its own `internal/` directory.
+- `source/examples/website/`: the website's live examples and the generator of its example and API data.
 - [Development guide](docs/build.md): build, verification and release procedures.
-- `website/`: the official website, built with React Router and shadcn/ui and deployed to GitHub Pages; its `/components` page runs the Gallery's demonstrations as WebAssembly; see [website/README.md](website/README.md).
+- `website/`: the documentation site, deployed to GitHub Pages; see [website/README.md](website/README.md).
 
 The repository-root [`skills/onevra/`](skills/onevra/SKILL.md) is an Agent skill for consumer applications, covering usage, component choice, hidden tests and project layout. It is not part of the Go module.
 
@@ -52,6 +58,7 @@ No sibling application or shared workspace is required. The module path includes
 | --- | --- |
 | [Components](docs/architecture/components.md) | Changing composition boundaries, lifecycle ownership or platform styling |
 | [Gallery](docs/architecture/gallery.md) | Changing the standalone example's role or native verification approach |
+| [Website](docs/architecture/website.md) | Changing the documentation site, its live examples or how it reads the API |
 
 ## Platform confidence
 

@@ -1,0 +1,61 @@
+---
+title: 图表
+description: 基于应用数据的柱状图、折线图、面积图、堆叠柱状图、环形图、气泡图和分段条形图。
+---
+
+<Example name="chart-bar" height={340} />
+
+`chart` 包绘制分类图表。应用为每个图表保存数据和一个 `chart.State`，为序列和切片提供稳定的 ID，并提供标签和格式化。悬停，或让图表获得焦点后使用方向键，即可选中某个分类，其详情显示在工具提示中。用 `chart.State{Index: -1}` 开始表示没有选中项。
+
+数据变化时会有动画：数值移动到新的位置，开启减少动态效果时则跳过过渡。这些图表适合规模有限的数据集；大型数据请先聚合或采样再传入。
+
+## 折线图
+
+折线是单调平滑的，并在缺失值处断开。
+
+<Example name="chart-line" height={380} />
+
+## 面积图
+
+面积从零开始并相互重叠；需要累加总量时请使用堆叠柱状图。
+
+<Example name="chart-area" height={340} />
+
+## 堆叠柱状图
+
+图例可以隐藏和显示序列。
+
+<Example name="chart-stacked-bar" height={340} />
+
+## 环形图
+
+切片按比例绘制；图例用于选中切片。
+
+<Example name="chart-donut" height={360} />
+
+## 气泡图
+
+气泡的面积与数值成正比。新增的气泡会逐渐长大，整体排布会弹性过渡到新的布局。
+
+<Example name="chart-bubble" height={400} />
+
+## 分段条形图
+
+把一根条形分成若干份，适合少量分类的部分与整体关系，并显示总量或高亮切片的数值。
+
+<Example name="chart-split-bar" height={240} />
+
+## API
+
+<GoAPI name="chart.Bar" />
+<GoAPI name="chart.Line" />
+<GoAPI name="chart.Area" />
+<GoAPI name="chart.StackedBar" />
+<GoAPI name="chart.Donut" />
+<GoAPI name="chart.Bubble" />
+<GoAPI name="chart.SplitBar" />
+<GoAPI name="chart.Data" />
+<GoAPI name="chart.Series" />
+<GoAPI name="chart.Slice" />
+<GoAPI name="chart.Options" />
+<GoAPI name="chart.State" />

@@ -1,0 +1,16 @@
+---
+title: 着色器背景
+description: 用于欢迎页和空白页的安静 GPU 动态背景，会跟随指针。
+---
+
+<Example name="shader-background" height={400} />
+
+背景会填满父容器，页面内容通过 `Children` 构建在它内部。`shaders.SignalField` 随缓慢的噪声起伏，在指针周围聚光，并在点击处泛起涟漪；它的中心比边缘更安静，便于放置内容。
+
+背景只在 GPU 渲染器上绘制，在 CPU 渲染器（包括无界面测试）上保留主题背景。开启减少动态效果时漂移会停止。自己接管指针的内容（例如蜂窝组件）需要为按下操作调用 `shaders.Ripple`。
+
+## API
+
+<GoAPI name="shaders.SignalField" />
+<GoAPI name="shaders.Options" />
+<GoAPI name="shaders.Ripple" />

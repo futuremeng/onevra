@@ -1,0 +1,23 @@
+---
+title: Dialog
+description: Modal panels for any content, and alert dialogs that ask for a decision.
+---
+
+<Example name="dialog" height={360} />
+
+`components.Dialog` builds content in a modal panel while its `*bool` is true. Call it every frame; MyGo traps focus inside and restores it on close. Dialogs nest: build layers back to front, and the page underneath stays open. Clicking the backdrop or pressing Escape dismisses a layer unless its options disable that.
+
+## Alert dialogs
+
+`components.AlertDialog` asks a question with confirm and cancel buttons and returns the choice in the frame it is made. It never blocks the UI thread; store the result if it is needed later. `HideCancel` makes a one-button notice.
+
+<Example name="alert-dialog" height={320} />
+
+## API
+
+<GoAPI name="components.Dialog" />
+<GoAPI name="components.DialogOptions" />
+<GoAPI name="components.AlertDialog" />
+<GoAPI name="components.AlertDialogOptions" />
+<GoAPI name="components.DialogResult" />
+<GoAPI name="components.WithDialogWindowDrag" />

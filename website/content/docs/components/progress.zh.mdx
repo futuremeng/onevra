@@ -1,0 +1,21 @@
+---
+title: 进度
+description: 用于已知时长任务的进度条和进度环，以及用于其他情况的加载指示器。
+---
+
+<Example name="progress" height={200} />
+
+`components.Progress` 和 `components.ProgressRing` 显示 0 到 1 之间的进度，并在变化时以动画过渡。
+
+## 加载指示器
+
+`components.Spinner` 表示时长未知的工作，可以是与 `ProgressRing` 相同的圆环，也可以是渐隐的辐条。用 `Label` 为它命名。开启减少动态效果时它会停止转动。
+
+<Example name="spinner" height={140} />
+
+## API
+
+<GoAPI name="components.Progress" />
+<GoAPI name="components.ProgressRing" />
+<GoAPI name="components.Spinner" />
+<GoAPI name="components.SpinnerVariant" />

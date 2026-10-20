@@ -1,0 +1,19 @@
+---
+title: ScrollEdgeBar
+description: A bar of controls floating over the edge of scrolling content, on glass, a soft edge or a blur.
+---
+
+<Example name="scroll-edge-bar" height={400} />
+
+Build the bar after the content, inside a bounded container that clips: the bar samples what is painted beneath it. Pad the content by `ScrollEdgeBarExtent` so its first rows and the scroll bar start clear of the bar. Switch the styles above while scrolling to compare them.
+
+`ScrollEdgeGlass` sets the whole bar on Liquid Glass. The other styles leave the bar transparent, so its controls bring their own faces, such as `IconButtonToolbar`. `components.ScrollEdge` is the effect alone, for hosts that place their own controls.
+
+## API
+
+<GoAPI name="components.ScrollEdgeBar" />
+<GoAPI name="components.ScrollEdgeBarOptions" />
+<GoAPI name="components.ScrollEdgeStyle" />
+<GoAPI name="components.ScrollEdgeBarExtent" />
+<GoAPI name="components.ScrollEdge" />
+<GoAPI name="components.ScrollEdgeOptions" />

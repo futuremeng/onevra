@@ -1,0 +1,36 @@
+---
+title: Icons
+description: Lucide icons as named Go accessors, sized and tinted like text.
+---
+
+The `icons/lucide` package provides [Lucide](https://lucide.dev) icons as MyGo SVGs. Each icon is a function named after it in PascalCase, as `arrow-up-right` becomes `lucide.ArrowUpRight`; names that start with a digit take an `Icon` prefix.
+
+<Example name="icons" height={260} />
+
+## Show an icon
+
+```go
+import (
+	"github.com/oneo-me/onevra/source/components"
+	"github.com/oneo-me/onevra/source/icons/lucide"
+)
+
+components.Icon(c, lucide.Search).Size(20, 20)
+```
+
+`components.Icon` takes the accessor itself or the `*ui.SVG` it returns. Icons inherit the surrounding text color; change it with `TextColor`. They keep Lucide's strokes and scale with the element.
+
+Components that show icons take them as `*ui.SVG`, so call the accessor:
+
+```go
+components.SidebarItem(c, "Home", lucide.House(), selected)
+components.IconButton(c, lucide.Trash(), "Delete", components.IconButtonPlain)
+```
+
+## Cost
+
+Each accessor parses its SVG the first time it is called and returns the same shared value after that. There is no runtime registry, so an application carries only the icons it calls. The package pins the upstream release it was generated from and ships under Lucide's ISC and Feather's MIT licenses.
+
+## API
+
+<GoAPI name="components.Icon" />

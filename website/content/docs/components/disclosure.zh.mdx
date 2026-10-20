@@ -1,0 +1,22 @@
+---
+title: 手风琴与折叠面板
+description: 可展开和收起的区块，可以放在带边框的分组中，也可以单独使用。
+---
+
+<Example name="accordion" height={280} />
+
+`components.Accordion` 在带边框的盒子里构建可独立展开的区块。每一项绑定自己的 `*bool`，因此可以同时展开任意多项；如果只想保持一项展开，请在某项报告 `Changed()` 时关闭其他项。Up、Down、Home 和 End 在标题之间移动。
+
+## 折叠面板
+
+`components.Collapsible` 是不带边框的单个动画折叠项。`ArrowPosition` 把箭头放在标签之前或之后，`Leading` 和 `Trailing` 在标题中添加图标或计数。
+
+<Example name="collapsible" height={200} />
+
+## API
+
+<GoAPI name="components.Accordion" />
+<GoAPI name="components.AccordionGroup" />
+<GoAPI name="components.Collapsible" />
+<GoAPI name="components.CollapsibleOptions" />
+<GoAPI name="components.DisclosureParts" />

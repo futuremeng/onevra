@@ -1,0 +1,20 @@
+---
+title: Settings
+description: 由分类、分组和行组成的可搜索设置面板，基于定义构建。
+---
+
+<Example name="settings" height={460} />
+
+把设置描述为“分类—分组—条目”的结构，每一项都有稳定的 ID、标题和用于构建控件的函数。Settings 提供导航、搜索和行布局；应用负责保存值、持久化，并决定何时生效。试着搜索“audio”或“font”：搜索会匹配标题、描述和关键词，而不会构建隐藏的控件。
+
+Settings 可以放在对话框、外壳或独立窗口中，它会填满有界的父容器。`Narrow` 会把行堆叠起来，并用选择器替代侧边栏；请根据分配给 Settings 的空间来决定是否使用。`Stacked` 把较宽的控件放在文字下方，`Content` 则构建整行内容。
+
+## API
+
+<GoAPI name="components.Settings" />
+<GoAPI name="components.SettingsOptions" />
+<GoAPI name="components.SettingsCategory" />
+<GoAPI name="components.SettingsGroup" />
+<GoAPI name="components.SettingsItem" />
+<GoAPI name="components.SettingsState" />
+<GoAPI name="components.SearchSettings" />

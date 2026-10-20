@@ -1,6 +1,8 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
+@import "@fumadocs/base-ui/css/shadcn.css";
+@import "@fumadocs/base-ui/css/preset.css";
 @import "@fontsource-variable/geist";
 @import "@fontsource-variable/geist-mono";
 
@@ -127,54 +129,29 @@
     @apply bg-background text-foreground;
     }
   html {
-    @apply scroll-pt-20 scroll-smooth font-sans;
+    @apply scroll-pt-20 font-sans;
+    scrollbar-gutter: stable;
     }
   ::selection {
     @apply bg-primary/20;
     }
 }
 
-/* Animated highlight for the hero's highlight phrase. */
-.showcase-accent {
-    background-image: linear-gradient(
-        115deg,
-        var(--primary) 0%,
-        color-mix(in oklab, var(--primary) 75%, white) 50%,
-        var(--primary) 100%
-    );
-    background-size: 220% 100%;
-    background-clip: text;
-    -webkit-background-clip: text;
-    color: transparent;
-    font-weight: 600;
-    animation:
-        showcase-accent-shimmer 4s ease-in-out infinite,
-        showcase-accent-glow 3s ease-in-out infinite;
+/* Go source is indented with tabs. */
+pre {
+    tab-size: 4;
 }
 
-@keyframes showcase-accent-shimmer {
-    0% {
-        background-position: 130% 0;
-    }
-    100% {
-        background-position: -130% 0;
-    }
+/* API headings name a Go identifier without the inline-code chip. */
+.prose :where(h3) > code {
+    border: 0;
+    background: transparent;
+    padding: 0;
+    font-size: 0.95em;
 }
 
-@keyframes showcase-accent-glow {
-    0%,
-    100% {
-        filter: drop-shadow(0 0 0 transparent);
-    }
-    50% {
-        filter: drop-shadow(
-            0 0 0.65rem color-mix(in oklab, var(--primary) 55%, transparent)
-        );
-    }
-}
-
-@media (prefers-reduced-motion: reduce) {
-    .showcase-accent {
-        animation: none;
-    }
+/* Long Go signatures wrap rather than scroll. */
+.api-entry pre code .line {
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
 }

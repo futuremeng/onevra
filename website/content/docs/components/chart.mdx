@@ -1,0 +1,61 @@
+---
+title: Charts
+description: Bar, line, area, stacked bar, donut, bubble and split bar charts over data you own.
+---
+
+<Example name="chart-bar" height={340} />
+
+The `chart` package draws categorical charts. The application keeps the data and a `chart.State` per chart, gives series and slices stable IDs, and supplies labels and formatting. Hover, or focus the chart and use the arrow keys, to select a category; its details show in a tooltip. Start with `chart.State{Index: -1}` for no selection.
+
+Data changes animate: values move to their new places, and Reduced Motion skips the transition. These charts suit bounded datasets; aggregate or sample large data before passing it in.
+
+## Line
+
+Lines are monotone and break at missing values.
+
+<Example name="chart-line" height={380} />
+
+## Area
+
+Areas overlap from zero; use stacked bars for additive totals.
+
+<Example name="chart-area" height={340} />
+
+## Stacked bar
+
+The legend hides and shows series.
+
+<Example name="chart-stacked-bar" height={340} />
+
+## Donut
+
+Slices are proportional; the legend selects them.
+
+<Example name="chart-donut" height={360} />
+
+## Bubble
+
+A bubble's area follows its value. Added bubbles grow in and the pack springs to its new layout.
+
+<Example name="chart-bubble" height={400} />
+
+## Split bar
+
+One bar divided into shares, for part-to-whole splits of a few categories, with a readout of the total or the highlighted slice.
+
+<Example name="chart-split-bar" height={240} />
+
+## API
+
+<GoAPI name="chart.Bar" />
+<GoAPI name="chart.Line" />
+<GoAPI name="chart.Area" />
+<GoAPI name="chart.StackedBar" />
+<GoAPI name="chart.Donut" />
+<GoAPI name="chart.Bubble" />
+<GoAPI name="chart.SplitBar" />
+<GoAPI name="chart.Data" />
+<GoAPI name="chart.Series" />
+<GoAPI name="chart.Slice" />
+<GoAPI name="chart.Options" />
+<GoAPI name="chart.State" />

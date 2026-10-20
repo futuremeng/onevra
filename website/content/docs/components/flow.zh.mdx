@@ -1,0 +1,19 @@
+---
+title: 流程图
+description: 按层级布局的有向图，带直角连线和卡片节点。
+---
+
+<Example name="flow" height={440} />
+
+`flow.View` 对节点分层，让连线尽量短，对每一层排序以减少交叉，并在层与层之间布置连线。节点可以构建自己的内容，也可以使用各区域均为插槽的 `flow.Card`。点击节点即可选中；选择和打开由应用掌控。
+
+## API
+
+<GoAPI name="flow.View" />
+<GoAPI name="flow.Data" />
+<GoAPI name="flow.Node" />
+<GoAPI name="flow.Edge" />
+<GoAPI name="flow.Options" />
+<GoAPI name="flow.Card" />
+<GoAPI name="flow.CardOptions" />
+<GoAPI name="flow.State" />

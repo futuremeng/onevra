@@ -1,0 +1,75 @@
+---
+title: Theming
+description: Onevra's light and dark palettes, the system appearance and themes of your own.
+---
+
+Onevra's palettes pair warm white and warm charcoal surfaces with a terracotta accent. They are ordinary MyGo `ui.Theme` values, so every MyGo widget keeps working with them. Switch these docs between light and dark to see both:
+
+<Example name="theme-palette" height={300} />
+
+## Install the theme
+
+The application owns the theme. Pass `theme.Onevra` to a shell:
+
+```go
+plain.NewShell(plain.ShellOptions{
+	Theme:   theme.Onevra,
+	Content: app.view,
+})
+```
+
+A window without a shell installs it at the top of its root builder, before creating any element:
+
+```go
+func (a *app) view(c *ui.Context) {
+	theme.Apply(c)
+	// ...
+}
+```
+
+Components read the frame's theme and never set it themselves.
+
+## Light, dark or system
+
+`theme.Onevra` follows the window's appearance. Choose that appearance with MyGo, which also covers native chrome such as the title bar:
+
+```go
+mygo.Theme.SetSource(mygo.ThemeSystem) // or mygo.ThemeLight, mygo.ThemeDark
+```
+
+Call it before `mygo.App.Run` to apply a saved preference from the first frame. Like MyGo's default theme, Onevra's follows the system's text size and increased contrast.
+
+## Use the theme in your own views
+
+Read colors and spacing from `c.Theme()` rather than hard-coding them, so custom views match the controls in both appearances:
+
+```go
+t := c.Theme()
+ui.Column(c).Padding(t.Space(4)).Gap(t.Space(2)).
+	Radius(t.Radius).Background(t.Surface).Border(1, t.Border)
+```
+
+`t.Space(n)` and `t.Rem(n)` scale with the user's text size.
+
+## A theme of your own
+
+`Theme` takes any function returning a `*ui.Theme`. Start from Onevra's palette and change what you need:
+
+```go
+func brand(c *ui.Context) *ui.Theme {
+	t := theme.Onevra(c)
+	t.Accent = ui.Hex("#2563eb")
+	t.AccentHover = t.Accent.Mix(ui.RGB(0, 0, 0), 0.12)
+	return t
+}
+```
+
+It runs every frame, so it can follow application state.
+
+## API
+
+<GoAPI name="theme.Onevra" />
+<GoAPI name="theme.Apply" />
+<GoAPI name="theme.Palette" />
+<GoAPI name="theme.LightPalette" />
+<GoAPI name="theme.DarkPalette" />

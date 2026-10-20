@@ -1,0 +1,45 @@
+---
+title: Introduction
+description: A Go component library for native desktop applications, built on MyGo.
+---
+
+Onevra provides themed controls, window shells, Lucide icons and complex components for native desktop applications written in Go. It is built on [MyGo](https://mygo.egoist.dev), which draws the interface itself, so applications need no web view, markup or JavaScript.
+
+<Example name="todo" height={300} />
+
+The example above is real Onevra code. Every example in these docs is compiled to WebAssembly and runs in the page, drawn by the same renderer MyGo uses on Linux; the source beneath it is the file that runs.
+
+## Design principles
+
+Onevra builds on MyGo rather than replacing it:
+
+- **Refine built-in components.** Onevra restyles MyGo's controls and merges them into a smaller, consistent API.
+- **Fill the gaps.** It adds components MyGo does not have, such as charts, chat, settings surfaces and window shells.
+- **Defer to upstream.** When MyGo provides a feature Onevra already has, Onevra may remove its own and switch to MyGo's.
+
+Applications own their state, localized text, persistence and background work. Components are product-neutral: they take application-built content through slots instead of business-specific options.
+
+## What is included
+
+<Cards>
+  <Card title="Components" href="/docs/components">
+    Buttons, inputs, selections, collections, overlays, charts and conversations.
+  </Card>
+  <Card title="Window shells" href="/docs/shells">
+    A plain window and a sidebar window with native window controls.
+  </Card>
+  <Card title="Theming" href="/docs/theming">
+    Onevra's warm light and dark palettes, or a theme of your own.
+  </Card>
+  <Card title="Icons" href="/docs/icons">
+    More than 1,800 Lucide icons as named Go accessors.
+  </Card>
+</Cards>
+
+## Use MyGo directly for the rest
+
+Onevra covers everyday controls, not MyGo's full catalog. Use MyGo directly for layout primitives such as `ui.Row`, `ui.Column` and `ui.Grid`, native menus, web views, the code editor, Markdown documents and every MyGo plugin, including Glass. When Onevra has a component for a purpose, use it instead of MyGo's styled widget, so the window keeps one look.
+
+## Next steps
+
+Start with the [quick start](/docs/quick-start), then read [views and state](/docs/views-and-state) to see how a builder runs.

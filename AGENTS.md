@@ -4,7 +4,7 @@ Onevra is an independent Go component library built on MyGo. Read [ARCHITECTURE.
 
 ## Boundaries
 
-- Keep Go source, tests, examples, module files and application packaging configuration in `source/`. Run Go commands from that module directory; keep documentation at the repository root and in `docs/`. The module path is `github.com/oneo-me/onevra/source`; follow the [publication versioning rules](docs/build.md#publication).
+- Keep Go source, tests, examples, module files and application packaging configuration in `source/`. Run Go commands from that module directory; keep documentation at the repository root and in `docs/`, and the public documentation site's pages in `website/content/docs/`. The module path is `github.com/oneo-me/onevra/source`; follow the [publication versioning rules](docs/build.md#publication).
 
 - When Onevra implements a component, use that component instead of MyGo's equivalent styled widget in application and gallery UI. MyGo primitives and unstyled bases remain implementation building blocks; dedicated MyGo component demonstrations are the only styled-widget exception. Check `source/components/` and `source/shells/` before choosing a control.
 - Use all MyGo plugins directly, including Glass and future plugins; do not implement Onevra replacements.
@@ -13,6 +13,7 @@ Onevra is an independent Go component library built on MyGo. Read [ARCHITECTURE.
 - Prefer generic content slots for shared component customization over business-specific fields or variants. Keep domain-specific content and decisions in the application; preserve existing convenience APIs when adding slots.
 - Read upstream public signatures before using MyGo APIs. MyGo documentation: https://mygo.egoist.dev/docs; Markdown index: https://mygo.egoist.dev/llms.txt; complete Markdown: https://mygo.egoist.dev/llms-full.txt; individual pages: `/docs/*.md`. Version-matched documentation and implementation live in `docs/` and `ui/` under the directory returned by `GOWORK=off go list -m -f '{{.Dir}}' github.com/egoist/mygo` from `source/`; prefer these over the latest website when versions differ. Keep examples runnable independently of consumer applications.
 - On every MyGo upgrade, read the release notes and compare upstream changes against Onevra's own components and Shell, especially adapted collection behavior, input, accessibility, animation and native appearance. Adopt applicable fixes through upstream primitives rather than duplicating runtime internals; preserve intentional Onevra interaction contracts. Proactively run `GOWORK=off go generate ./examples/gallery/internal/gallery` from `source/` on every upgrade and review the generated inventory diff; do not rely on packaging to refresh it. By default, supplement the gallery catalog with runnable examples for every newly added component, window and application API, including methods and plugins the generator cannot discover; provide localized labels, lifecycle cleanup and relevant interaction coverage. Do not omit an example on your own judgment: the user decides which to keep, and only then record the reason for an exclusion in the decision map. Add regression tests where Onevra's own behavior changes, and report review conclusions and native-verification gaps.
+- Give every new public component a documentation page with a live example in `source/examples/website/examples/` and its `<GoAPI>` entries, in English and Chinese; follow [Adding a page](website/README.md#adding-a-page). The website's `bun run check` fails while any exported function lacks an API section.
 - Gallery and starter-application trays follow the [tray convention](docs/build.md#tray-convention); keep them aligned when changing any tray.
 - Use English for documentation and comments, except maintained translations and intentional multilingual fixtures.
 - Keep README.md and README.zh-CN.md equivalent with reciprocal language links.
@@ -22,6 +23,7 @@ Onevra is an independent Go component library built on MyGo. Read [ARCHITECTURE.
 Update documentation in the same change only when its reader-needed facts change. Implementation edits alone do not require prose changes.
 
 - README.md and README.zh-CN.md cover the project introduction, basic usage and contributor onboarding. Link to deeper material instead of expanding the quick start.
+- The website's pages teach consumers: when public behavior or usage changes, update the affected page and example in both languages. API sections read doc comments, so keep those accurate rather than restating them.
 - ARCHITECTURE.md and docs/ explain system boundaries, core flows, design rationale and important constraints. Keep property definitions, defaults and local implementation details in code; do not duplicate them in prose or create a document per task.
 - skills/onevra/ guides Agents building applications on Onevra. Update it when basic usage, component replacement decisions, testing conventions or packaging requirements change; keep it concise and link to the module source for details.
 - CHANGELOG.md records what a library consumer notices or must do, under Unreleased. Write one short clause per outcome, starting with a verb and naming the public API, such as "Add `components.Honeycomb`."
@@ -38,7 +40,7 @@ The 16 KiB overview and 24 KiB subject budgets are ceilings, not targets. Remove
 
 ## Verification
 
-Scale [development checks](docs/build.md#development-checks) to the change. While iterating, run only the affected packages, narrowed with `-run`; before handing off, run formatting, vet, the build and `go test ./...` once. Leave the full race check, native tests and other runs over a minute to the user: list the commands and state that they were not run. Documentation-only changes need no Go checks.
+Scale [development checks](docs/build.md#development-checks) to the change. While iterating, run only the affected packages, narrowed with `-run`; before handing off, run formatting, vet, the build and `go test ./...` once. Leave the full race check, native tests and other runs over a minute to the user: list the commands and state that they were not run. Documentation-only changes need no Go checks. Website changes run `bun run check`, `bun run typecheck` and `bun run build` from `website/`.
 
 Add tests for public component behavior and contracts and for fixed bugs; extend existing tests before creating new ones. Gallery demonstrations, copy, styling adjustments and removals need no new tests. Keep tests fast: avoid real-time waits and repeated full-page frames.
 

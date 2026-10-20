@@ -1,0 +1,19 @@
+---
+title: 命令面板
+description: 通过快捷键打开、位于对话框或任意有界容器中的可搜索命令列表。
+---
+
+<Example name="command-palette" height={380} />
+
+`command.CommandDialog` 在模态面板中放置搜索框和分组的结果。方向键在结果间移动，焦点始终留在搜索框中；按 Enter 或点击会通过 `OnActivate` 激活命令。打开面板的快捷键由宿主注册，每个命令做什么也由宿主决定。
+
+`command.CommandView` 是不带对话框的同一视图，适合启动器之类的面板窗口。默认在本地过滤；`Filter` 可以替换过滤逻辑，`PreFiltered` 配合 `Loading` 和 `Error` 支持由宿主执行的异步搜索。
+
+## API
+
+<GoAPI name="command.CommandDialog" />
+<GoAPI name="command.CommandView" />
+<GoAPI name="command.Options" />
+<GoAPI name="command.Item" />
+<GoAPI name="command.State" />
+<GoAPI name="command.Filter" />

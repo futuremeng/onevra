@@ -1,0 +1,36 @@
+---
+title: 图标
+description: 以具名 Go 访问器提供的 Lucide 图标，像文字一样设置尺寸和颜色。
+---
+
+`icons/lucide` 包以 MyGo SVG 的形式提供 [Lucide](https://lucide.dev) 图标。每个图标都是一个以其名称的 PascalCase 形式命名的函数，例如 `arrow-up-right` 对应 `lucide.ArrowUpRight`；以数字开头的名称会加上 `Icon` 前缀。
+
+<Example name="icons" height={260} />
+
+## 显示图标
+
+```go
+import (
+	"github.com/oneo-me/onevra/source/components"
+	"github.com/oneo-me/onevra/source/icons/lucide"
+)
+
+components.Icon(c, lucide.Search).Size(20, 20)
+```
+
+`components.Icon` 接受访问器本身或它返回的 `*ui.SVG`。图标继承周围文字的颜色，可以用 `TextColor` 修改。它们保留 Lucide 的描边，并随元素缩放。
+
+显示图标的组件接受 `*ui.SVG`，因此需要调用访问器：
+
+```go
+components.SidebarItem(c, "Home", lucide.House(), selected)
+components.IconButton(c, lucide.Trash(), "Delete", components.IconButtonPlain)
+```
+
+## 开销
+
+每个访问器在第一次调用时解析 SVG，之后返回同一个共享值。没有运行时注册表，因此应用只携带它调用过的图标。该包固定了生成它的上游版本，并遵循 Lucide 的 ISC 许可和 Feather 的 MIT 许可。
+
+## API
+
+<GoAPI name="components.Icon" />

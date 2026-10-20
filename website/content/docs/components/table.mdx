@@ -1,0 +1,22 @@
+---
+title: Table
+description: Rows under sortable, movable and resizable columns, built directly or virtualized.
+---
+
+<Example name="table" height={280} />
+
+Columns are MyGo `ui.TableColumn` values with stable IDs. Clicking a sortable header sets the sort order, and the application sorts its rows. Dragging a header moves its column and dragging its edge resizes it; `TableState.Columns` keeps that layout, which the application may persist.
+
+## Large tables
+
+`components.TableVirtualized` builds only the visible rows of a count, calling `cell` for each column. It scrolls sideways under its header when the columns are wider than the table.
+
+<Example name="table-virtualized" height={380} />
+
+## API
+
+<GoAPI name="components.Table" />
+<GoAPI name="components.TableRow" />
+<GoAPI name="components.TableState" />
+<GoAPI name="components.TableVirtualized" />
+<GoAPI name="components.TableVirtualizedState" />

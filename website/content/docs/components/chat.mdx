@@ -1,0 +1,42 @@
+---
+title: Chat
+description: Conversation turns with tool activity, folded summaries and a glass composer.
+---
+
+<Example name="chat" height={520} />
+
+Send a message to see a turn run: an activity group shows the work, the reply streams in, and once the turn completes its steps fold behind a summary. The application owns the turns, their steps with stable IDs, the request and every label; builders never call the network.
+
+`chat.FloatingConversation` lets the transcript scroll behind `chat.GlassComposer`, keeping the latest turn clear of it. Enter sends and Shift+Enter inserts a line. Stream replies with MyGo's `markdown.Stream`, and switch to `markdown.View` once complete.
+
+The composer's slots hold attachments, pickers, a context meter and a footer; the package supplies chips, pickers, meters and usage limits styled for them. The [Gallery](/docs/starter-apps#gallery) shows a complete composer.
+
+## API
+
+<GoAPI name="chat.FloatingConversation" />
+<GoAPI name="chat.Conversation" />
+<GoAPI name="chat.Turn" />
+<GoAPI name="chat.TurnOptions" />
+<GoAPI name="chat.Step" />
+<GoAPI name="chat.Activity" />
+<GoAPI name="chat.Status" />
+<GoAPI name="chat.GlassComposer" />
+<GoAPI name="chat.ComposerOptions" />
+<GoAPI name="chat.ComposerResult" />
+<GoAPI name="chat.Attachment" />
+<GoAPI name="chat.Chip" />
+<GoAPI name="chat.Picker" />
+<GoAPI name="chat.EffortPicker" />
+<GoAPI name="chat.ContextMeter" />
+<GoAPI name="chat.QuotaSummary" />
+<GoAPI name="chat.FloatingConversationWith" />
+<GoAPI name="chat.Composer" />
+<GoAPI name="chat.Message" />
+<GoAPI name="chat.Bubble" />
+<GoAPI name="chat.ActivityRow" />
+<GoAPI name="chat.ResultSummary" />
+<GoAPI name="chat.AttachmentPreview" />
+<GoAPI name="chat.Quota" />
+<GoAPI name="chat.Shimmer" />
+<GoAPI name="chat.GlassPanel" />
+<GoAPI name="chat.IconAction" />

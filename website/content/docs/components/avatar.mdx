@@ -1,0 +1,23 @@
+---
+title: Avatar
+description: A person or account as a photo or initials, alone or in an overlapping group.
+---
+
+<Example name="avatar" height={160} />
+
+Without an image, an avatar shows up to two initials of the name. `Status` adds a presence dot, which assistive technology hears with the name. Decode photos outside builders and pass the bitmap; pass nil while loading or after a failure.
+
+## Groups
+
+`components.AvatarGroup` overlaps members in order and folds those past `Max` into a count. Pointing at the stack loosens it and names the member under the pointer; members joining or leaving open and close their slots.
+
+<Example name="avatar-group" height={180} />
+
+## API
+
+<GoAPI name="components.Avatar" />
+<GoAPI name="components.AvatarOptions" />
+<GoAPI name="components.AvatarStatus" />
+<GoAPI name="components.AvatarGroup" />
+<GoAPI name="components.AvatarGroupOptions" />
+<GoAPI name="components.AvatarGroupMember" />

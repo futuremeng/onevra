@@ -1,0 +1,33 @@
+---
+title: Sidebar
+description: 带图标、分组操作和树形结构的分组导航项。
+---
+
+<Example name="sidebar" height={300} />
+
+`components.Sidebar` 是由若干分组组成的一列，每个分组是一个淡色标题加上由应用掌控的导航项。选中状态由应用掌控，并处理 `Clicked()`。它既可以单独使用，也可以放在[侧边栏外壳](/zh/docs/shells#sidebar-window)中，由外壳提供可调整宽度的窗口列。
+
+## 分组操作
+
+`SidebarSectionWithActions` 在标题末尾放置控件，例如添加按钮；`IconButtonCompact` 可以放进标题而不撑高它。
+
+## 文件树
+
+在分组中放入 [Tree](/zh/docs/components/tree)，即可得到文件夹原地展开的资源管理器。
+
+<Example name="sidebar-tree" height={300} />
+
+## 自定义项
+
+`SidebarImageItem` 以图片开头，`SidebarItemWithSlots` 和 `SidebarItemWithContent` 接收应用构建的前置、后置和标签内容，例如字母头像、计数或忙碌指示。
+
+## API
+
+<GoAPI name="components.Sidebar" />
+<GoAPI name="components.SidebarSection" />
+<GoAPI name="components.SidebarSectionWithActions" />
+<GoAPI name="components.SidebarItem" />
+<GoAPI name="components.SidebarImageItem" />
+<GoAPI name="components.SidebarItemWithLeading" />
+<GoAPI name="components.SidebarItemWithSlots" />
+<GoAPI name="components.SidebarItemWithContent" />

@@ -1,0 +1,15 @@
+---
+title: TagInput
+description: Edits a list of short values as removable pills before a draft field.
+---
+
+<Example name="tag-input" height={200} />
+
+Enter or a comma adds the draft as a tag, and pasted comma-separated text adds each part. A duplicate pulses the existing tag instead. Backspace at the start of the draft picks the last tag, and pressing it again removes it.
+
+Validate or normalize tags after `Changed()`.
+
+## API
+
+<GoAPI name="components.TagInput" />
+<GoAPI name="components.TagInputControl" />

@@ -1,0 +1,40 @@
+---
+title: Button
+description: Starts an action, in five weights, with icons, menus or a toggled state.
+---
+
+<Example name="button" height={160} />
+
+`components.Button` takes a label and a variant, and reports a click with `Clicked()` in the frame it happens. Use one primary button for the main action of a view, and quieter variants for the rest.
+
+## With icons
+
+Pass an empty label to give a button its own content, and keep its accessible name with `Label`.
+
+<Example name="button-icons" height={140} />
+
+## Icon buttons
+
+`components.IconButton` shows only an icon, with its label as a tooltip. `IconButtonPlain` suits rows and headers; `IconButtonToolbar` raises the face to match `ButtonToolbar` and segmented tabs.
+
+<Example name="icon-button" height={180} />
+
+## Toggle buttons
+
+`components.ToggleButton` turns a `*bool` on and off, filled with the accent while on, for formatting and view options.
+
+<Example name="toggle-button" height={140} />
+
+## Menus
+
+`Menu` opens a menu when the button is clicked; `ContextMenu` opens one on right-click. Ask each item whether it was `Chosen()`.
+
+<Example name="button-menu" height={180} />
+
+## API
+
+<GoAPI name="components.Button" />
+<GoAPI name="components.ButtonVariant" />
+<GoAPI name="components.IconButton" />
+<GoAPI name="components.IconButtonStyle" />
+<GoAPI name="components.ToggleButton" />

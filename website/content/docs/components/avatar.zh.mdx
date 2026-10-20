@@ -1,0 +1,23 @@
+---
+title: Avatar
+description: 以照片或姓名首字母表示的人或账户，可单独显示或叠成一组。
+---
+
+<Example name="avatar" height={160} />
+
+没有图片时，头像显示姓名的前一两个首字母。`Status` 添加在线状态圆点，辅助技术会在读出名称时一并读出状态。请在构建函数之外解码照片并传入位图；加载中或加载失败时传入 nil。
+
+## 头像组
+
+`components.AvatarGroup` 按顺序叠放成员，并把超过 `Max` 的成员折叠为计数。指针指向头像组时它会散开，并显示指针下成员的名称；成员加入或离开时会打开或收起各自的位置。
+
+<Example name="avatar-group" height={180} />
+
+## API
+
+<GoAPI name="components.Avatar" />
+<GoAPI name="components.AvatarOptions" />
+<GoAPI name="components.AvatarStatus" />
+<GoAPI name="components.AvatarGroup" />
+<GoAPI name="components.AvatarGroupOptions" />
+<GoAPI name="components.AvatarGroupMember" />

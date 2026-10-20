@@ -1,0 +1,105 @@
+---
+title: Quick start
+description: Install Onevra, open a window and run it.
+---
+
+## Requirements
+
+- [Go](https://go.dev/dl/) 1.27.1 or later.
+- On Linux, GTK 3. macOS and Windows need nothing more.
+
+Onevra follows MyGo's [requirements](https://mygo.egoist.dev/docs/getting-started); `go run github.com/egoist/mygo/cmd/mygo@latest doctor` checks a machine.
+
+<Steps>
+<Step>
+
+### Create a module
+
+```sh
+mkdir hello && cd hello
+go mod init example.com/hello
+```
+
+</Step>
+<Step>
+
+### Add Onevra
+
+```sh
+go get github.com/oneo-me/onevra/source@latest
+```
+
+This also adds the MyGo version Onevra requires.
+
+</Step>
+<Step>
+
+### Write the application
+
+Save this as `main.go`:
+
+```go title="main.go"
+package main
+
+import (
+	"fmt"
+	"log"
+
+	"github.com/egoist/mygo"
+	"github.com/egoist/mygo/ui"
+	"github.com/oneo-me/onevra/source/components"
+	"github.com/oneo-me/onevra/source/shells/plain"
+	"github.com/oneo-me/onevra/source/theme"
+)
+
+type app struct {
+	count int
+}
+
+func (a *app) view(c *ui.Context) {
+	ui.Column(c).Fill().Center().Gap(12).Children(func() {
+		components.Text(c, "Hello, Onevra!")
+		if components.Button(c, "Click me", components.ButtonPrimary).Clicked() {
+			a.count++
+		}
+		components.Text(c, fmt.Sprintf("Clicked %d times", a.count))
+	})
+}
+
+func main() {
+	a := &app{}
+	mygo.App.WhenReady(func() {
+		shell := plain.NewShell(plain.ShellOptions{
+			Title:   "Hello",
+			Theme:   theme.Onevra,
+			Content: a.view,
+		})
+		shell.Window().OnClosed(func() { mygo.App.Quit() })
+	})
+	if err := mygo.App.Run(); err != nil {
+		log.Fatal(err)
+	}
+}
+```
+
+</Step>
+<Step>
+
+### Run it
+
+```sh
+go run .
+```
+
+A window opens with the text and the button. Edit `view`, then run it again.
+
+</Step>
+</Steps>
+
+## What the code does
+
+- `mygo.App.Run` starts the application; windows are created in `WhenReady`, once MyGo is ready.
+- [`plain.NewShell`](/docs/shells) creates a native window with a header showing its title. `theme.Onevra` installs Onevra's palettes, following the system's light or dark appearance.
+- `view` is a builder. It runs every frame and reads the application's state, `a.count`. The button reports a click in the frame it happens. See [views and state](/docs/views-and-state).
+
+To package the application for distribution, see [packaging](/docs/packaging). To start from a complete application with settings, localization and packaging, copy one of the [starter applications](/docs/starter-apps).

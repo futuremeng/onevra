@@ -1,0 +1,22 @@
+---
+title: Tree
+description: 可展开和收起的嵌套行，可直接构建或虚拟化。
+---
+
+<Example name="tree" height={260} />
+
+`components.Tree` 构建 `TreeItem` 行；带有 `open` 绑定和子项的行是分支。点击箭头或双击行可以切换展开状态，Left 和 Right 在父项与子项之间移动。展开和选择状态由应用掌控。
+
+## 大型树
+
+`components.TreeVirtualized` 根据根节点和 `children` 函数只构建可见的行。展开状态按键保存，按住 Option 或 Shift 再按 Left/Right 会递归展开或收起。
+
+<Example name="tree-virtualized" height={320} />
+
+## API
+
+<GoAPI name="components.Tree" />
+<GoAPI name="components.TreeItem" />
+<GoAPI name="components.TreeItemWithLeading" />
+<GoAPI name="components.TreeVirtualized" />
+<GoAPI name="components.TreeVirtualizedState" />

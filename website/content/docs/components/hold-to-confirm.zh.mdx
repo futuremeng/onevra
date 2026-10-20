@@ -1,0 +1,17 @@
+---
+title: HoldToConfirm
+description: 需要按住才会执行的按钮，用于不能被误点触发的操作。
+---
+
+<Example name="hold-to-confirm" height={160} />
+
+按住按钮：填充会跟随按住的进度，提前松开则回退。按住完成时，按钮设置其 `*bool` 并变为确认后的标签。也可以用键盘按住 Space 或 Enter。
+
+当用户需要先了解后果时，请改用[警告对话框](/zh/docs/components/dialog)。把值重新设为 `false` 即可重置按钮。
+
+## API
+
+<GoAPI name="components.HoldToConfirm" />
+<GoAPI name="components.HoldToConfirmOptions" />
+<GoAPI name="components.HoldToConfirmTone" />
+<GoAPI name="components.HoldToConfirmControl" />

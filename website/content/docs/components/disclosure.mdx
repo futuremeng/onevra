@@ -1,0 +1,22 @@
+---
+title: Accordion and Collapsible
+description: Sections that expand and collapse, in a bordered group or on their own.
+---
+
+<Example name="accordion" height={280} />
+
+`components.Accordion` builds independently expandable sections in a bordered box. Each item binds its own `*bool`, so any number can be open; to keep one open at a time, close the others when an item reports `Changed()`. Up, Down, Home and End move between headers.
+
+## Collapsible
+
+`components.Collapsible` is one animated disclosure without a box. `ArrowPosition` puts the arrow before or after the label, and `Leading` and `Trailing` add an icon or a count to the header.
+
+<Example name="collapsible" height={200} />
+
+## API
+
+<GoAPI name="components.Accordion" />
+<GoAPI name="components.AccordionGroup" />
+<GoAPI name="components.Collapsible" />
+<GoAPI name="components.CollapsibleOptions" />
+<GoAPI name="components.DisclosureParts" />

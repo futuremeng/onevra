@@ -1,0 +1,46 @@
+---
+title: 本地化
+description: 用 MyGo 目录翻译应用文本；Onevra 自带的标签跟随窗口语言。
+---
+
+Onevra 组件显示的文本有两类。你传入的文本（例如按钮标签）属于应用：请在传入之前完成翻译。组件自己添加的文本（例如日历的月份名称或对话框的关闭按钮）来自 Onevra 自带的目录，并跟随窗口的语言。
+
+## 应用自己的文本
+
+把消息放在 MyGo 目录中。在 `mygo.json` 里把 `i18n` 指向一个目录，每种语言一个 JSON 文件：
+
+```json title="mygo.json"
+{
+  "i18n": { "dir": "locales", "source": "en" }
+}
+```
+
+```json title="locales/en.json"
+{
+  "@@locale": "en",
+  "settings": "Settings…",
+  "save": "Save"
+}
+```
+
+`go tool mygo generate` 会为每条消息生成一个带类型的函数，构建函数在构建时调用它：
+
+```go
+components.Button(c, locales.Save(), components.ButtonPrimary)
+```
+
+MyGo 的[国际化指南](https://mygo.egoist.dev/docs/i18n)介绍了复数、参数和格式化。
+
+## 窗口的语言
+
+通过 MyGo 选择语言；空字符串表示跟随用户的首选语言：
+
+```go
+mygo.App.SetLocale("zh-Hans")
+```
+
+Onevra 的目录包含英语、简体中文、繁体中文、日语和韩语。要修改其中某个标签或添加新语言，请在你自己的目录中以 `onevra.` 前缀定义同名键，例如 `onevra.today`。日历日期和每周的第一天跟随用户的区域格式。
+
+键和存储的值请与翻译文本保持独立：把设置保存为 `"zh-Hans"`，而不是界面上显示的文字。
+
+[桌面入门应用](/zh/docs/starter-apps)展示了包含语言设置的完整配置。

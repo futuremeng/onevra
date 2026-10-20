@@ -1,0 +1,62 @@
+---
+title: Views and state
+description: How builders run every frame, where state lives and how work stays off the UI thread.
+---
+
+An Onevra view is a builder: a Go function that takes a `*ui.Context` and creates the window's content. MyGo runs it on the UI thread for every frame it draws, and redraws when input, animation or the application asks for it.
+
+<Example name="counter" height={160} />
+
+## State lives in your values
+
+A builder holds no state of its own between frames. Keep state in application values that outlive the builder, and pass controls pointers to it: `components.Switch(c, &s.wifi, "Wi-Fi")` reads and writes `s.wifi`. A control reports what happened during the frame, as `Clicked()` does for a button, and the builder acts on it directly.
+
+```go
+type settings struct {
+	wifi   bool
+	volume float64
+}
+
+func (s *settings) view(c *ui.Context) {
+	components.Switch(c, &s.wifi, "Wi-Fi")
+	components.Slider(c, &s.volume, 0, 100).Label("Volume")
+}
+```
+
+Because everything the window shows comes from these values, changing them is how the application changes the interface.
+
+## Builders stay fast
+
+Builders run every frame, so they must not block. Do not read files, call the network or parse large data inside one. Do that work elsewhere and hand the result to the UI thread:
+
+```go
+go func() {
+	result, err := load(path) // on another goroutine
+	window.Update(func() {    // back on the UI thread, with a redraw
+		s.result, s.err = result, err
+	})
+}()
+```
+
+Prepare large datasets, such as a chart's series, outside the builder as well, and keep them in state.
+
+## Elements belong to one frame
+
+The `ui.Element` values controls return are handles for the current build pass only. Chain methods on them, but never keep one in state. When an element needs an identity or geometry that lasts across frames, bind a `ui.Handle`.
+
+When a builder creates elements in a loop whose items can change, give each item a stable key so it keeps its own interaction state:
+
+```go
+for i := range s.items {
+	item := &s.items[i]
+	ui.Box(c).Key(item.id).Children(func() {
+		components.Checkbox(c, &item.done, item.title)
+	})
+}
+```
+
+## Layout comes from MyGo
+
+Onevra components sit inside MyGo's layout primitives: `ui.Row`, `ui.Column`, `ui.Box`, `ui.Grid`, `ui.Spacer` and `ui.Overlay`. Size and arrange them with methods such as `Fill`, `Grow`, `Gap`, `Padding` and `AlignItems`. MyGo's [layout guide](https://mygo.egoist.dev/docs/ui/layout) covers them in full.
+
+Use the theme's spacing for gaps and padding, `c.Theme().Space(3)`, so layouts scale with the user's text size.

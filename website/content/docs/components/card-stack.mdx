@@ -1,0 +1,19 @@
+---
+title: CardStack
+description: A deck reviewed one card at a time, swiped left or right, with undo.
+---
+
+<Example name="card-stack" height={460} />
+
+Drag or flick the top card, use the buttons, or press the arrow keys. A throw carries the card off with the pointer's velocity while the cards behind rise. Undo brings the last card back, and once every card is decided, Start over deals them again.
+
+The decisions live in application state, which the application may change itself.
+
+## API
+
+<GoAPI name="components.CardStack" />
+<GoAPI name="components.CardStackOptions" />
+<GoAPI name="components.CardStackItem" />
+<GoAPI name="components.CardStackState" />
+<GoAPI name="components.CardStackEvent" />
+<GoAPI name="components.CardDecision" />

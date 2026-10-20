@@ -1,0 +1,45 @@
+---
+title: 测试
+description: 用 MyGo 的测试器以无界面方式测试视图：不需要窗口、焦点或桌面会话。
+---
+
+`go test ./...` 不应该显示任何窗口。请用 MyGo 的 `ui.NewTester` 测试视图，它在屏幕外渲染构建函数，并用输入驱动它。
+
+```go title="settings_test.go"
+func TestSaveButton(t *testing.T) {
+	for _, dark := range []bool{false, true} {
+		saved := false
+		tt := ui.NewTester(func(c *ui.Context) {
+			c.SetTheme(theme.Palette(dark))
+			if components.Button(c, "Save", components.ButtonPrimary).Clicked() {
+				saved = true
+			}
+		}, 300, 100)
+		if err := tt.Click("Save"); err != nil {
+			t.Fatal(err)
+		}
+		if !saved {
+			t.Errorf("dark=%v: the click was not reported", dark)
+		}
+	}
+}
+```
+
+构建与应用中相同的视图，并自己应用主题：测试中没有外壳。
+
+## 驱动视图
+
+- 用 `Find`、`HasText`、`Texts` 和 `Focused` 按文字或无障碍标签查找元素。
+- 用 `Click`、`RightClick`、`Key`、`TypeKey`、`Type`、`Scroll`、`Move`、`Press` 和 `Release` 驱动它们。
+- 同时检查键盘路径：`tt.Key(0, ui.KeyTab)`，然后是 `ui.KeySpace` 或 `ui.KeyEnter`。
+- 用 `Menu` 和 `ChooseMenuItem` 检查菜单，用 `Announcements` 检查读屏输出。
+
+测试器的时钟在 `tt.Advance(d)` 推进之前保持静止，推进时会运行这段时间内应有的帧。对于动画、延迟和工具提示，请推进时钟而不是休眠。在构建函数之外修改状态后，断言之前先调用 `tt.Frame()`。
+
+## 分层
+
+1. **逻辑测试**：偏好、策略等决策，写成不需要 MyGo 运行时的普通函数。
+2. **无界面视图测试**：使用 `ui.NewTester`，是组件和视图行为的默认选择。
+3. **原生冒烟测试**：通过环境变量显式开启，用于测试器无法触及的部分，例如窗口生命周期、托盘、Dock 和原生菜单。其中的窗口请以隐藏方式创建。
+
+无界面测试无法证明真实桌面上的指针、输入法或辅助技术行为。界面改动请在每个支持的平台上通过桌面会话进行审查。

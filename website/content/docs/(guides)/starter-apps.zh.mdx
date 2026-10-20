@@ -1,0 +1,27 @@
+---
+title: 入门应用
+description: 可以运行、阅读和复制的完整应用。
+---
+
+Onevra 模块附带了几个小型应用，展示各部分如何组合。每个应用都有自己的生命周期、消息和打包配置，因此可以单独复制而无需导入其他应用。在[仓库](https://github.com/oneo-me/onevra)的克隆中，从 `source/` 运行它们：
+
+| 应用 | 展示内容 | 命令 |
+| --- | --- | --- |
+| Gallery | 所有组件、两种外壳以及 MyGo 自己的控件目录 | `go run ./examples/gallery` |
+| Desktop | 带设置、语言选择和托盘的主窗口 | `go run ./examples/desktop` |
+| Menu bar | 带快速笔记面板的托盘应用 | `go run ./examples/menubar` |
+| Launcher | 类似 Spotlight 的面板，搜索并打开已安装的应用 | `go run ./examples/launcher` |
+| Documents | 基于文档的笔记编辑器 | `go run ./examples/documents` |
+| Lawn defense | 像素风格的塔防游戏 | `go run ./examples/games/lawn` |
+
+## Gallery
+
+Gallery 是了解每个组件在真实窗口中外观和行为的参考。追加 `-theme light` 或 `-theme dark` 可以预览单一外观：
+
+```sh
+go run ./examples/gallery -theme dark
+```
+
+## 复制使用
+
+把某个入门应用的目录复制到你自己的模块中，修改模块路径以及 `mygo.json` 中的标识符和名称，然后替换其中的内容。保留它展示的生命周期：在 `WhenReady` 之后创建窗口，把设置作为应用操作，并让后台工作远离构建函数。

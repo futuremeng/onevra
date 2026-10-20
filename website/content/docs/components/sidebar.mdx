@@ -1,0 +1,33 @@
+---
+title: Sidebar
+description: Grouped navigation items with icons, section actions and trees.
+---
+
+<Example name="sidebar" height={300} />
+
+`components.Sidebar` is a column of sections, each a muted heading over application-owned items. The application owns selection and handles `Clicked()`. It works on its own or inside the [sidebar shell](/docs/shells#sidebar-window), which provides the window's resizable column.
+
+## Section actions
+
+`SidebarSectionWithActions` ends a heading with controls, such as an add button; `IconButtonCompact` fits it without raising the heading.
+
+## File trees
+
+Put a [Tree](/docs/components/tree) in a section for an explorer whose folders expand in place.
+
+<Example name="sidebar-tree" height={300} />
+
+## Custom items
+
+`SidebarImageItem` leads with an image, and `SidebarItemWithSlots` and `SidebarItemWithContent` take application-built leading, trailing and label content, such as monograms, counts or a busy indicator.
+
+## API
+
+<GoAPI name="components.Sidebar" />
+<GoAPI name="components.SidebarSection" />
+<GoAPI name="components.SidebarSectionWithActions" />
+<GoAPI name="components.SidebarItem" />
+<GoAPI name="components.SidebarImageItem" />
+<GoAPI name="components.SidebarItemWithLeading" />
+<GoAPI name="components.SidebarItemWithSlots" />
+<GoAPI name="components.SidebarItemWithContent" />

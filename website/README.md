@@ -1,112 +1,63 @@
 # Onevra website
 
-The Onevra marketing site: a statically prerendered React Router app that is
-deployed to GitHub Pages at <https://oneo-me.github.io/onevra/>. Its
-[components page](app/routes/components.tsx) runs the Gallery's demonstrations
-in the browser as WebAssembly.
+The documentation site: guides and a page for every component, in English and Simplified Chinese. Every example on it is Go code from [`source/examples/website`](../source/examples/website), compiled to WebAssembly and running in the page. It deploys to GitHub Pages at <https://oneo-me.github.io/onevra/>.
 
-- **Framework:** React Router in framework mode with `ssr: false` and full
-  prerendering, so every route ships as static HTML.
-- **Styling:** Tailwind CSS v4 with the `nova` shadcn/ui preset on Base UI.
-- **Content:** English and Simplified Chinese, defined in
-  [`app/lib/content.ts`](app/lib/content.ts).
+The design and its constraints are in [Website design](../docs/architecture/website.md).
 
 ## Requirements
 
 - [Bun](https://bun.sh) 1.4 or newer.
-- [Go](https://go.dev) 1.27.1 or newer, which compiles the component preview to
-  WebAssembly.
+- [Go](https://go.dev) 1.27.1 or newer, which compiles the examples and reads the API.
 
 ## Commands
 
+Run these from `website/`:
+
 ```sh
-bun install           # install dependencies
-bun run dev           # start the dev server at http://localhost:5173/onevra/
-bun run typecheck     # generate route types and typecheck
-bun run build:pages   # build the static artifact into build/pages
-bun run preview       # serve the built artifact the way GitHub Pages does
-bun run preview:manifest # regenerate the component catalog from Go
-bun run format        # format with Prettier
+bun install          # install dependencies
+bun run dev          # serve at http://localhost:5173/onevra/
+bun run check        # check that the docs cover the API, examples and translations
+bun run typecheck    # generate route types and typecheck
+bun run build        # prerender the static site into build/pages
+bun run preview      # serve build/pages the way GitHub Pages does
+bun run format       # format with Prettier
 ```
 
-The site is served under the `/onevra/` base path, so the dev server uses
-<http://localhost:5173/onevra/> rather than the root.
+The development server rebuilds the examples and recompiles the pages when Go source changes.
 
-> `dev` runs the React Router CLI through Bun with the `development`
-> condition. Invoking `react-router dev` directly makes its self-restart loop
-> under Bun, so keep the explicit invocation.
+## Adding an example
 
-## Deployment
+1. Add a file to `source/examples/website/examples/`, such as `slider_range.go`. Its name is the example's: `slider-range`.
+2. Declare the example's state as a type with a `View(c *ui.Context)` method, and register one value with `var _ = register(&value{})`. Use `registerWindow` when it lays out the whole window itself.
+3. Show it on a page with `<Example name="slider-range" height={240} />`, in both the English and the Chinese page.
 
-The [Website workflow](../.github/workflows/website.yml) builds the site and
-publishes it with GitHub Pages whenever `website/**` or `source/**` changes on
-`main`.
+The page shows the file's source without its package clause and registration. Write it as an application would, with plain English labels; `go test ./examples/website/...` from `source/` builds every example.
 
-Enable it once under **Settings → Pages → Build and deployment → Source →
-GitHub Actions**. GitHub Pages is only available for private repositories on
-paid plans; the site keeps working unchanged once the repository is public.
+## Adding a page
 
-## Base path
+1. Add `name.mdx` and `name.zh.mdx` under `content/docs/components/` or `content/docs/(guides)/`, each with a `title` and a `description`.
+2. List the page in that folder's `meta.json` and `meta.zh.json`, which order the sidebar.
+3. End a component page with an `## API` section of `<GoAPI name="components.Name" />` entries, which read the declaration and doc comment from Go.
 
-`BASE_PATH` overrides the deploy path in both `vite.config.ts` and
-`react-router.config.ts`. It defaults to `/onevra/`, which matches the
-`oneo-me/onevra` repository. Set it to `/` when serving from a custom domain.
-
-React Router writes prerendered pages under `build/client/onevra/`, while Vite
-keeps assets at the root of `build/client`. `scripts/prepare-pages.mjs` merges
-both into `build/pages` and adds a `404.html` fallback, which is the directory
-uploaded to Pages.
-
-## Component previews
-
-`/components` and `/zh/components` list the Gallery's component
-demonstrations and frame a live preview. Each demonstration is prerendered at
-`/components/<slug>` with its own title; a component alias such as
-`/components/calendar` settles on the page that demonstrates it. The preview is the Gallery's own Go app
-for browsers,
-[`source/examples/gallery/web`](../source/examples/gallery/web/main.go), built by
-[`scripts/preview-wasm.ts`](scripts/preview-wasm.ts).
-
-- The Vite plugin compiles the app to WebAssembly during development and in the
-  Pages build, and emits `preview/index.html`, Go's `wasm_exec.js` and a
-  content-hashed `.wasm` file. Go must be installed; the site does not ship a
-  checked-in build.
-- The Go app selects a page from its command-line arguments. Changing components
-  changes only the frame's fragment, so the running app redraws the next page
-  instead of loading the WebAssembly again. The frame follows the site's light or
-  dark appearance, and the language comes from the page route.
-- `app/lib/preview-manifest.json` is generated from
-  `go run ./examples/gallery/web -manifest` before `dev`, `build`,
-  `build:pages` and `typecheck`, so it always matches the Go source and is not
-  committed. Run `bun run preview:manifest` to refresh it while the dev server
-  is running.
-- The previews share the Gallery's demonstrations rather than duplicating them.
-  Native window chrome, menus, trays, notifications and file dialogs report that
-  a browser cannot provide them.
+Pages can also use Fumadocs' `Steps`, `Tabs`, `Cards`, `Callout` and `TypeTable`, registered in [`app/components/mdx.tsx`](app/components/mdx.tsx).
 
 ## Structure
 
 | Path | Purpose |
 | --- | --- |
-| `app/root.tsx` | Document shell, theme bootstrap and error boundary. |
-| `app/routes.ts` | Route table: `/`, `/components/:slug?` and their `/zh` pages. |
-| `app/components/landing.tsx` | The landing page sections. |
-| `app/components/component-browser.tsx` | The components page and its preview frame. |
-| `app/lib/content.ts` | English and Simplified Chinese copy and code samples. |
-| `app/lib/preview.ts` | Component catalog lookup, slugs and the frame URL. |
-| `app/lib/preview-manifest.json` | Generated component pages from the Go Gallery; not committed. |
-| `app/lib/site.ts` | Shared links and the locale helper. |
-| `app/components/ui` | shadcn/ui components. |
-| `preview/index.html` | The page that loads the WebAssembly preview app. |
-| `scripts/preview-wasm.ts` | Vite plugin that compiles and serves the preview. |
-| `scripts/preview-manifest.mjs` | Regenerates the component catalog from Go. |
-| `app/assets/icon.png` | The app icon, used as the header/footer logo and favicon. |
+| `content/docs/` | Guides and component pages, with their translations and sidebar order |
+| `app/routes/` | The home page, the docs pages and the static search index |
+| `app/components/home/` | The home page and its copy in both languages |
+| `app/components/example.tsx` | A live example above its source |
+| `app/lib/examples.ts` | The browser side of the examples' WebAssembly |
+| `scripts/examples.ts` | Vite plugin that writes `.generated/docs-data.json` and compiles the WebAssembly |
+| `scripts/remark-onevra.ts` | Fills `<Example>` and `<GoAPI>` from that data while compiling MDX |
+| `scripts/check-docs.ts` | The coverage check behind `bun run check` |
 
-`app/assets/icon.png` is downscaled from `../source/assets/icon.png`.
-Regenerate it rather than editing it by hand.
+`app/assets/icon.png` is downscaled from `../source/assets/icon.png`. Regenerate it rather than editing it by hand. Add shadcn/ui components with `bun x --bun shadcn@latest add <component>`.
 
-Add or update shadcn/ui components with the project's Bun runner:
+## Deployment
 
-```sh
-bun x --bun shadcn@latest add <component>
-```
+The [Website workflow](../.github/workflows/website.yml) checks, builds and publishes the site whenever `website/**` or `source/**` changes on `main`. Enable it once under **Settings → Pages → Build and deployment → Source → GitHub Actions**.
+
+`BASE_PATH` overrides the deploy path in `vite.config.ts` and `react-router.config.ts`. It defaults to `/onevra/`, which matches the `oneo-me/onevra` repository; set it to `/` for a custom domain. React Router writes prerendered pages under `build/client/onevra/` while Vite keeps assets at the root of `build/client`, so `scripts/prepare-pages.mjs` merges both into `build/pages` and adds a `404.html` fallback.

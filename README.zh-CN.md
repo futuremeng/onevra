@@ -151,9 +151,7 @@ GOWORK=off go build ./...
 
 ## 官网
 
-官网位于 [website/](website)，使用 React Router 和 shadcn/ui 构建。官网的 `/components` 页面以 WebAssembly 在浏览器中运行 Gallery 的示例，展示每个 Onevra 组件页面。[Website workflow](.github/workflows/website.yml) 会将其部署到 GitHub Pages。
-
-编译浏览器预览还需要 Go 1.27.1 或更高版本。
+文档站点位于 [website/](website)：包含指南和每个组件的页面，页面中的实时示例由 Go 编译为 WebAssembly 运行。[Website workflow](.github/workflows/website.yml) 会将其部署到 GitHub Pages。运行它需要 Bun 和 Go 1.27.1 或更高版本：
 
 ```sh
 cd website
@@ -161,7 +159,11 @@ bun install
 bun run dev
 ```
 
-构建与部署细节见 [website/README.md](website/README.md)。
+添加页面和示例的方法见 [website/README.md](website/README.md)。
+
+## 作者
+
+[博客](https://oneo.me) · [X @oneo666](https://x.com/oneo666)
 
 ## 协议
 

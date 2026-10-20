@@ -1,0 +1,29 @@
+---
+title: Select
+description: 从下拉列表中选择一个值，可选带搜索框。
+---
+
+<Example name="select" height={200} />
+
+`components.Select` 返回若干部件：设置 `Trigger` 的样式，然后在 `Popup` 中用 `Item` 构建选项。选项文字由应用掌控，因此选项可以包含任意内容。
+
+## 可搜索
+
+`SearchField` 在弹出层顶部添加搜索框。查询内容由应用掌控，并只构建匹配的选项。
+
+<Example name="select-search" height={340} />
+
+## 原生菜单
+
+`components.NativeSelect` 改为打开操作系统的菜单，选项由值和标签组成的列表给出。禁用的选项仍然可见。
+
+<Example name="native-select" height={160} />
+
+浏览器中没有原生菜单，因此这个示例以 MyGo 的 HTML 菜单代替。
+
+## API
+
+<GoAPI name="components.Select" />
+<GoAPI name="components.SelectParts" />
+<GoAPI name="components.NativeSelect" />
+<GoAPI name="components.NativeSelectOption" />

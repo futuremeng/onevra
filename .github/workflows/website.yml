@@ -45,9 +45,13 @@ jobs:
         working-directory: website
         run: bun run typecheck
 
+      - name: Check that the docs cover the API and examples
+        working-directory: website
+        run: bun run check
+
       - name: Build the Pages artifact
         working-directory: website
-        run: bun run build:pages
+        run: bun run build
 
       - name: Configure Pages
         uses: actions/configure-pages@v5

@@ -1,0 +1,29 @@
+---
+title: Select
+description: Chooses a value from a drop-down list, optionally with a search field.
+---
+
+<Example name="select" height={200} />
+
+`components.Select` returns parts: style the `Trigger`, then build the options in `Popup` with `Item`. The application owns the option text, so items can hold any content.
+
+## Searchable
+
+`SearchField` adds a search input at the top of the popup. The application owns the query and builds only the items that match.
+
+<Example name="select-search" height={340} />
+
+## Native menu
+
+`components.NativeSelect` opens the operating system's menu instead, from a list of values and labels. Disabled options stay visible.
+
+<Example name="native-select" height={160} />
+
+Browsers have no native menu, so this example shows MyGo's HTML menu in its place.
+
+## API
+
+<GoAPI name="components.Select" />
+<GoAPI name="components.SelectParts" />
+<GoAPI name="components.NativeSelect" />
+<GoAPI name="components.NativeSelectOption" />

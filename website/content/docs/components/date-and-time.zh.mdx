@@ -1,0 +1,22 @@
+---
+title: 日期与时间
+description: 基于同一个 time.Time 的日历、日期选择器和时间选择器。
+---
+
+<Example name="date-time-pickers" height={180} />
+
+`CalendarPicker` 显示日期，并在弹出层中打开日历；`TimePicker` 显示 24 小时制时间，并打开小时和分钟两列。选择日期会保留时间，选择时间会保留日期，因此两者可以编辑同一个值。
+
+## 日历
+
+`components.Calendar` 是单独的六周视图。点击标题可切换到月份，再到年份。每周的第一天跟随用户的区域格式。
+
+<Example name="calendar" height={420} />
+
+## API
+
+<GoAPI name="components.CalendarPicker" />
+<GoAPI name="components.TimePicker" />
+<GoAPI name="components.Calendar" />
+<GoAPI name="components.CalendarControl" />
+<GoAPI name="components.TimeControl" />

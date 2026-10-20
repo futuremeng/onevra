@@ -1,0 +1,19 @@
+---
+title: Command palette
+description: Searchable commands in a dialog or any bounded host, opened from a shortcut.
+---
+
+<Example name="command-palette" height={380} />
+
+`command.CommandDialog` hosts a search field and grouped results in a modal panel. The arrow keys move through results while focus stays in search, and Enter or a click activates a command through `OnActivate`. The host registers the opening shortcut and decides what each command does.
+
+`command.CommandView` is the same view without the dialog, for a panel window such as a launcher. Filtering is local by default; `Filter` replaces it, and `PreFiltered` with `Loading` and `Error` support asynchronous search the host runs.
+
+## API
+
+<GoAPI name="command.CommandDialog" />
+<GoAPI name="command.CommandView" />
+<GoAPI name="command.Options" />
+<GoAPI name="command.Item" />
+<GoAPI name="command.State" />
+<GoAPI name="command.Filter" />

@@ -1,0 +1,16 @@
+---
+title: Treemap
+description: 以图块显示嵌套的大小（例如磁盘占用），点击即可逐层深入。
+---
+
+<Example name="treemap" height={420} />
+
+每个节点是一个图块，大小由它的值或其子节点之和决定。点击图块会深入一层，面包屑导航可以返回；数据变化时图块会形变过渡。方向键在图块之间移动，Enter 深入，Escape 返回上一层。
+
+## API
+
+<GoAPI name="treemap.View" />
+<GoAPI name="treemap.Node" />
+<GoAPI name="treemap.Options" />
+<GoAPI name="treemap.State" />
+<GoAPI name="treemap.Path" />

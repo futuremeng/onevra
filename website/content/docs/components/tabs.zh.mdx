@@ -1,0 +1,22 @@
+---
+title: Tabs
+description: 在视图之间切换，提供下划线、分段控件和高亮三种样式。
+---
+
+<Example name="tabs" height={220} />
+
+`components.Tabs` 把选中的索引绑定到一个 `*int`。`TabsUnderline` 适合页面分区，`TabsSegmented` 可替代分段控件，`TabsHighlight` 在选中的标签后方滑动一块柔和的底色。
+
+## 插槽与菜单
+
+`TabsWith` 接收选项：`Leading` 和 `Trailing` 在每个标签旁构建内容，例如图标或计数；`Menu` 为标签提供右键菜单。
+
+<Example name="tabs-slots" height={140} />
+
+## API
+
+<GoAPI name="components.Tabs" />
+<GoAPI name="components.TabsVariant" />
+<GoAPI name="components.TabsWith" />
+<GoAPI name="components.TabsOptions" />
+<GoAPI name="components.TabsWithLeading" />

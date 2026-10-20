@@ -1,0 +1,20 @@
+{
+  "title": "Guides",
+  "description": "Building applications with Onevra",
+  "root": true,
+  "icon": "BookOpen",
+  "pages": [
+    "index",
+    "quick-start",
+    "---Concepts---",
+    "views-and-state",
+    "shells",
+    "theming",
+    "icons",
+    "localization",
+    "---Shipping---",
+    "testing",
+    "packaging",
+    "starter-apps"
+  ]
+}

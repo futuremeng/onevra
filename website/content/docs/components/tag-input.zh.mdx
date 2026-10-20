@@ -1,0 +1,15 @@
+---
+title: TagInput
+description: 以可移除的标签形式编辑一组短值，后面跟着输入框。
+---
+
+<Example name="tag-input" height={200} />
+
+按 Enter 或逗号会把草稿添加为标签，粘贴以逗号分隔的文本会逐个添加。重复的标签不会再次添加，而是让已有标签闪动。在草稿开头按 Backspace 会选中最后一个标签，再按一次则删除它。
+
+请在 `Changed()` 之后校验或规范化标签。
+
+## API
+
+<GoAPI name="components.TagInput" />
+<GoAPI name="components.TagInputControl" />

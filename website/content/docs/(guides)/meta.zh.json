@@ -1,0 +1,20 @@
+{
+  "title": "指南",
+  "description": "使用 Onevra 构建应用",
+  "root": true,
+  "icon": "BookOpen",
+  "pages": [
+    "index",
+    "quick-start",
+    "---概念---",
+    "views-and-state",
+    "shells",
+    "theming",
+    "icons",
+    "localization",
+    "---发布---",
+    "testing",
+    "packaging",
+    "starter-apps"
+  ]
+}

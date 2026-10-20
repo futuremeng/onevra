@@ -1,0 +1,20 @@
+---
+title: Image
+description: Decoded bitmaps and SVGs, fitted, rounded or in grayscale, and before-and-after comparisons.
+---
+
+<Example name="image" height={220} />
+
+`components.Image` shows a `*ui.Bitmap` or `*ui.SVG` the application has decoded. It contain-fits by default; `Fit(ui.Cover)` crops to fill. Never load or decode images in a builder.
+
+## Comparing
+
+`components.ImageCompare` lays one view over another and reveals the first up to a draggable divider. Press anywhere to move the divider there; the handle is a slider for the keyboard.
+
+<Example name="image-compare" height={360} />
+
+## API
+
+<GoAPI name="components.Image" />
+<GoAPI name="components.ImageCompare" />
+<GoAPI name="components.ImageCompareOptions" />

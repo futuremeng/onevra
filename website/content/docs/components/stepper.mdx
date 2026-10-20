@@ -1,0 +1,15 @@
+---
+title: Stepper
+description: Shows where a person is in a multi-step flow, such as checkout or setup.
+---
+
+<Example name="stepper" height={220} />
+
+`current` is the index of the step in progress; set it to the number of steps once all are done. Completed steps show a check and failed steps an alert. With `Selectable`, people can return to completed steps, which `Chosen()` reports. `Orientation: components.Vertical` stacks the steps for a sidebar, and `Compact` shows markers only.
+
+## API
+
+<GoAPI name="components.Stepper" />
+<GoAPI name="components.StepperOptions" />
+<GoAPI name="components.StepperStep" />
+<GoAPI name="components.StepperControl" />

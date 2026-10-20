@@ -1,0 +1,19 @@
+---
+title: Relationship graph
+description: A force-directed graph of nodes and edges, panned, zoomed and dragged.
+---
+
+<Example name="graph" height={440} />
+
+`graph.View` lays out nodes with forces and keeps the layout and camera in a `graph.State`. Nodes need stable IDs; groups seed their placement and color. Drag nodes, use the wheel or a pinch to zoom, and double-click an openable node to open it. Hovering a node highlights its neighbors.
+
+## API
+
+<GoAPI name="graph.View" />
+<GoAPI name="graph.Data" />
+<GoAPI name="graph.Node" />
+<GoAPI name="graph.Edge" />
+<GoAPI name="graph.Options" />
+<GoAPI name="graph.State" />
+<GoAPI name="graph.DefaultPalette" />
+<GoAPI name="graph.DefaultGroupColor" />

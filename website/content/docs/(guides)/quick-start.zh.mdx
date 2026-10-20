@@ -1,0 +1,105 @@
+---
+title: 快速开始
+description: 安装 Onevra，打开一个窗口并运行它。
+---
+
+## 环境要求
+
+- [Go](https://go.dev/dl/) 1.27.1 或更高版本。
+- Linux 需要 GTK 3；macOS 和 Windows 无需额外依赖。
+
+Onevra 遵循 MyGo 的[环境要求](https://mygo.egoist.dev/docs/getting-started)；可以用 `go run github.com/egoist/mygo/cmd/mygo@latest doctor` 检查当前机器。
+
+<Steps>
+<Step>
+
+### 创建模块
+
+```sh
+mkdir hello && cd hello
+go mod init example.com/hello
+```
+
+</Step>
+<Step>
+
+### 添加 Onevra
+
+```sh
+go get github.com/oneo-me/onevra/source@latest
+```
+
+这同时会添加 Onevra 所需的 MyGo 版本。
+
+</Step>
+<Step>
+
+### 编写应用
+
+将以下内容保存为 `main.go`：
+
+```go title="main.go"
+package main
+
+import (
+	"fmt"
+	"log"
+
+	"github.com/egoist/mygo"
+	"github.com/egoist/mygo/ui"
+	"github.com/oneo-me/onevra/source/components"
+	"github.com/oneo-me/onevra/source/shells/plain"
+	"github.com/oneo-me/onevra/source/theme"
+)
+
+type app struct {
+	count int
+}
+
+func (a *app) view(c *ui.Context) {
+	ui.Column(c).Fill().Center().Gap(12).Children(func() {
+		components.Text(c, "Hello, Onevra!")
+		if components.Button(c, "Click me", components.ButtonPrimary).Clicked() {
+			a.count++
+		}
+		components.Text(c, fmt.Sprintf("Clicked %d times", a.count))
+	})
+}
+
+func main() {
+	a := &app{}
+	mygo.App.WhenReady(func() {
+		shell := plain.NewShell(plain.ShellOptions{
+			Title:   "Hello",
+			Theme:   theme.Onevra,
+			Content: a.view,
+		})
+		shell.Window().OnClosed(func() { mygo.App.Quit() })
+	})
+	if err := mygo.App.Run(); err != nil {
+		log.Fatal(err)
+	}
+}
+```
+
+</Step>
+<Step>
+
+### 运行
+
+```sh
+go run .
+```
+
+窗口会显示文字和按钮。修改 `view` 后再次运行即可看到变化。
+
+</Step>
+</Steps>
+
+## 代码做了什么
+
+- `mygo.App.Run` 启动应用；窗口在 MyGo 就绪后、于 `WhenReady` 中创建。
+- [`plain.NewShell`](/zh/docs/shells) 创建一个原生窗口，标题栏区域显示窗口标题。`theme.Onevra` 安装 Onevra 的配色，并跟随系统的浅色或深色外观。
+- `view` 是一个构建函数。它每帧运行一次并读取应用状态 `a.count`。按钮会在点击发生的那一帧报告点击。参见[视图与状态](/zh/docs/views-and-state)。
+
+要打包发布应用，请参阅[打包](/zh/docs/packaging)。如果想从一个包含设置、本地化和打包配置的完整应用起步，可以复制某个[入门应用](/zh/docs/starter-apps)。

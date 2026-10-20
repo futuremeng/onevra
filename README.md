@@ -151,9 +151,7 @@ Formatting should produce no output. See [development checks](docs/build.md#deve
 
 ## Website
 
-The marketing site lives in [website/](website) and is built with React Router and shadcn/ui. Its `/components` page runs the Gallery's demonstrations in the browser as WebAssembly, covering every Onevra component page. The [Website workflow](.github/workflows/website.yml) deploys it to GitHub Pages.
-
-Go 1.27.1 or later is also required to compile the browser previews.
+The documentation site lives in [website/](website): guides and a page for every component, whose live examples are Go compiled to WebAssembly. The [Website workflow](.github/workflows/website.yml) deploys it to GitHub Pages. It needs Bun and Go 1.27.1 or later:
 
 ```sh
 cd website
@@ -161,7 +159,11 @@ bun install
 bun run dev
 ```
 
-See [website/README.md](website/README.md) for the build and deployment details.
+See [website/README.md](website/README.md) for adding pages and examples.
+
+## Author
+
+[Blog](https://oneo.me) · [X @oneo666](https://x.com/oneo666)
 
 ## License
 

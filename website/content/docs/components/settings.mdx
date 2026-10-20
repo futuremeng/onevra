@@ -1,0 +1,20 @@
+---
+title: Settings
+description: A searchable settings surface of categories, groups and rows, built from definitions.
+---
+
+<Example name="settings" height={460} />
+
+Describe settings as categories of groups of items, each with a stable ID, a title and a builder for its control. Settings provides the navigation, search and row layout; the application keeps the values, persists them and decides when they take effect. Try searching for "audio" or "font": search matches titles, descriptions and keywords without building hidden controls.
+
+Place Settings in a dialog, a shell or its own window; it fills a bounded parent. `Narrow` stacks rows and replaces the sidebar with a selector; choose it from the space Settings is given. `Stacked` places a wide control under its text, and `Content` builds a whole row.
+
+## API
+
+<GoAPI name="components.Settings" />
+<GoAPI name="components.SettingsOptions" />
+<GoAPI name="components.SettingsCategory" />
+<GoAPI name="components.SettingsGroup" />
+<GoAPI name="components.SettingsItem" />
+<GoAPI name="components.SettingsState" />
+<GoAPI name="components.SearchSettings" />

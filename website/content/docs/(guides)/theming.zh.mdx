@@ -1,0 +1,75 @@
+---
+title: 主题
+description: Onevra 的浅色与深色配色、系统外观，以及自定义主题。
+---
+
+Onevra 的配色以暖白与暖炭灰为底，搭配陶土色强调色。它们是普通的 MyGo `ui.Theme` 值，因此所有 MyGo 控件都能照常使用。在文档中切换浅色和深色即可看到两套配色：
+
+<Example name="theme-palette" height={300} />
+
+## 安装主题
+
+主题归应用所有。把 `theme.Onevra` 传给外壳：
+
+```go
+plain.NewShell(plain.ShellOptions{
+	Theme:   theme.Onevra,
+	Content: app.view,
+})
+```
+
+不使用外壳的窗口，在根构建函数开头、创建任何元素之前安装主题：
+
+```go
+func (a *app) view(c *ui.Context) {
+	theme.Apply(c)
+	// ...
+}
+```
+
+组件读取当前帧的主题，从不自行设置主题。
+
+## 浅色、深色或跟随系统
+
+`theme.Onevra` 跟随窗口的外观。外观由 MyGo 选择，它同时作用于标题栏等原生界面：
+
+```go
+mygo.Theme.SetSource(mygo.ThemeSystem) // or mygo.ThemeLight, mygo.ThemeDark
+```
+
+在 `mygo.App.Run` 之前调用，即可让保存的偏好从第一帧起生效。与 MyGo 的默认主题一样，Onevra 的主题会跟随系统的文字大小和增强对比度设置。
+
+## 在自己的视图中使用主题
+
+从 `c.Theme()` 读取颜色和间距，而不是写死数值，让自定义视图在两种外观下都与控件一致：
+
+```go
+t := c.Theme()
+ui.Column(c).Padding(t.Space(4)).Gap(t.Space(2)).
+	Radius(t.Radius).Background(t.Surface).Border(1, t.Border)
+```
+
+`t.Space(n)` 和 `t.Rem(n)` 会随用户的文字大小缩放。
+
+## 自定义主题
+
+`Theme` 接受任何返回 `*ui.Theme` 的函数。从 Onevra 的配色出发，修改需要的部分：
+
+```go
+func brand(c *ui.Context) *ui.Theme {
+	t := theme.Onevra(c)
+	t.Accent = ui.Hex("#2563eb")
+	t.AccentHover = t.Accent.Mix(ui.RGB(0, 0, 0), 0.12)
+	return t
+}
+```
+
+它每帧运行一次，因此可以跟随应用状态变化。
+
+## API
+
+<GoAPI name="theme.Onevra" />
+<GoAPI name="theme.Apply" />
+<GoAPI name="theme.Palette" />
+<GoAPI name="theme.LightPalette" />
+<GoAPI name="theme.DarkPalette" />

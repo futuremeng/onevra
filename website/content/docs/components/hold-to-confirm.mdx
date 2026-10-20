@@ -1,0 +1,17 @@
+---
+title: HoldToConfirm
+description: A button that acts only after it is held, for actions a stray click must not trigger.
+---
+
+<Example name="hold-to-confirm" height={160} />
+
+Press and hold the button: a fill tracks the hold, and letting go early rewinds it. When the hold completes, the button sets its `*bool` and morphs into its confirmed label. Space and Enter hold it from the keyboard.
+
+Prefer an [alert dialog](/docs/components/dialog) when people need to read the consequences first. Set the value back to `false` to reset the button.
+
+## API
+
+<GoAPI name="components.HoldToConfirm" />
+<GoAPI name="components.HoldToConfirmOptions" />
+<GoAPI name="components.HoldToConfirmTone" />
+<GoAPI name="components.HoldToConfirmControl" />

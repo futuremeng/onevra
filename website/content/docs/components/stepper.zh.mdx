@@ -1,0 +1,15 @@
+---
+title: Stepper
+description: 显示用户在多步骤流程（例如结账或设置）中所处的位置。
+---
+
+<Example name="stepper" height={220} />
+
+`current` 是当前进行中步骤的索引；全部完成后把它设为步骤总数。已完成的步骤显示对勾，失败的步骤显示警示。设置 `Selectable` 后，用户可以返回已完成的步骤，并通过 `Chosen()` 报告。`Orientation: components.Vertical` 将步骤纵向排列以放进侧边栏，`Compact` 只显示标记。
+
+## API
+
+<GoAPI name="components.Stepper" />
+<GoAPI name="components.StepperOptions" />
+<GoAPI name="components.StepperStep" />
+<GoAPI name="components.StepperControl" />

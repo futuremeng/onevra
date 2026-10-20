@@ -6,8 +6,11 @@ node_modules
 .react-router
 build
 
+# Fumadocs MDX
+.source
+
+# Written from the Go source by scripts/examples.ts
+.generated
+
 # typescript
 *.tsbuildinfo
-
-# Generated from the Go Gallery by `bun run preview:manifest`
-/app/lib/preview-manifest.json

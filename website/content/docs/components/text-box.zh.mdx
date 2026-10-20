@@ -1,0 +1,26 @@
+---
+title: TextBox
+description: 单行或多行的文本输入框，可带图标和前缀。
+---
+
+<Example name="text-box" height={260} />
+
+`components.TextBox` 编辑一个 `*string`。可以在其上链式调用 MyGo 的输入方法，例如 `Label`、`Placeholder` 和 `Password`。`LeadingIcon` 和 `LeadingText` 添加不属于值的装饰或前缀，`ReadOnly` 让文本可选择但不可编辑。
+
+## 多行
+
+`Multiline` 接受换行。`Lines(min, max)` 让输入框随文本增高，超过最大行数后滚动。
+
+<Example name="text-box-multiline" height={240} />
+
+## 缓冲区
+
+`components.TextBoxBuffer` 编辑由应用保存的 `*ui.TextBuffer`，因此编辑长文档时不会每帧都把它复制成字符串。
+
+<Example name="text-box-buffer" height={240} />
+
+## API
+
+<GoAPI name="components.TextBox" />
+<GoAPI name="components.TextBoxOptions" />
+<GoAPI name="components.TextBoxBuffer" />
