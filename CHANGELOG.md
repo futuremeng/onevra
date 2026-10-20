@@ -5,6 +5,7 @@ User-facing updates for Onevra library consumers.
 ## [Unreleased]
 
 - Breaking: Remove `chat.SwitchChip` in favor of `components.SwitchOptions.Compact`.
+- Breaking: Remove `components.IconButtonToolbarExpanding` in favor of `components.IconButtonToolbar`.
 - Add `chat.ComposerOptions.StopDisabled`.
 - Add `components.HoneycombItem.Caption` and `components.HoneycombOptions.Gap`.
 - Add `components.ScrollEdgeOptions.Uncolored`.
@@ -15,7 +16,6 @@ User-facing updates for Onevra library consumers.
 - Change `components.Switch` to widen its knob and lift it as draggable glass while held.
 - Change `shaders.SignalField` to repaint its drift 20 times a second.
 - Fix `chat.EffortPicker` repainting the window while its icon stands still.
-- Fix `components.IconButtonToolbarExpanding` flickering in end-aligned rows.
 
 ## [0.2026.13] - 2026-10-19
 

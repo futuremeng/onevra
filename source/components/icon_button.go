@@ -14,9 +14,6 @@ const (
 	// IconButtonCompact is IconButtonPlain at a smaller square, for dense
 	// rows such as a SidebarSectionWithActions heading.
 	IconButtonCompact
-	// IconButtonToolbarExpanding is IconButtonToolbar that widens to show its
-	// label after the icon while hovered or keyboard-focused.
-	IconButtonToolbarExpanding
 )
 
 // IconButton creates an icon-only button with an accessible label and a
@@ -27,9 +24,6 @@ const (
 // IconButtonPlain keeps a transparent face and tints it on hover and press.
 // IconButtonToolbar keeps the raised, shadowed face of ButtonToolbar, matching
 // TabsSegmented's chosen segment. IconButtonCompact shrinks the plain face.
-// IconButtonToolbarExpanding rests as the IconButtonToolbar square and, while
-// hovered or keyboard-focused, springs wider to reveal the label beside the
-// icon instead of showing a tooltip; neighbors in the same row move aside.
 func IconButton(c *ui.Context, icon *ui.SVG, label string, style IconButtonStyle) ui.Element {
 	t := c.Theme()
 	size, glyph := max(32, t.Rem(2)), t.Rem(1.25)
@@ -41,31 +35,6 @@ func IconButton(c *ui.Context, icon *ui.SVG, label string, style IconButtonStyle
 	case IconButtonToolbar:
 		b = Button(c, "", ButtonToolbar).Label(label).Size(size, size).Padding(0)
 		b.Children(func() { Icon(c, icon).Size(t.Rem(1.125), t.Rem(1.125)) })
-	case IconButtonToolbarExpanding:
-		glyph = t.Rem(1.125)
-		// The inset centers the icon in the resting square, within the border.
-		b = Button(c, "", ButtonToolbar).Label(label).Height(size).
-			Padding(0, (size-glyph)/2-1).Justify(ui.Start).Clip()
-		// The layout follows the animated width rather than a Transition's
-		// painted size, so an end-aligned row keeps the button's trailing edge
-		// under the pointer and its neighbors move with it frame by frame.
-		gap, trail := t.Space(1.5), t.Space(1)
-		reveal := float32(0)
-		if b.Hovered() || b.FocusVisible() {
-			w, _ := c.MeasureText(0, ui.Span{Text: label})
-			reveal = gap + w + trail
-		}
-		reveal = max(0, b.AnimateTo("reveal", reveal, ui.Snappy))
-		b.Width(size + reveal)
-		b.Children(func() {
-			Icon(c, icon).Size(glyph, glyph).Shrink(0)
-			if reveal > 0 {
-				// The label keeps its natural width while the face clips it.
-				ui.Row(c).PaddingStart(gap).PaddingEnd(trail).Shrink(0).
-					Children(func() { Text(c, label).SingleLine().Unselectable().Shrink(0) })
-			}
-		})
-		return b
 	default:
 		b = ui.ButtonBase(c).Size(size, size).Radius(t.Radius).TextColor(t.TextMuted).Label(label)
 		// Resolve the face in the build pass's paint, after the caller applies
