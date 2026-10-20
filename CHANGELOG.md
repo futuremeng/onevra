@@ -15,6 +15,7 @@ User-facing updates for Onevra library consumers.
 - Change `components.Switch` to widen its knob and lift it as draggable glass while held.
 - Change `shaders.SignalField` to repaint its drift 20 times a second.
 - Fix `chat.EffortPicker` repainting the window while its icon stands still.
+- Fix `components.IconButtonToolbarExpanding` flickering in end-aligned rows.
 
 ## [0.2026.13] - 2026-10-19
 

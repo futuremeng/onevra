@@ -105,3 +105,29 @@ func TestIconButtonToolbarExpanding(t *testing.T) {
 		}
 	}
 }
+
+// TestIconButtonToolbarExpandingEndAligned checks that an expanding button at
+// the end of an end-aligned row widens toward its leading side frame by frame,
+// keeping its trailing edge under the pointer instead of losing the hover.
+func TestIconButtonToolbarExpandingEndAligned(t *testing.T) {
+	tt := ui.NewTester(func(c *ui.Context) {
+		ui.Row(c).Fill().AlignItems(ui.Start).Justify(ui.End).Gap(8).Children(func() {
+			IconButton(c, lucide.Share(), "Share", IconButtonToolbarExpanding)
+			IconButton(c, lucide.Download(), "Download", IconButtonToolbarExpanding)
+		})
+	}, 300, 80)
+	rest, _ := tt.Find("Download")
+	tt.Move(rest.X+rest.W-2, rest.Y+rest.H/2)
+	last := rest.W
+	for range 30 {
+		tt.Advance(16 * time.Millisecond)
+		r, _ := tt.Find("Download")
+		if r.X+r.W < 299.5 || r.W < last-.5 {
+			t.Fatalf("hovered button must keep its trailing edge while it widens: %+v after width %v", r, last)
+		}
+		last = r.W
+	}
+	if last <= rest.W {
+		t.Fatalf("hover must reveal the label: width %v", last)
+	}
+}

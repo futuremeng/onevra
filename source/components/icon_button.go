@@ -19,10 +19,6 @@ const (
 	IconButtonToolbarExpanding
 )
 
-// iconButtonExpand is how an IconButtonToolbarExpanding button widens and
-// narrows around its label.
-var iconButtonExpand = ui.ElementTransition{Animation: &ui.Snappy, Size: true}
-
 // IconButton creates an icon-only button with an accessible label and a
 // tooltip. It uses one theme-scaled square size. Applications own the label and
 // handle Clicked on the result; MyGo owns its pointer, keyboard and focus
@@ -48,17 +44,24 @@ func IconButton(c *ui.Context, icon *ui.SVG, label string, style IconButtonStyle
 	case IconButtonToolbarExpanding:
 		glyph = t.Rem(1.125)
 		// The inset centers the icon in the resting square, within the border.
-		b = Button(c, "", ButtonToolbar).Label(label).Height(size).MinWidth(size).
-			Padding(0, (size-glyph)/2-1).Justify(ui.Start).Clip().Transition(iconButtonExpand)
-		expanded := b.Hovered() || b.FocusVisible()
+		b = Button(c, "", ButtonToolbar).Label(label).Height(size).
+			Padding(0, (size-glyph)/2-1).Justify(ui.Start).Clip()
+		// The layout follows the animated width rather than a Transition's
+		// painted size, so an end-aligned row keeps the button's trailing edge
+		// under the pointer and its neighbors move with it frame by frame.
+		gap, trail := t.Space(1.5), t.Space(1)
+		reveal := float32(0)
+		if b.Hovered() || b.FocusVisible() {
+			w, _ := c.MeasureText(0, ui.Span{Text: label})
+			reveal = gap + w + trail
+		}
+		reveal = max(0, b.AnimateTo("reveal", reveal, ui.Snappy))
+		b.Width(size + reveal)
 		b.Children(func() {
 			Icon(c, icon).Size(glyph, glyph).Shrink(0)
-			if expanded {
-				// The gap and trailing room collapse with the label, which keeps
-				// its natural width while the face clips it.
-				ui.Row(c).PaddingStart(t.Space(1.5)).PaddingEnd(t.Space(1)).Shrink(0).
-					Transition(ui.ElementTransition{Animation: &ui.Snappy,
-						Enter: &ui.Motion{Collapse: true}, Exit: &ui.Motion{Collapse: true}}).
+			if reveal > 0 {
+				// The label keeps its natural width while the face clips it.
+				ui.Row(c).PaddingStart(gap).PaddingEnd(trail).Shrink(0).
 					Children(func() { Text(c, label).SingleLine().Unselectable().Shrink(0) })
 			}
 		})
