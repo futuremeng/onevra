@@ -6,7 +6,7 @@ User-facing updates for Onevra library consumers.
 
 - Breaking: Remove `chat.SwitchChip` in favor of `components.SwitchOptions.Compact`.
 - Add `chat.ComposerOptions.StopDisabled`.
-- Add `components.HoneycombItem.Caption`.
+- Add `components.HoneycombItem.Caption` and `components.HoneycombOptions.Gap`.
 - Add `components.ScrollEdgeOptions.Uncolored`.
 - Add `components.SwitchOptions.Compact`.
 - Add `components.TabsOptions.Trailing`.

@@ -24,7 +24,7 @@ func honeycombItems(n int) []HoneycombItem {
 }
 
 func honeycombTestMetrics() honeycombMetrics {
-	return honeycombMetricsFor(theme.Palette(false))
+	return honeycombMetricsFor(theme.Palette(false), 0)
 }
 
 func honeycombTester(items []HoneycombItem, selected *string) *ui.Tester {
@@ -378,6 +378,44 @@ func TestHoneycombCurvatureScalesTheTiltAndEdge(t *testing.T) {
 	}
 	if oneSide, oneTop := build(1); oneSide != side || oneTop != top {
 		t.Fatalf("zero curvature differs from 1")
+	}
+}
+
+func TestHoneycombGapSpacesItems(t *testing.T) {
+	items := honeycombItems(7)
+	var gap float32
+	// A flat honeycomb draws items unmagnified, so neighbors are an item's
+	// size and the gap apart.
+	tt := ui.NewTester(func(c *ui.Context) {
+		c.SetTheme(theme.Palette(false))
+		ui.Column(c).Fill().Children(func() {
+			Honeycomb(c, HoneycombOptions{Items: items, Selected: "p00", Curvature: -1, Gap: gap})
+		})
+	}, 600, 300)
+	m := honeycombTestMetrics()
+	apart := func() (float32, ui.Rect) {
+		tt.Frame()
+		center, _ := tt.Find("p00")
+		side, _ := tt.Find("p01")
+		cx, _ := middle(center)
+		x, _ := middle(side)
+		return x - cx, center
+	}
+	settleHoneycomb(tt)
+	if d, _ := apart(); math.Abs(float64(d-m.small-honeycombGap)) > .01 {
+		t.Fatalf("zero gap not the default: %v", d)
+	}
+	// A new gap rescales the honeycomb at once, keeping the selection centered.
+	_, before := apart()
+	for _, c := range []struct{ gap, want float32 }{{20, 20}, {-1, 0}, {1000, honeycombGapMax}} {
+		gap = c.gap
+		d, center := apart()
+		if math.Abs(float64(d-m.small-c.want)) > .01 {
+			t.Fatalf("gap %v set neighbors %v apart, want %v", c.gap, d, m.small+c.want)
+		}
+		if center != before {
+			t.Fatalf("gap %v moved the selection: %+v, was %+v", c.gap, center, before)
+		}
 	}
 }
 

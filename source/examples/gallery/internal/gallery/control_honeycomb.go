@@ -5,6 +5,7 @@ import (
 	"math/rand/v2"
 	"slices"
 
+	"github.com/egoist/mygo/plugins/glass"
 	"github.com/egoist/mygo/ui"
 	"github.com/oneo-me/onevra/source/components"
 	"github.com/oneo-me/onevra/source/icons/lucide"
@@ -116,6 +117,7 @@ func controlHoneycomb(c *ui.Context, s *controlState, _ string) {
 		s.honeycombItems = honeycombDefaults()
 		s.honeycomb = s.honeycombItems[0].id
 		s.honeycombCurvature = 1
+		s.honeycombGap = 10
 	}
 	if !slices.ContainsFunc(s.honeycombItems, func(item honeycombDemoItem) bool { return item.id == s.honeycomb }) {
 		if len(s.honeycombItems) > 0 {
@@ -164,10 +166,36 @@ func controlHoneycomb(c *ui.Context, s *controlState, _ string) {
 	if curvature == 0 {
 		curvature = -1
 	}
-	if chosen := components.Honeycomb(c, components.HoneycombOptions{Items: items, Selected: selected,
-		SelectedLabel: selectedLabel, Curvature: curvature, OffsetY: float32(s.honeycombOffset)}); chosen != "" {
-		s.honeycomb = chosen
+	// So too the zero gap, which sets items edge to edge.
+	gap := float32(s.honeycombGap)
+	if gap == 0 {
+		gap = -1
 	}
-	components.Slider(c, &s.honeycombCurvature, 0, 2).Label(tr(c, "honeycombCurvature")).FillWidth().MinWidth(0)
-	components.Slider(c, &s.honeycombOffset, -120, 120).Label(tr(c, "honeycombOffset")).FillWidth().MinWidth(0)
+	// The settings float over the honeycomb's bottom right corner.
+	ui.Column(c).FillWidth().MinWidth(0).Grow(1).MinHeight(0).Children(func() {
+		if chosen := components.Honeycomb(c, components.HoneycombOptions{Items: items, Selected: selected,
+			SelectedLabel: selectedLabel, Curvature: curvature, OffsetY: float32(s.honeycombOffset), Gap: gap}); chosen != "" {
+			s.honeycomb = chosen
+		}
+		honeycombSettings(c, s)
+	})
+}
+
+// honeycombSettings holds the sample's stepped sliders in a glass panel.
+func honeycombSettings(c *ui.Context, s *controlState) {
+	t := c.Theme()
+	ui.Column(c).Absolute().Right(0).Bottom(0).Width(t.Space(60)).Padding(t.Space(3), t.Space(4)).Gap(t.Space(2)).
+		Radius(t.Radius*1.5).Material(glass.Glass{Tint: t.Background.Alpha(.92)}).Border(1, t.Border).
+		Shadow(0, t.Space(2), t.Space(6), 0, ui.RGBA(0, 0, 0, .12)).Children(func() {
+		setting := func(label, value string, v *float64, lo, hi, step float64) {
+			ui.Row(c).FillWidth().MinWidth(0).Justify(ui.SpaceBetween).FontSize(t.FontSize - 1).Children(func() {
+				components.Text(c, label).TextColor(t.Text)
+				components.Text(c, value).TextColor(t.TextMuted)
+			})
+			components.Slider(c, v, lo, hi, components.SliderOptions{Step: step}).Label(label).FillWidth().MinWidth(0)
+		}
+		setting(tr(c, "honeycombCurvature"), fmt.Sprintf("%.2f", s.honeycombCurvature), &s.honeycombCurvature, 0, 2, .25)
+		setting(tr(c, "honeycombGap"), fmt.Sprintf("%.0f", s.honeycombGap), &s.honeycombGap, 0, 50, 5)
+		setting(tr(c, "honeycombOffset"), fmt.Sprintf("%.0f", s.honeycombOffset), &s.honeycombOffset, -120, 120, 20)
+	})
 }

@@ -68,6 +68,11 @@ type HoneycombOptions struct {
 	// composer at the bottom, so the honeycomb centers in the visible space.
 	// The view and its edge fade stay where they are.
 	OffsetY float32
+	// Gap is the space between neighboring items in DIPs, unmagnified, which
+	// the lens magnifies with the items, scaled to the theme's spacing like
+	// the rest of the honeycomb. Zero uses 10; negative values set the items
+	// edge to edge; values above 56 are 56, the size of an item.
+	Gap float32
 }
 
 const (
@@ -90,19 +95,14 @@ const (
 	// below it, at most honeycombCaptionWidth wide.
 	honeycombCaptionGap   = 6
 	honeycombCaptionWidth = 200
-	// honeycombSpacing is the distance between the centers of neighboring
-	// cells, unmagnified.
-	honeycombSpacing = 66
+	// honeycombGap is the default space between neighboring items,
+	// unmagnified, and honeycombGapMax the largest HoneycombOptions.Gap.
+	honeycombGap    = 10
+	honeycombGapMax = honeycombSmall
 	// The view fills the space it is given; honeycombWidth and honeycombHeight
 	// are its size before it is laid out.
 	honeycombWidth  = 400
 	honeycombHeight = 240
-	// honeycombMinHeight keeps the selected item and the rows beside it in
-	// view when space is short.
-	honeycombMinHeight = 2 * honeycombSpacing
-	// Within honeycombEdge of the edge of the view, items shrink further, to
-	// honeycombTiny, and fade out.
-	honeycombEdge = honeycombSpacing
 	// honeycombTap is how far the pointer may move while pressed for its
 	// release to still click the item under it.
 	honeycombTap = 4
@@ -134,26 +134,31 @@ var (
 )
 
 // honeycombMetrics are the lengths of a honeycomb in DIPs, scaled to the frame
-// theme.
+// theme. spacing is the distance between the centers of neighboring cells,
+// unmagnified. Within edge of the edge of the view, items shrink further, to
+// honeycombTiny, and fade out; minHeight keeps the selected item and the rows
+// beside it in view when space is short.
 type honeycombMetrics struct {
 	large, small, tiny, fall, tiltFall, spacing, ring, edge, minHeight, width, height float32
 	captionGap, captionWidth                                                          float32
 }
 
 // honeycombMetricsFor scales one design DIP to the theme's spacing, so a
-// roomier theme makes the whole honeycomb roomier too.
-func honeycombMetricsFor(t *ui.Theme) honeycombMetrics {
+// roomier theme makes the whole honeycomb roomier too, with gap between items
+// as HoneycombOptions.Gap gives it.
+func honeycombMetricsFor(t *ui.Theme, gap float32) honeycombMetrics {
 	s := t.Space(.25)
+	spacing := honeycombSmall + honeycombGapFor(gap)
 	return honeycombMetrics{
 		large:        honeycombLarge * s,
 		small:        honeycombSmall * s,
 		tiny:         honeycombTiny * s,
 		fall:         honeycombFall * s,
 		tiltFall:     honeycombTiltFall * s,
-		spacing:      honeycombSpacing * s,
+		spacing:      spacing * s,
 		ring:         honeycombRing * s,
-		edge:         honeycombEdge * s,
-		minHeight:    honeycombMinHeight * s,
+		edge:         spacing * s,
+		minHeight:    2 * spacing * s,
 		width:        honeycombWidth * s,
 		height:       honeycombHeight * s,
 		captionGap:   honeycombCaptionGap * s,
@@ -182,7 +187,7 @@ func honeycombMetricsFor(t *ui.Theme) honeycombMetrics {
 // nothing. Call Honeycomb within a bounded parent; the view takes its height
 // from the space left to it, keeping at least two rows visible.
 func Honeycomb(c *ui.Context, options HoneycombOptions) string {
-	m := honeycombMetricsFor(c.Theme())
+	m := honeycombMetricsFor(c.Theme(), options.Gap)
 	curvature := honeycombCurvature(options.Curvature)
 	view := ui.Box(c).FillWidth().MinWidth(0).Height(m.height).Grow(1).Shrink(1).MinHeight(m.minHeight).Clip()
 	n := len(options.Items)
@@ -192,13 +197,16 @@ func Honeycomb(c *ui.Context, options HoneycombOptions) string {
 	}
 	p := ui.Local(view, honeycombPanKey{}, func() honeycombPan { return honeycombPan{} })
 	now := c.Now()
-	// A new spacing scales the whole honeycomb at once; items added or removed
-	// slide the others to their cells as the pan glides to the selected one.
+	// A new spacing, from the theme or the gap, scales the whole honeycomb at
+	// once, the pan and any glide with it, so it stays where it was; items
+	// added or removed slide the others to their cells as the pan glides to
+	// the selected one.
 	rescaled := p.spacing != m.spacing
 	if len(p.cells) != n || rescaled {
+		k := m.spacing / p.spacing
 		p.cells, p.spacing = honeycombCells(n, m.spacing), m.spacing
 		if p.ready && rescaled {
-			p.at, p.gliding = p.cells[selected], false
+			p.at, p.from, p.to = p.at.scaled(k), p.from.scaled(k), p.to.scaled(k)
 		} else if p.ready && !p.pressed {
 			p.glide(p.cells[selected], now, honeycombDuration, ui.EaseInOut)
 		}
@@ -283,7 +291,7 @@ func Honeycomb(c *ui.Context, options HoneycombOptions) string {
 			c.Invalidate()
 		}
 	})
-	// Within honeycombEdge of the edge, scaled by the curvature as items
+	// Within the edge inset, a cell's spacing, scaled by the curvature as items
 	// further round the ball fall away sooner, items shrink and fade out; the
 	// inset is less in a view too small for it, and none on a flat honeycomb.
 	edge := min(m.edge*curvature, width/2, height/2)
@@ -419,6 +427,9 @@ func Honeycomb(c *ui.Context, options HoneycombOptions) string {
 
 // honeycombPoint is a point of the honeycomb, from its first cell.
 type honeycombPoint struct{ x, y float32 }
+
+// scaled returns the point k times as far from the first cell.
+func (p honeycombPoint) scaled(k float32) honeycombPoint { return honeycombPoint{p.x * k, p.y * k} }
 
 // honeycombPanKey keys the retained pan of a Honeycomb.
 type honeycombPanKey struct{}
@@ -677,6 +688,18 @@ func honeycombCurvature(v float32) float32 {
 		return 0
 	}
 	return min(v, honeycombCurvatureMax)
+}
+
+// honeycombGapFor resolves HoneycombOptions.Gap: zero is honeycombGap,
+// negative is none and the rest is at most honeycombGapMax.
+func honeycombGapFor(v float32) float32 {
+	switch {
+	case v == 0:
+		return honeycombGap
+	case v < 0 || math.IsNaN(float64(v)):
+		return 0
+	}
+	return min(v, honeycombGapMax)
 }
 
 // magnified is how far from the middle of the view a point d from it,

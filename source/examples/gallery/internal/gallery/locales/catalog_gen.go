@@ -7882,6 +7882,16 @@ func (msgs Messages) HoneycombOffset() string {
 	return Catalog.Format(msgs.locale, "honeycombOffset", nil)
 }
 
+// HoneycombGap says "Gap"
+// in the language the app shows.
+func HoneycombGap() string { return In(i18n.Locale()).HoneycombGap() }
+
+// HoneycombGap says "Gap"
+// in the language of msgs.
+func (msgs Messages) HoneycombGap() string {
+	return Catalog.Format(msgs.locale, "honeycombGap", nil)
+}
+
 // Archive says "Archive"
 // in the language the app shows.
 func Archive() string { return In(i18n.Locale()).Archive() }
