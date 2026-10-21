@@ -174,7 +174,7 @@ func TestZoomAndPan(t *testing.T) {
 		t.Fatalf("touchpad Control-scroll zoom = %g from %g", got, zoomed)
 	}
 	zoomed = h.state.Zoom()
-	h.state.navigate(gesture.Event{Kind: gesture.Zoom, X: px - r.X, Y: py - r.Y, Scale: 2, Pinch: true})
+	h.tt.Pinch(px, py, 2)
 	if got := h.state.Zoom(); math.Abs(float64(got/zoomed)-2) > 1e-3 {
 		t.Fatalf("pinch zoom = %g from %g", got, zoomed)
 	}

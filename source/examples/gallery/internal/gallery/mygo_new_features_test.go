@@ -171,11 +171,36 @@ func TestCodeAndGameGroups(t *testing.T) {
 	}
 }
 
-func TestNewComponentsGroup(t *testing.T) {
+// catalogWithIndexes returns the navigation groups with New components and
+// Updated components at 1 and 2 after Overview, empty where the sidebar
+// leaves them out for having no pages.
+func catalogWithIndexes(t *testing.T) []navigationGroup {
+	t.Helper()
 	groups := navigationCatalog()
-	if len(groups) < 2 || groups[0].label != "Overview" || groups[1].label != newGroupLabel {
-		t.Fatalf("New components group must follow Overview: %v", groups)
+	if len(groups) == 0 || groups[0].label != "Overview" {
+		t.Fatalf("navigation must start with Overview: %v", groups)
 	}
+	for i, label := range []string{newGroupLabel, updatedGroupLabel} {
+		entries := newNavigationEntries(false)
+		if label == updatedGroupLabel {
+			entries = updatedNavigationEntries(false)
+		}
+		at := i + 1
+		shown := len(groups) > at && groups[at].label == label
+		switch {
+		case len(entries) == 0 && shown:
+			t.Fatalf("empty %s group is shown", label)
+		case len(entries) == 0:
+			groups = slices.Insert(groups, at, navigationGroup{label: label})
+		case !shown:
+			t.Fatalf("%s group must follow %s: %v", label, groups[at-1].label, groups)
+		}
+	}
+	return groups
+}
+
+func TestNewComponentsGroup(t *testing.T) {
+	groups := catalogWithIndexes(t)
 	mygoGroups := mygoNavigationGroups()
 	// The MyGo list has a New components group only while MyGo pages are new.
 	if len(newNavigationEntries(true)) > 0 {
@@ -218,10 +243,7 @@ func TestNewComponentsGroup(t *testing.T) {
 }
 
 func TestUpdatedComponentsGroup(t *testing.T) {
-	groups := navigationCatalog()
-	if len(groups) < 3 || groups[1].label != newGroupLabel || groups[2].label != updatedGroupLabel {
-		t.Fatalf("Updated components group must follow New components: %v", groups)
-	}
+	groups := catalogWithIndexes(t)
 	want := map[galleryPage]bool{}
 	for key := range updatedPages {
 		if newPages[key] {
@@ -277,6 +299,12 @@ func TestUpdatedComponentsGroupRenders(t *testing.T) {
 		g := &Gallery{language: newTranslator(lang, "en")}
 		tt := ui.NewTester(g.Left, 220, 6000)
 		index, ok := tt.Find(g.text(updatedGroupLabel))
+		if len(updatedNavigationEntries(false)) == 0 {
+			if ok {
+				t.Fatalf("%s: empty Updated components group is shown", lang)
+			}
+			continue
+		}
 		if !ok {
 			t.Fatalf("%s: missing Updated components group", lang)
 		}
@@ -297,6 +325,12 @@ func TestNewComponentsGroupRenders(t *testing.T) {
 		g := &Gallery{language: newTranslator(lang, "en")}
 		tt := ui.NewTester(g.Left, 220, 6000)
 		index, ok := tt.Find(g.text(newGroupLabel))
+		if len(newNavigationEntries(false)) == 0 {
+			if ok {
+				t.Fatalf("%s: empty New components group is shown", lang)
+			}
+			continue
+		}
 		if !ok {
 			t.Fatalf("%s: missing New components group", lang)
 		}

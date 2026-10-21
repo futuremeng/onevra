@@ -19,7 +19,8 @@ func TestNavigationSpacing(t *testing.T) {
 		t.Fatalf("first group must follow the search field at the shell's safe content edge: %v", first)
 	}
 	item, _ := tt.Find("Welcome")
-	next, _ := tt.Find(newGroupLabel)
+	// The group after Overview, which is New components while it has pages.
+	next, _ := tt.Find(g.text(navigationCatalog()[1].label))
 	if gap := next.Y - item.Y - item.H; math.Abs(float64(gap-12)) > 0.001 {
 		t.Fatalf("group gap = %v, want 12", gap)
 	}

@@ -5,7 +5,7 @@ Onevra is an experimental, product-neutral Go component library built on MyGo. I
 ## System boundaries
 
 - MyGo owns rendering, layout, input, native controls and desktop integration.
-- Three narrow exceptions fill upstream gaps: AppKit adapters for the command component's input-source selection and the gesture package's scroll devices and pinches, and the switch's thinner Glass bezel for a knob-sized lens. See [complex component composition](docs/architecture/components.md#complex-component-composition).
+- Three narrow exceptions fill upstream gaps: AppKit adapters for the command component's input-source selection and the gesture package's scroll devices, and the switch's thinner Glass bezel for a knob-sized lens. See [complex component composition](docs/architecture/components.md#complex-component-composition).
 - Onevra composes MyGo primitives, rather than wrapping every upstream API or maintaining a parallel UI system.
 - Onevra restyles, merges and simplifies MyGo's built-in components and adds components MyGo lacks. When MyGo officially provides an equivalent of an Onevra feature or component, Onevra may remove its own version in favor of MyGo's.
 - Applications own business state, localized text, persistence, background work and application lifetime.

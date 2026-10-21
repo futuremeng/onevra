@@ -3,7 +3,6 @@ package gesture
 import (
 	"math"
 	"testing"
-	"weak"
 
 	"github.com/egoist/mygo/ui"
 )
@@ -33,6 +32,9 @@ func TestClassify(t *testing.T) {
 	if e := scroll(40, 0, ui.Shift, false); e.Kind != Pan || e.DX != -40 || e.DY != 0 {
 		t.Fatalf("sideways wheel = %+v, want a pan across", e)
 	}
+	if e, ok := Classify(ui.InputEvent{Kind: ui.InputZoom, X: 10, Y: 20, Scale: 1.25}); !ok || e.Kind != Zoom || e.Device != Touchpad || !e.Pinch || math.Abs(e.Scale-1.25) > 1e-6 || e.X != 10 {
+		t.Fatalf("pinch = %+v, want a ×1.25 pinch zoom", e)
+	}
 	if _, ok := Classify(ui.InputEvent{Kind: ui.InputPointerMove}); ok {
 		t.Fatal("pointer move was classified")
 	}
@@ -48,30 +50,15 @@ func TestHandleRoutesInput(t *testing.T) {
 	}, 200, 200)
 	tt.Frame()
 	tt.Wheel(50, 60, 0, -120)
-	if len(got) != 1 || got[0].Kind != Zoom || got[0].X != 50 || got[0].Y != 60 {
+	tt.Pinch(70, 80, 2)
+	if len(got) != 2 || got[1].Kind != Zoom || !got[1].Pinch || got[1].Scale != 2 || got[1].X != 70 || got[1].Y != 80 {
+		t.Fatalf("pinch delivered %+v", got)
+	}
+	if got[0].Kind != Zoom || got[0].Pinch || got[0].X != 50 || got[0].Y != 60 {
 		t.Fatalf("scroll delivered %+v", got)
 	}
 	tt.Click("Canvas")
-	if others == 0 || len(got) != 1 {
+	if others == 0 || len(got) != 2 {
 		t.Fatal("pointer input did not reach the other handler")
-	}
-}
-
-func TestPinchGoesWhereThePointerIs(t *testing.T) {
-	var got []Event
-	n := &Navigation{fn: func(e Event) { got = append(got, e) }, x: 30, y: 40}
-	n.pointer = nativePointer{window: 1, x: 100, y: 200}
-	pinchTarget = weak.Make(n)
-	defer func() { pinchTarget = weak.Pointer[Navigation]{} }()
-
-	if !pinch(nativePointer{window: 1, x: 100.5, y: 200}, .25) {
-		t.Fatal("pinch under the pointer was not delivered")
-	}
-	if len(got) != 1 || got[0].Kind != Zoom || got[0].Scale != 1.25 || got[0].X != 30 || got[0].Y != 40 || !got[0].Pinch {
-		t.Fatalf("pinch delivered %+v", got)
-	}
-	// The pointer has since left for another element or window.
-	if pinch(nativePointer{window: 1, x: 300, y: 200}, .25) || pinch(nativePointer{window: 2, x: 100, y: 200}, .25) {
-		t.Fatal("pinch elsewhere reached the element")
 	}
 }

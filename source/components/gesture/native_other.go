@@ -2,6 +2,4 @@
 
 package gesture
 
-func nativeScrollTouch() (touch, ok bool)   { return false, false }
-func currentPointer() (nativePointer, bool) { return nativePointer{}, false }
-func installPinch()                         {}
+func nativeScrollTouch() (touch, ok bool) { return false, false }

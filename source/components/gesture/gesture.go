@@ -2,17 +2,14 @@
 // canvases such as graphs, maps and image viewers: a mouse wheel and a
 // touchpad pinch zoom, and two fingers dragged on a touchpad pan.
 //
-// MyGo reports scrolling, not the device behind it, and does not deliver
-// touchpad magnification. On macOS a narrow AppKit adapter reads the scroll
-// phase of the event being handled, which only touch surfaces report, and
-// observes magnify events without consuming them. Elsewhere precise scrolling
-// counts as a touchpad, and a pinch arrives as Control-scroll, as Windows
-// precision touchpads send it.
+// MyGo reports pinches as InputZoom, but scrolling without the device
+// behind it. On macOS a narrow AppKit adapter reads the scroll phase of the
+// event being handled, which only touch surfaces report; elsewhere precise
+// scrolling counts as a touchpad.
 package gesture
 
 import (
 	"math"
-	"weak"
 
 	"github.com/egoist/mygo/ui"
 )
@@ -71,11 +68,18 @@ const (
 	pinchZoomDistance = 48
 )
 
-// Classify maps a scroll to navigation. A touchpad pans unless Control or
-// Command is held, which zooms as a pinch does; a wheel zooms, except a
-// sideways wheel, or Shift with a vertical one on macOS, which pans across.
-// Call it while handling the event; ok is false for other input.
+// Classify maps a scroll or pinch to navigation. A pinch zooms; a touchpad
+// pans unless Control or Command is held, which zooms as a pinch does; a
+// wheel zooms, except a sideways wheel, or Shift with a vertical one on
+// macOS, which pans across. Call it while handling the event; ok is false
+// for other input.
 func Classify(ev ui.InputEvent) (Event, bool) {
+	if ev.Kind == ui.InputZoom {
+		if ev.Scale <= 0 {
+			return Event{}, false
+		}
+		return Event{Kind: Zoom, X: ev.X, Y: ev.Y, Scale: float64(ev.Scale), Device: Touchpad, Pinch: true}, true
+	}
 	if ev.Kind != ui.InputScroll {
 		return Event{}, false
 	}
@@ -97,16 +101,10 @@ func Classify(ev ui.InputEvent) (Event, bool) {
 	return out, true
 }
 
-// Navigation delivers an element's pan and zoom gestures, including
-// touchpad pinches that MyGo does not report. Keep one per element; its
-// zero value is ready to use.
+// Navigation delivers an element's pan and zoom gestures. Keep one per
+// element; its zero value is ready to use.
 type Navigation struct {
-	fn       func(Event)
-	services ui.Services
-	// Where the element last saw the pointer, in its own box and in the
-	// native window, so a pinch there can be placed in the element.
-	x, y    float32
-	pointer nativePointer
+	fn func(Event)
 }
 
 // Handle has el take its input through fn, as HandleInput does, after
@@ -114,13 +112,8 @@ type Navigation struct {
 // navigate and are taken; other input goes to other, which may be nil.
 // Call it on each build.
 func (n *Navigation) Handle(c *ui.Context, el ui.Element, navigate func(Event), other func(ui.InputEvent) bool) ui.Element {
-	n.fn, n.services = navigate, c.Services()
-	installPinch()
+	n.fn = navigate
 	return el.HandleInput(func(ev ui.InputEvent) bool {
-		switch ev.Kind {
-		case ui.InputPointerMove, ui.InputPointerDown, ui.InputScroll:
-			n.track(ev.X, ev.Y)
-		}
 		if g, ok := Classify(ev); ok && n.fn != nil {
 			n.fn(g)
 			return true
@@ -130,41 +123,4 @@ func (n *Navigation) Handle(c *ui.Context, el ui.Element, navigate func(Event), 
 		}
 		return false
 	})
-}
-
-// track remembers where the pointer is, making n the target of the next
-// pinch made there.
-func (n *Navigation) track(x, y float32) {
-	pointer, ok := currentPointer()
-	if !ok {
-		return
-	}
-	n.x, n.y, n.pointer = x, y, pointer
-	pinchTarget = weak.Make(n)
-}
-
-// pinchTarget is the navigation that last saw the pointer.
-var pinchTarget weak.Pointer[Navigation]
-
-// pinch delivers a magnification made at pointer to the navigation that
-// last saw the pointer there; a pointer that has since moved elsewhere was
-// seen by another element, or none.
-func pinch(pointer nativePointer, magnification float64) bool {
-	n := pinchTarget.Value()
-	if n == nil || n.fn == nil || !n.pointer.near(pointer) || magnification <= -1 {
-		return false
-	}
-	n.fn(Event{Kind: Zoom, X: n.x, Y: n.y, Scale: 1 + magnification, Device: Touchpad, Pinch: true})
-	n.services.Invalidate()
-	return true
-}
-
-// nativePointer is a pointer location in a native window's coordinates.
-type nativePointer struct {
-	window uintptr
-	x, y   float64
-}
-
-func (p nativePointer) near(o nativePointer) bool {
-	return p.window != 0 && p.window == o.window && math.Abs(p.x-o.x) <= 1 && math.Abs(p.y-o.y) <= 1
 }

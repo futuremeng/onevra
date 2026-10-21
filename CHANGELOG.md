@@ -4,6 +4,9 @@ User-facing updates for Onevra library consumers.
 
 ## [Unreleased]
 
+- Require MyGo 0.6.2.
+- Change `gesture.Classify` and `gesture.Navigation` to zoom on `ui.InputZoom` pinches.
+
 ## [0.2026.14] - 2026-10-21
 
 - Breaking: Require MyGo 0.6.0.
