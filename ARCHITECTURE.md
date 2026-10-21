@@ -33,6 +33,8 @@ The website is a second, browser-only consumer. Its examples are separate consum
 
 The desktop, menu bar, launcher, documents and lawn defense starter applications are independent consumers under `source/examples/`. Each keeps its own lifecycle, preferences where it has them, MyGo message catalog and packaging configuration so it can be copied without importing another example. Their small application helpers are intentionally local, not a shared application framework.
 
+The [mobile preview](docs/build.md#mobile-preview) under `source/examples/mobile/` is a pre-research consumer: it simulates phones and tablets on the desktop to predict how components would carry over to iOS and Android. It calls no mobile API and adds nothing to the library.
+
 They use MyGo directly for single-instance activation, Dock visibility, tray integration, panels and global shortcuts, and compose Onevra controls for their content. Settings is an application action: desktop hosts it in a Dialog, while the menu bar and launcher examples need no main window and use a settings window. See [starter applications](docs/build.md#starter-applications) for running, copying and native review.
 
 ## Repository landmarks

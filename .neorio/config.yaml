@@ -52,6 +52,13 @@ tasks:
       cwd: source
       env:
         GOWORK: "off"
+  - label: Run mobile preview
+    command: go
+    args: [run, ./examples/mobile]
+    options:
+      cwd: source
+      env:
+        GOWORK: "off"
   - label: Website
     type: shell
     command: bun install && bun run dev

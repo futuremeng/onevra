@@ -1,0 +1,16 @@
+{
+  "name": "Onevra Mobile",
+  "identifier": "me.oneo.onevra.examples.mobile",
+  "version": "0.1.0",
+  "out": "../../../dist/mobile",
+  "macos": {
+    "minimumSystemVersion": "13.0"
+  },
+  "linux": {
+    "webview": false
+  },
+  "i18n": {
+    "dir": "locales",
+    "source": "en"
+  }
+}

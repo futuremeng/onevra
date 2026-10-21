@@ -65,6 +65,10 @@ ONEVRA_NATIVE_SMOKE=1 ONEVRA_NATIVE_FOREGROUND=1 ONEVRA_SCREENSHOTS="$PWD/../dis
 
 The tests exercise startup, close-to-hide, restoration, settings hosting, language updates, panel-free startup, and quit cleanup. The launcher test additionally toggles its panel, filters a sample app and captures both appearances. In a packaged app, also review actual Dock and tray clicks, opening the application again, right-click dismissal followed by left-click, keyboard shortcuts, focus, accessibility, both languages and themes, and panel placement across displays. Programmatic callbacks and content captures do not establish those native interactions. Windows and Linux require their own desktop review.
 
+## Mobile preview
+
+The [mobile preview](../source/examples/mobile/main.go) predicts component support on iOS and Android, independent of MyGo's platforms; iOS screens follow iOS 27's Liquid Glass. Run `GOWORK=off go run ./examples/mobile` from `source/`. Device metrics and the per-platform [catalog](../source/examples/mobile/catalog.go) are code-owned approximations. Review rotation, the sheet and pointer input on the scaled frame natively; a desktop simulation cannot establish touch, gestures, the real keyboard or platform accessibility.
+
 ## Tray convention
 
 Gallery and the starter applications share one tray pattern. Change it here and in every tray together:

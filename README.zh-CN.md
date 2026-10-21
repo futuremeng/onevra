@@ -33,7 +33,7 @@ cd source
 go run ./examples/gallery
 ```
 
-追加 `-theme light` 或 `-theme dark` 可预览指定外观。另外提供五个小型应用，在 `source/` 中运行：
+追加 `-theme light` 或 `-theme dark` 可预览指定外观。`go run ./examples/mobile` 打开[移动端预览](docs/build.md#mobile-preview)，在模拟设备上预测组件在 iOS 和 Android 上的支持情况。另外提供五个小型应用，在 `source/` 中运行：
 
 | 示例 | 用途 | 命令 |
 | --- | --- | --- |

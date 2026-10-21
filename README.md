@@ -33,7 +33,7 @@ cd source
 go run ./examples/gallery
 ```
 
-Append `-theme light` or `-theme dark` to preview an appearance. Five smaller applications are also available; run these commands from `source/`:
+Append `-theme light` or `-theme dark` to preview an appearance. `go run ./examples/mobile` opens the [mobile preview](docs/build.md#mobile-preview), which predicts component support on iOS and Android on simulated devices. Five smaller applications are also available; run these commands from `source/`:
 
 | Example | Purpose | Command |
 | --- | --- | --- |
