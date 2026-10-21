@@ -1,6 +1,7 @@
 package gallery
 
 import (
+	"github.com/egoist/mygo/plugins/terminal"
 	"github.com/egoist/mygo/ui"
 	"github.com/oneo-me/onevra/source/components"
 )
@@ -171,6 +172,7 @@ func (g *Gallery) mygoHost(c *ui.Context, page func()) {
 // shows after its title so the content stays with the example itself.
 var mygoToolbars = map[string]func(*ui.Context, *demoState){
 	"Rich text editor": richTextToolbar, "Markdown stream": markdownStreamToolbar, "Terminal": terminalToolbar,
+	"Loading indicators": loadingToolbar,
 }
 
 // mygoTitlebar names the selected page above it, followed by its actions.
@@ -253,7 +255,8 @@ func (g *Gallery) myGoLocalized(c *ui.Context, example mygoExample) {
 	if selfScrolling, ok := mygoDocuments[example.name]; ok {
 		s := g.mygoState(example.name, "Default", true)
 		if example.name == "Terminal" && g.createTerminal != nil {
-			s.terminal.start(g.createTerminal)
+			d := &s.terminal
+			d.start(func() (*terminal.Terminal, error) { return g.createTerminal(d.options(g.refresh)) })
 		}
 		if selfScrolling {
 			ui.Column(c).Key("mygo-" + example.name).Fill().Children(func() { example.build(c, s) })

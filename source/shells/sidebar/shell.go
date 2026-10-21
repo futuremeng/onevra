@@ -85,9 +85,10 @@ type shellWindow interface {
 
 // NewShell creates a native window and installs the page container.
 // It requests a titlebar material on macOS and Mica with custom caption buttons
-// on Windows. If no material is effective, it draws an opaque theme background.
-// Other platforms retain their native controls. It persists no state itself;
-// StateKey delegates window geometry to MyGo.
+// on Windows, whose maximize button brings up Windows 11's snap layouts. If no
+// material is effective, it draws an opaque theme background. Other platforms
+// retain their native controls. It persists no state itself; StateKey
+// delegates window geometry to MyGo.
 func NewShell(options ShellOptions) *Shell {
 	s := newShell(options)
 	s.window = mygo.NewWindow(s.nativeOptions())
@@ -139,7 +140,7 @@ func (s *Shell) nativeOptions() mygo.WindowOptions {
 		Hidden: o.Hidden, Title: o.Title, Width: o.Width, Height: o.Height,
 		MinWidth: o.MinWidth, MinHeight: o.MinHeight, StateKey: o.StateKey,
 		TitleBarStyle:        mygo.TitleBarHidden,
-		Frameless:            runtime.GOOS == "windows",
+		HideWindowButtons:    runtime.GOOS == "windows",
 		TrafficLightPosition: &mygo.Point{X: 16, Y: 16},
 		Transparent:          runtime.GOOS == "darwin",
 		Vibrancy:             shellVibrancy(),

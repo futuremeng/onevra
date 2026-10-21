@@ -16,7 +16,7 @@ import (
 func TestFlyoutNoteAndHeadlessLifecycle(t *testing.T) {
 	g := &Gallery{}
 	d := &g.mygoState("Flyout", "Default", true).flyout
-	d.show(ui.Rect{}, false)
+	d.show(ui.Rect{}, flyoutEditor)
 	if d.window != nil {
 		t.Fatal("headless example created a native window")
 	}
@@ -58,9 +58,9 @@ func TestNativeFlyout(t *testing.T) {
 			source = mygo.ThemeDark
 		}
 		mygo.Theme.SetSource(source)
-		for _, popover := range []bool{false, true} {
+		for _, style := range []flyoutStyle{flyoutEditor, flyoutPopover, flyoutMaterial} {
 			var w *mygo.Window
-			mygo.RunOnMain(func() { d.show(ui.Rect{X: 280, Y: 80, W: 100, H: 30}, popover); w = d.window })
+			mygo.RunOnMain(func() { d.show(ui.Rect{X: 280, Y: 80, W: 100, H: 30}, style); w = d.window })
 			if w == nil || !w.IsFlyout() {
 				t.Fatal("expected native flyout")
 			}
@@ -73,7 +73,7 @@ func TestNativeFlyout(t *testing.T) {
 			if err != nil || img.Bounds().Dx() < 300 {
 				t.Fatalf("invalid capture: %v", err)
 			}
-			if err := os.WriteFile(filepath.Join(dir, fmt.Sprintf("flyout-dark-%v-popover-%v.png", dark, popover)), data, 0600); err != nil {
+			if err := os.WriteFile(filepath.Join(dir, fmt.Sprintf("flyout-dark-%v-style-%d.png", dark, style)), data, 0600); err != nil {
 				t.Fatal(err)
 			}
 			mygo.RunOnMain(func() { w.Close() })
@@ -85,7 +85,7 @@ func TestNativeFlyout(t *testing.T) {
 		}
 	}
 	mygo.RunOnMain(func() {
-		d.show(ui.Rect{X: 280, Y: 80, W: 100, H: 30}, false)
+		d.show(ui.Rect{X: 280, Y: 80, W: 100, H: 30}, flyoutEditor)
 		parent.Destroy()
 		if d.window != nil {
 			t.Error("parent close retained flyout")

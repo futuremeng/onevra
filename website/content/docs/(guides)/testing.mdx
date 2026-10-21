@@ -30,7 +30,8 @@ Build the same view the application builds, and apply the theme yourself: no she
 ## Driving a view
 
 - Find elements by their text or accessible label with `Find`, `HasText`, `Texts` and `Focused`.
-- Drive them with `Click`, `RightClick`, `Key`, `TypeKey`, `Type`, `Scroll`, `Move`, `Press` and `Release`.
+- Drive them with `Click`, `RightClick`, `Key`, `TypeKey`, `Type`, `Scroll`, `Wheel`, `DropFiles`, `Move`, `Press` and `Release`. `Click` returns an error for an element outside the window, so size the tester to fit it.
+- `Scroll` scrolls at once, as a touchpad does; `Wheel` is a notch of a mouse wheel, which scroll containers glide through as the clock advances.
 - Check the keyboard path too: `tt.Key(0, ui.KeyTab)`, then `ui.KeySpace` or `ui.KeyEnter`.
 - Inspect menus with `Menu` and `ChooseMenuItem`, and screen-reader output with `Announcements`.
 

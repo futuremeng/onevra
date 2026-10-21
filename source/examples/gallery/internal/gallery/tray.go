@@ -50,8 +50,8 @@ func (a *trayDemo) localizedView(c *ui.Context) {
 	if c.Shortcut(0, ui.KeyEscape) || c.Shortcut(ui.Cmd, ui.KeyW) {
 		a.hide()
 	}
-	// The popover material shows on macOS; elsewhere the flyout is
-	// transparent and the panel draws its own surface.
+	// The popover material shows on macOS and acrylic on Windows 11;
+	// elsewhere the flyout is transparent and the panel draws its own surface.
 	c.Root().Background(ui.Transparent)
 	panel := ui.Column(c).Fill().Padding(16).Gap(12)
 	if !c.Vibrancy() {
@@ -85,7 +85,8 @@ func (a *trayDemo) show() {
 	panel := mygo.NewFlyout(mygo.FlyoutOptions{
 		Tray: a.tray, Placement: mygo.PlacementBottom, Gap: 4,
 		Width: 300, Height: 124, Focusable: true, Shadow: true, Popover: true,
-		Content: ui.View(a.view),
+		Vibrancy: mygo.VibrancyPopover, // Acrylic on Windows 11; macOS popovers have their own
+		Content:  ui.View(a.view),
 	})
 	a.panel = panel
 	panel.OnClosed(func() {
@@ -125,7 +126,7 @@ func (a *trayDemo) start(showOwner func()) error {
 	template := runtime.GOOS == "darwin"
 	var err error
 	a.tray, err = mygo.NewTray(mygo.TrayOptions{
-		Icon: trayIcon(template), IconIsTemplate: template, ToolTip: a.text("trayTooltip"),
+		ID: "main", Icon: trayIcon(template), IconIsTemplate: template, ToolTip: a.text("trayTooltip"),
 	})
 	if err != nil {
 		return err

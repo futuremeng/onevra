@@ -94,6 +94,7 @@ var navigationIcons = map[string]func() *ui.SVG{
 	"Flyout":                lucide.PanelsTopLeft,
 	"WebView":               lucide.Globe,
 	"Glass":                 lucide.GlassWater,
+	"Loading indicators":    lucide.LoaderCircle,
 	"Audio":                 lucide.AudioLines,
 	"System information":    lucide.Info,
 	"Recent documents":      lucide.FileClock,

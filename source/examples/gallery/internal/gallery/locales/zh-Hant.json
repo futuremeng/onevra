@@ -1038,5 +1038,22 @@
   "glassUncoloredBar": "無著色列",
   "glassContentHint": "玻璃沿邊緣折射光線，並霧化其中央下方的內容。",
   "glassBottomBar": "底部列",
-  "componentScrollEdgeBar": "捲動邊緣列"
+  "componentScrollEdgeBar": "捲動邊緣列",
+  "componentLoadingIndicators": "載入指示器",
+  "loadingPause": "暫停",
+  "terminalFind": "在終端機中尋找",
+  "terminalMatches": "第 {selected} 個，共 {total} 個",
+  "terminalOlderMatch": "較早的相符項目",
+  "terminalNewerMatch": "較新的相符項目",
+  "terminalEndFind": "關閉尋找",
+  "terminalCopied": "已複製到剪貼簿",
+  "terminalOptions": "終端機選項",
+  "terminalMinimumContrast": "最低對比度",
+  "terminalMirror": "鏡像工作階段",
+  "terminalMirrorLabel": "鏡像的工作階段",
+  "terminalMirrorFailed": "無法鏡像工作階段",
+  "notificationSender": "以 ONEO 的訊息傳送",
+  "webViewUserAgent": "使用者代理程式",
+  "webViewSafariTab": "Tab 鍵僅切換輸入欄位，與 Safari 相同",
+  "flyoutMaterial": "材質浮動視窗"
 }

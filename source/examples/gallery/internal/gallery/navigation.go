@@ -16,8 +16,9 @@ var navigationGroups = []string{
 // own. A route is in at most one list; a route added since the release stays
 // new however often it changes.
 var newPages = map[string]bool{
-	"controls/ScrollEdgeBar": true,
-	"mygo/Native dialogs":    true,
+	"controls/ScrollEdgeBar":  true,
+	"mygo/Loading indicators": true,
+	"mygo/Native dialogs":     true,
 }
 
 var updatedPages = map[string]bool{
@@ -33,7 +34,10 @@ var updatedPages = map[string]bool{
 	"controls/Tabs":         true,
 	"controls/Toast":        true,
 	"controls/Treemap":      true,
+	"mygo/Flyout":           true,
 	"mygo/Glass":            true,
+	"mygo/Terminal":         true,
+	"mygo/WebView":          true,
 }
 
 type navigationEntry struct {

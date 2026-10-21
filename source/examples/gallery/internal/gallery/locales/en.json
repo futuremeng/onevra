@@ -1460,5 +1460,32 @@
   "glassUncoloredBar": "Uncolored bar",
   "glassContentHint": "Glass bends the light along its rim and frosts what is under its middle.",
   "glassBottomBar": "Bottom bar",
-  "componentScrollEdgeBar": "Scroll edge bar"
+  "componentScrollEdgeBar": "Scroll edge bar",
+  "componentLoadingIndicators": "Loading indicators",
+  "loadingPause": "Pause",
+  "terminalFind": "Find in terminal",
+  "terminalMatches": "{selected} of {total}",
+  "@terminalMatches": {
+    "placeholders": {
+      "selected": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "terminalOlderMatch": "Older match",
+  "terminalNewerMatch": "Newer match",
+  "terminalEndFind": "Close find",
+  "terminalCopied": "Copied to the clipboard",
+  "terminalOptions": "Terminal options",
+  "terminalMinimumContrast": "Minimum contrast",
+  "terminalMirror": "Mirror session",
+  "terminalMirrorLabel": "Mirrored session",
+  "terminalMirrorFailed": "Unable to mirror the session",
+  "notificationSender": "Send as a message from ONEO",
+  "webViewUserAgent": "User agent",
+  "webViewSafariTab": "Tab only to fields, as in Safari",
+  "flyoutMaterial": "Material flyout"
 }

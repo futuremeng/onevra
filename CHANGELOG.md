@@ -4,6 +4,7 @@ User-facing updates for Onevra library consumers.
 
 ## [Unreleased]
 
+- Breaking: Require MyGo 0.6.0.
 - Breaking: Remove `chat.SwitchChip` in favor of `components.SwitchOptions.Compact`.
 - Breaking: Remove `components.IconButtonToolbarExpanding` in favor of `components.IconButtonToolbar`.
 - Add `chat.ComposerOptions.StopDisabled`.
@@ -14,6 +15,7 @@ User-facing updates for Onevra library consumers.
 - Change `components.ScrollEdge` to tint its progressive blur with the background by default.
 - Change `components.ScrollEdgeBar` to make its default surface and edge more opaque.
 - Change `components.Switch` to widen its knob and lift it as draggable glass while held.
+- Change `plain.Shell` and `sidebar.Shell` to bring up Windows 11 snap layouts from their maximize buttons.
 - Change `shaders.SignalField` to repaint its drift 20 times a second.
 - Fix `chat.EffortPicker` repainting the window while its icon stands still.
 

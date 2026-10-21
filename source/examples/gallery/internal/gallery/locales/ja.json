@@ -1038,5 +1038,22 @@
   "glassUncoloredBar": "無着色バー",
   "glassContentHint": "ガラスは縁で光を屈折させ、中央の下にあるものをすりガラスのようにぼかします。",
   "glassBottomBar": "ボトムバー",
-  "componentScrollEdgeBar": "スクロールエッジバー"
+  "componentScrollEdgeBar": "スクロールエッジバー",
+  "componentLoadingIndicators": "ローディングインジケーター",
+  "loadingPause": "一時停止",
+  "terminalFind": "ターミナル内を検索",
+  "terminalMatches": "{total} 件中 {selected} 件目",
+  "terminalOlderMatch": "古い一致",
+  "terminalNewerMatch": "新しい一致",
+  "terminalEndFind": "検索を閉じる",
+  "terminalCopied": "クリップボードにコピーしました",
+  "terminalOptions": "ターミナルのオプション",
+  "terminalMinimumContrast": "最小コントラスト",
+  "terminalMirror": "セッションをミラー",
+  "terminalMirrorLabel": "ミラーされたセッション",
+  "terminalMirrorFailed": "セッションをミラーできません",
+  "notificationSender": "ONEO からのメッセージとして送信",
+  "webViewUserAgent": "ユーザーエージェント",
+  "webViewSafariTab": "Safari と同様に Tab で入力欄のみ移動",
+  "flyoutMaterial": "マテリアルのフライアウト"
 }

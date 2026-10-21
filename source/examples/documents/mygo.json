@@ -6,6 +6,9 @@
   "macos": {
     "minimumSystemVersion": "13.0"
   },
+  "linux": {
+    "webview": false
+  },
   "fileAssociations": [
     { "ext": ["md", "markdown"], "name": "Markdown Document", "mimeType": "text/markdown" },
     { "ext": ["txt"], "name": "Plain Text", "mimeType": "text/plain" }

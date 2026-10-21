@@ -1038,5 +1038,22 @@
   "glassUncoloredBar": "무색 막대",
   "glassContentHint": "유리는 가장자리에서 빛을 굴절시키고 가운데 아래의 내용을 흐리게 만듭니다.",
   "glassBottomBar": "하단 막대",
-  "componentScrollEdgeBar": "스크롤 가장자리 막대"
+  "componentScrollEdgeBar": "스크롤 가장자리 막대",
+  "componentLoadingIndicators": "로딩 인디케이터",
+  "loadingPause": "일시 정지",
+  "terminalFind": "터미널에서 찾기",
+  "terminalMatches": "{total}개 중 {selected}번째",
+  "terminalOlderMatch": "이전 일치 항목",
+  "terminalNewerMatch": "최근 일치 항목",
+  "terminalEndFind": "찾기 닫기",
+  "terminalCopied": "클립보드에 복사됨",
+  "terminalOptions": "터미널 옵션",
+  "terminalMinimumContrast": "최소 대비",
+  "terminalMirror": "세션 미러링",
+  "terminalMirrorLabel": "미러링된 세션",
+  "terminalMirrorFailed": "세션을 미러링할 수 없음",
+  "notificationSender": "ONEO의 메시지로 보내기",
+  "webViewUserAgent": "사용자 에이전트",
+  "webViewSafariTab": "Safari처럼 Tab으로 입력란만 이동",
+  "flyoutMaterial": "머티리얼 플라이아웃"
 }

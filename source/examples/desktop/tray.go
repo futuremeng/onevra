@@ -14,7 +14,9 @@ import (
 
 func (a *application) createTray() error {
 	var err error
-	a.tray, err = mygo.NewTray(mygo.TrayOptions{Icon: trayIcon(), IconIsTemplate: true, ToolTip: a.text("title")})
+	a.tray, err = mygo.NewTray(mygo.TrayOptions{
+		ID: "main", Icon: trayIcon(), IconIsTemplate: runtime.GOOS == "darwin", ToolTip: a.text("title"),
+	})
 	if err != nil {
 		return err
 	}
@@ -62,7 +64,8 @@ func (a *application) showPanel() {
 		panel := mygo.NewFlyout(mygo.FlyoutOptions{
 			Tray: a.tray, Placement: mygo.PlacementBottom, Gap: 4,
 			Width: 360, Height: 300, Focusable: true, Shadow: true, Popover: true,
-			Content: ui.View(a.panelView),
+			Vibrancy: mygo.VibrancyPopover, // Acrylic on Windows 11; macOS popovers have their own
+			Content:  ui.View(a.panelView),
 		})
 		a.panel = panel
 		panel.OnClosed(func() {

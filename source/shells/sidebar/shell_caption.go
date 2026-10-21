@@ -29,7 +29,7 @@ func (s *Shell) captionButtons(c *ui.Context) {
 		if w != nil && w.IsMaximized() {
 			icon, label = lucide.Copy(), m.Text("restoreWindow")
 		}
-		if iconButton(c, icon, label, iconSize).Clicked() && w != nil {
+		if iconButton(c, icon, label, iconSize).MaximizeButton().Clicked() && w != nil {
 			w.ToggleMaximize()
 		}
 		closeButton := iconButton(c, lucide.X(), m.Text("closeWindow"), iconSize)

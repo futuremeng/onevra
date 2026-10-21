@@ -13,15 +13,28 @@ import (
 // Load and decode once, including failures, rather than retrying every frame.
 // MyGo resolves bundle resources and source/resources for direct go run.
 var galleryImage = sync.OnceValues(func() (*ui.Bitmap, error) {
+	data, err := galleryImageData()
+	if err != nil {
+		return nil, err
+	}
+	return ui.DecodeBitmap(data)
+})
+
+// galleryImageData is the encoded avatar, which notifications send as is.
+var galleryImageData = sync.OnceValues(func() ([]byte, error) {
 	dir, err := mygo.App.Path(mygo.PathResources)
 	if err != nil {
 		return nil, err
 	}
-	return loadGalleryImage(dir)
+	return readGalleryImage(dir)
 })
 
+func readGalleryImage(dir string) ([]byte, error) {
+	return os.ReadFile(filepath.Join(dir, "images", "avatar.jpeg"))
+}
+
 func loadGalleryImage(dir string) (*ui.Bitmap, error) {
-	data, err := os.ReadFile(filepath.Join(dir, "images", "avatar.jpeg"))
+	data, err := readGalleryImage(dir)
 	if err != nil {
 		return nil, err
 	}

@@ -56,8 +56,8 @@ func (a *application) panelView(c *ui.Context) {
 		if c.Shortcut(0, ui.KeyEscape) || c.Shortcut(ui.Cmd, ui.KeyW) {
 			a.hidePanel()
 		}
-		// The popover material shows on macOS; elsewhere the flyout is
-		// transparent and the panel draws its own surface.
+		// The popover material shows on macOS and acrylic on Windows 11;
+		// elsewhere the flyout is transparent and the panel draws its own surface.
 		c.Root().Background(ui.Transparent)
 		panel := ui.Column(c).Fill().Padding(16).Gap(12)
 		if !c.Vibrancy() {

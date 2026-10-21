@@ -50,7 +50,7 @@ The [graph component](../../source/components/graph/graph.go) draws a force-dire
 
 Layout, camera, hover and reveal advance in `Draw` on the UI thread. Initial ticks run in per-frame budgets before showing; Reduced Motion settles at once.
 
-[Gestures](../../source/components/gesture/gesture.go): wheels and pinches zoom, touchpads pan. MyGo 0.5.5 neither tells smoothed mice from touchpads nor reports pinches; a macOS adapter reads scroll phases and observes magnify events.
+[Gestures](../../source/components/gesture/gesture.go): wheels and pinches zoom, touchpads pan. MyGo 0.6.0 neither tells smoothed mice from touchpads nor reports pinches; a macOS adapter reads scroll phases and observes magnify events.
 
 ### Flow diagrams
 
@@ -152,7 +152,7 @@ Both shells build the viewport after their content, inside a localization scope 
 
 ## Native appearance
 
-MyGo and the operating system provide native window interaction semantics. On Windows, Shell uses MyGo's frameless window and composes rounded toolbar-style minimize, maximize/restore and close buttons in the shared header, including replacement pages. Their names come from the catalog; close requests retain MyGo's cancellable application lifecycle. Maximize/restore follows the actual window state; these buttons do not implement Windows' Snap Layouts flyout.
+MyGo and the operating system provide native window interaction semantics. On Windows, Shell replaces the system's window buttons (`HideWindowButtons`) with rounded toolbar-style minimize, maximize/restore and close buttons in the shared header, including replacement pages. Their names come from the catalog; close requests retain MyGo's cancellable application lifecycle. Maximize/restore follows the actual window state and brings up Windows 11's snap layouts.
 
 Sidebar Shell requests a sidebar material on macOS and Mica on Windows. MyGo supports Windows system materials on Windows 11 22H2 and later; it owns compositor setup and native opaque fallback. Shell uses `Context.Vibrancy()` each frame, rather than the operating system or requested material, to decide whether to expose the backdrop.
 

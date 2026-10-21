@@ -44,7 +44,7 @@ func TestShellNativeOptions(t *testing.T) {
 	} else if runtime.GOOS == "windows" {
 		material = mygo.VibrancyMica
 	}
-	if o.Transparent != (runtime.GOOS == "darwin") || o.Vibrancy != material || o.Frameless != (runtime.GOOS == "windows") || o.DisableResize || o.StateKey != "" {
+	if o.Transparent != (runtime.GOOS == "darwin") || o.Vibrancy != material || o.Frameless || o.HideWindowButtons != (runtime.GOOS == "windows") || o.DisableResize || o.StateKey != "" {
 		t.Fatal(o)
 	}
 	if o := newShell(ShellOptions{StateKey: "main"}).nativeOptions(); o.StateKey != "main" {

@@ -30,7 +30,8 @@ func TestSaveButton(t *testing.T) {
 ## 驱动视图
 
 - 用 `Find`、`HasText`、`Texts` 和 `Focused` 按文字或无障碍标签查找元素。
-- 用 `Click`、`RightClick`、`Key`、`TypeKey`、`Type`、`Scroll`、`Move`、`Press` 和 `Release` 驱动它们。
+- 用 `Click`、`RightClick`、`Key`、`TypeKey`、`Type`、`Scroll`、`Wheel`、`DropFiles`、`Move`、`Press` 和 `Release` 驱动它们。元素在窗口之外时 `Click` 会返回错误，请让测试器的尺寸容纳它。
+- `Scroll` 像触控板一样立即滚动；`Wheel` 是鼠标滚轮的一格，滚动容器会随时钟推进平滑滑动到位。
 - 同时检查键盘路径：`tt.Key(0, ui.KeyTab)`，然后是 `ui.KeySpace` 或 `ui.KeyEnter`。
 - 用 `Menu` 和 `ChooseMenuItem` 检查菜单，用 `Announcements` 检查读屏输出。
 

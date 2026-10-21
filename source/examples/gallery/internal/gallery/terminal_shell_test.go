@@ -26,7 +26,7 @@ func terminalPage() galleryPage {
 func TestTerminalAutomaticLoadOnce(t *testing.T) {
 	var calls atomic.Int32
 	failure := errors.New("load failed")
-	g := &Gallery{page: terminalPage(), createTerminal: func() (*terminal.Terminal, error) {
+	g := &Gallery{page: terminalPage(), createTerminal: func(terminal.Options) (*terminal.Terminal, error) {
 		calls.Add(1)
 		return nil, failure
 	}}

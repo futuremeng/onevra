@@ -10483,3 +10483,175 @@ func ComponentScrollEdgeBar() string { return In(i18n.Locale()).ComponentScrollE
 func (msgs Messages) ComponentScrollEdgeBar() string {
 	return Catalog.Format(msgs.locale, "componentScrollEdgeBar", nil)
 }
+
+// ComponentLoadingIndicators says "Loading indicators"
+// in the language the app shows.
+func ComponentLoadingIndicators() string { return In(i18n.Locale()).ComponentLoadingIndicators() }
+
+// ComponentLoadingIndicators says "Loading indicators"
+// in the language of msgs.
+func (msgs Messages) ComponentLoadingIndicators() string {
+	return Catalog.Format(msgs.locale, "componentLoadingIndicators", nil)
+}
+
+// LoadingPause says "Pause"
+// in the language the app shows.
+func LoadingPause() string { return In(i18n.Locale()).LoadingPause() }
+
+// LoadingPause says "Pause"
+// in the language of msgs.
+func (msgs Messages) LoadingPause() string {
+	return Catalog.Format(msgs.locale, "loadingPause", nil)
+}
+
+// TerminalFind says "Find in terminal"
+// in the language the app shows.
+func TerminalFind() string { return In(i18n.Locale()).TerminalFind() }
+
+// TerminalFind says "Find in terminal"
+// in the language of msgs.
+func (msgs Messages) TerminalFind() string {
+	return Catalog.Format(msgs.locale, "terminalFind", nil)
+}
+
+// TerminalMatches says "{selected} of {total}"
+// in the language the app shows.
+func TerminalMatches(selected int, total int) string {
+	return In(i18n.Locale()).TerminalMatches(selected, total)
+}
+
+// TerminalMatches says "{selected} of {total}"
+// in the language of msgs.
+func (msgs Messages) TerminalMatches(selected int, total int) string {
+	return Catalog.Format(msgs.locale, "terminalMatches", map[string]any{"selected": selected, "total": total})
+}
+
+// TerminalOlderMatch says "Older match"
+// in the language the app shows.
+func TerminalOlderMatch() string { return In(i18n.Locale()).TerminalOlderMatch() }
+
+// TerminalOlderMatch says "Older match"
+// in the language of msgs.
+func (msgs Messages) TerminalOlderMatch() string {
+	return Catalog.Format(msgs.locale, "terminalOlderMatch", nil)
+}
+
+// TerminalNewerMatch says "Newer match"
+// in the language the app shows.
+func TerminalNewerMatch() string { return In(i18n.Locale()).TerminalNewerMatch() }
+
+// TerminalNewerMatch says "Newer match"
+// in the language of msgs.
+func (msgs Messages) TerminalNewerMatch() string {
+	return Catalog.Format(msgs.locale, "terminalNewerMatch", nil)
+}
+
+// TerminalEndFind says "Close find"
+// in the language the app shows.
+func TerminalEndFind() string { return In(i18n.Locale()).TerminalEndFind() }
+
+// TerminalEndFind says "Close find"
+// in the language of msgs.
+func (msgs Messages) TerminalEndFind() string {
+	return Catalog.Format(msgs.locale, "terminalEndFind", nil)
+}
+
+// TerminalCopied says "Copied to the clipboard"
+// in the language the app shows.
+func TerminalCopied() string { return In(i18n.Locale()).TerminalCopied() }
+
+// TerminalCopied says "Copied to the clipboard"
+// in the language of msgs.
+func (msgs Messages) TerminalCopied() string {
+	return Catalog.Format(msgs.locale, "terminalCopied", nil)
+}
+
+// TerminalOptions says "Terminal options"
+// in the language the app shows.
+func TerminalOptions() string { return In(i18n.Locale()).TerminalOptions() }
+
+// TerminalOptions says "Terminal options"
+// in the language of msgs.
+func (msgs Messages) TerminalOptions() string {
+	return Catalog.Format(msgs.locale, "terminalOptions", nil)
+}
+
+// TerminalMinimumContrast says "Minimum contrast"
+// in the language the app shows.
+func TerminalMinimumContrast() string { return In(i18n.Locale()).TerminalMinimumContrast() }
+
+// TerminalMinimumContrast says "Minimum contrast"
+// in the language of msgs.
+func (msgs Messages) TerminalMinimumContrast() string {
+	return Catalog.Format(msgs.locale, "terminalMinimumContrast", nil)
+}
+
+// TerminalMirror says "Mirror session"
+// in the language the app shows.
+func TerminalMirror() string { return In(i18n.Locale()).TerminalMirror() }
+
+// TerminalMirror says "Mirror session"
+// in the language of msgs.
+func (msgs Messages) TerminalMirror() string {
+	return Catalog.Format(msgs.locale, "terminalMirror", nil)
+}
+
+// TerminalMirrorLabel says "Mirrored session"
+// in the language the app shows.
+func TerminalMirrorLabel() string { return In(i18n.Locale()).TerminalMirrorLabel() }
+
+// TerminalMirrorLabel says "Mirrored session"
+// in the language of msgs.
+func (msgs Messages) TerminalMirrorLabel() string {
+	return Catalog.Format(msgs.locale, "terminalMirrorLabel", nil)
+}
+
+// TerminalMirrorFailed says "Unable to mirror the session"
+// in the language the app shows.
+func TerminalMirrorFailed() string { return In(i18n.Locale()).TerminalMirrorFailed() }
+
+// TerminalMirrorFailed says "Unable to mirror the session"
+// in the language of msgs.
+func (msgs Messages) TerminalMirrorFailed() string {
+	return Catalog.Format(msgs.locale, "terminalMirrorFailed", nil)
+}
+
+// NotificationSender says "Send as a message from ONEO"
+// in the language the app shows.
+func NotificationSender() string { return In(i18n.Locale()).NotificationSender() }
+
+// NotificationSender says "Send as a message from ONEO"
+// in the language of msgs.
+func (msgs Messages) NotificationSender() string {
+	return Catalog.Format(msgs.locale, "notificationSender", nil)
+}
+
+// WebViewUserAgent says "User agent"
+// in the language the app shows.
+func WebViewUserAgent() string { return In(i18n.Locale()).WebViewUserAgent() }
+
+// WebViewUserAgent says "User agent"
+// in the language of msgs.
+func (msgs Messages) WebViewUserAgent() string {
+	return Catalog.Format(msgs.locale, "webViewUserAgent", nil)
+}
+
+// WebViewSafariTab says "Tab only to fields, as in Safari"
+// in the language the app shows.
+func WebViewSafariTab() string { return In(i18n.Locale()).WebViewSafariTab() }
+
+// WebViewSafariTab says "Tab only to fields, as in Safari"
+// in the language of msgs.
+func (msgs Messages) WebViewSafariTab() string {
+	return Catalog.Format(msgs.locale, "webViewSafariTab", nil)
+}
+
+// FlyoutMaterial says "Material flyout"
+// in the language the app shows.
+func FlyoutMaterial() string { return In(i18n.Locale()).FlyoutMaterial() }
+
+// FlyoutMaterial says "Material flyout"
+// in the language of msgs.
+func (msgs Messages) FlyoutMaterial() string {
+	return Catalog.Format(msgs.locale, "flyoutMaterial", nil)
+}

@@ -16,7 +16,9 @@ func (a *application) createTray() error {
 		return nil
 	}
 	var err error
-	a.tray, err = mygo.NewTray(mygo.TrayOptions{Icon: trayIcon(), IconIsTemplate: true, ToolTip: a.text("title")})
+	a.tray, err = mygo.NewTray(mygo.TrayOptions{
+		ID: "main", Icon: trayIcon(), IconIsTemplate: runtime.GOOS == "darwin", ToolTip: a.text("title"),
+	})
 	if err != nil {
 		return err
 	}

@@ -68,6 +68,7 @@ var mygoExamples = []mygoExample{
 	{"Divider", "Layout & containers", exampleDivider},
 	{"Terminal", "Plugins", exampleTerminal},
 	{"Glass", "Plugins", exampleGlass},
+	{"Loading indicators", "Plugins", exampleLoading},
 	{"Audio", "Desktop", exampleAudio},
 	{"System information", "Desktop", exampleSystemInformation},
 	{"Recent documents", "Desktop", exampleRecentDocuments},

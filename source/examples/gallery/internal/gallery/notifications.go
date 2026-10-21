@@ -14,8 +14,11 @@ type notificationDemo struct {
 	current *mygo.Notification
 	pending bool
 	silent  bool
-	status  string
-	err     error
+	// sender sends the notification as a message from the author, with
+	// their avatar where the system shows one.
+	sender bool
+	status string
+	err    error
 }
 
 func (d *notificationDemo) close() {
@@ -37,11 +40,17 @@ func (g *Gallery) sendNotification() {
 		return
 	}
 	d.close()
-	n := mygo.NewNotification(mygo.NotificationOptions{
+	o := mygo.NotificationOptions{
 		Title:  g.text("notificationTitle"),
 		Body:   g.text("notificationBody"),
 		Silent: d.silent,
-	})
+	}
+	if avatar, err := galleryImageData(); d.sender && err == nil {
+		// macOS shows the avatar only in an app signed with the Communication
+		// Notifications capability; elsewhere the notification is ordinary.
+		o.Sender = &mygo.NotificationSender{ID: "author", Name: "ONEO", Avatar: avatar}
+	}
+	n := mygo.NewNotification(o)
 	d.current, d.pending = n, true
 	d.status = "notificationSending"
 	n.OnClick(func() {
@@ -87,6 +96,7 @@ func (g *Gallery) Notifications(c *ui.Context) {
 		components.ScrollView(c, components.ScrollViewOptions{}).Fill().Children(func() {
 			ui.Column(c).FillWidth().Padding(c.Theme().Space(6)).Gap(16).Children(func() {
 				components.Checkbox(c, &d.silent, tr(c, "notificationSilent"))
+				components.Checkbox(c, &d.sender, tr(c, "notificationSender"))
 				components.Button(c, tr(c, "notificationSend"), components.ButtonPrimary).
 					Disabled(g.Shell == nil || d.pending).OnClick(g.sendNotification)
 				components.Button(c, tr(c, "notificationWithdraw"), components.ButtonOutline).

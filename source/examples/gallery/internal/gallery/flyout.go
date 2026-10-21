@@ -23,19 +23,35 @@ func (d *flyoutDemo) close() {
 	d.window = nil
 }
 
-func (d *flyoutDemo) show(bounds ui.Rect, popover bool) {
+// flyoutStyle is how the page's flyout looks: the editor draws its own
+// surface, the system popover is the platform's, and the material flyout
+// shows a blurred material cut to rounded corners where the platform has one.
+type flyoutStyle int
+
+const (
+	flyoutEditor flyoutStyle = iota
+	flyoutPopover
+	flyoutMaterial
+)
+
+func (d *flyoutDemo) show(bounds ui.Rect, style flyoutStyle) {
 	if d.gallery == nil || d.gallery.Shell == nil {
 		return
 	}
 	d.close()
 	parent := d.gallery.Shell.Window()
-	w := mygo.NewFlyout(mygo.FlyoutOptions{
+	o := mygo.FlyoutOptions{
 		Parent:    parent,
 		Anchor:    mygo.Rectangle{X: int(bounds.X), Y: int(bounds.Y), Width: int(bounds.W), Height: int(bounds.H)},
 		Placement: mygo.PlacementBottomStart, Gap: 6,
-		Width: 300, Height: 180, Focusable: true, Shadow: true, Popover: popover,
+		Width: 300, Height: 180, Focusable: true, Shadow: true, Popover: style == flyoutPopover,
 		Content: ui.View(d.view),
-	})
+	}
+	if style == flyoutMaterial {
+		// Windows 11 rounds flyouts itself; CornerRadius rounds them on macOS.
+		o.Vibrancy, o.CornerRadius = mygo.VibrancyPopover, 10
+	}
+	w := mygo.NewFlyout(o)
 	d.window = w
 	w.OnClosed(func() {
 		if d.window == w {
@@ -75,10 +91,10 @@ func (d *flyoutDemo) view(c *ui.Context) {
 func exampleFlyout(c *ui.Context, s *demoState) {
 	d := &s.flyout
 	components.Text(c, tr(c, "flyoutDescription")).Wrap()
-	for i, label := range []string{"flyoutEditor", "flyoutPopover"} {
+	for i, label := range []string{"flyoutEditor", "flyoutPopover", "flyoutMaterial"} {
 		b := components.Button(c, tr(c, label), components.ButtonOutline).Disabled(d.gallery == nil || d.gallery.Shell == nil)
 		if b.Clicked() {
-			d.show(b.Bounds(), i == 1)
+			d.show(b.Bounds(), flyoutStyle(i))
 		}
 	}
 	components.Text(c, d.note).Wrap()

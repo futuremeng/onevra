@@ -129,3 +129,51 @@ func TestNativeTerminalEcho(t *testing.T) {
 		t.Fatalf("restart failed: %v", err)
 	}
 }
+
+func TestNativeTerminalMirrorAndSearch(t *testing.T) {
+	if os.Getenv("ONEVRA_NATIVE_SMOKE") != "1" {
+		t.Skip("requires opt-in native library loading")
+	}
+	s := newDemoState()
+	d := &s.terminal
+	defer d.close()
+	d.start(newPreviewTerminal)
+	term, err := waitTerminal(t, d)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if err := d.openMirror(term); err != nil {
+		t.Fatal(err)
+	}
+	mirror := d.mirror.term
+	d.finding = true
+	tt := ui.NewTester(func(c *ui.Context) { exampleTerminal(c, s) }, 900, 400)
+	settle := func(done func() bool) bool {
+		deadline := time.Now().Add(2 * time.Second)
+		for !done() && time.Now().Before(deadline) {
+			time.Sleep(10 * time.Millisecond)
+			tt.Frame()
+		}
+		return done()
+	}
+	if !settle(func() bool { return strings.Contains(mirror.Text(), "MyGo Terminal") }) {
+		t.Fatalf("mirror shows %q", mirror.Text())
+	}
+	tt.Type("green")
+	if !settle(func() bool { return term.SearchStatus().Total == 1 }) {
+		t.Fatalf("search status = %+v", term.SearchStatus())
+	}
+	if !tt.HasText("1 of 1") {
+		t.Fatal("find bar does not count the match")
+	}
+	tt.Key(0, ui.KeyEscape)
+	if d.finding || term.SearchStatus().Text != "" {
+		t.Fatal("Escape did not end the search")
+	}
+	d.closeMirror()
+	select {
+	case <-mirror.Done():
+	case <-time.After(time.Second):
+		t.Fatal("mirror did not close")
+	}
+}

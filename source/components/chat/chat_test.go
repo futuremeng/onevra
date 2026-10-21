@@ -252,6 +252,31 @@ func TestComposerPasteWithoutHook(t *testing.T) {
 	}
 }
 
+// AcceptFiles reports the paths dropped on the card; a composer without it
+// takes no files.
+func TestComposerAcceptsDroppedFiles(t *testing.T) {
+	for _, accept := range []bool{false, true} {
+		draft := ""
+		var dropped []string
+		tt := ui.NewTester(func(c *ui.Context) {
+			if r := Composer(c, &draft, ComposerOptions{Label: "Message", SendLabel: "Send", StopLabel: "Stop", AcceptFiles: accept}); r.Dropped != nil {
+				dropped = r.Dropped
+			}
+		}, 400, 160)
+		r, ok := tt.Find("Message")
+		if !ok {
+			t.Fatal("composer missing")
+		}
+		taken := tt.DropFiles(r.X+r.W/2, r.Y+r.H/2, "/tmp/a.png", "/tmp/b.txt")
+		if taken != accept || accept != (len(dropped) == 2 && dropped[0] == "/tmp/a.png" && dropped[1] == "/tmp/b.txt") {
+			t.Fatalf("accept=%v: taken %v, dropped %q", accept, taken, dropped)
+		}
+		if draft != "" {
+			t.Fatalf("accept=%v: drop changed the draft to %q", accept, draft)
+		}
+	}
+}
+
 func TestComposerSendDuringComposition(t *testing.T) {
 	for _, glass := range []bool{false, true} {
 		for _, running := range []bool{false, true} {

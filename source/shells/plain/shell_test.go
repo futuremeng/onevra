@@ -40,7 +40,7 @@ func TestHeaderShowsWindowTitle(t *testing.T) {
 func TestNativeConfiguration(t *testing.T) {
 	s := newShell(ShellOptions{Hidden: true, Width: 200, Height: 100})
 	o := s.nativeOptions()
-	if !o.Hidden || o.TitleBarStyle != mygo.TitleBarHidden || o.Frameless != (runtime.GOOS == "windows") {
+	if !o.Hidden || o.TitleBarStyle != mygo.TitleBarHidden || o.Frameless || o.HideWindowButtons != (runtime.GOOS == "windows") {
 		t.Fatalf("unexpected native chrome: %+v", o)
 	}
 	if o.Width < o.MinWidth || o.Height < o.MinHeight {

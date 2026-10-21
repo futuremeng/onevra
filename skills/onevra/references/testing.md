@@ -30,7 +30,8 @@ func TestSaveButton(t *testing.T) {
 }
 ```
 
-- Locate elements by visible text or accessible label with `Find`, `HasText`, `Texts` and `Focused`; drive them with `Click`, `RightClick`, `Key`, `TypeKey`, `Type`, `Compose`, `Scroll`, `Move`, `Press` and `Release`.
+- Locate elements by visible text or accessible label with `Find`, `HasText`, `Texts` and `Focused`; drive them with `Click`, `RightClick`, `Key`, `TypeKey`, `Type`, `Compose`, `Scroll`, `Wheel`, `DropFiles`, `Move`, `Press` and `Release`. `Click` and `RightClick` return an error for an element outside the window, so size the tester to fit it.
+- `Scroll` scrolls at once as a touchpad does; `Wheel` is a mouse wheel notch, which scroll containers glide through as the clock advances.
 - Check keyboard paths, not just pointer clicks: `tt.Key(0, ui.KeyTab)` then `tt.Key(0, ui.KeySpace)` or `ui.KeyEnter`.
 - Inspect menus with `Menu` and `ChooseMenuItem`, screen-reader output with `Announcements`, pointer shape with `Cursor`, and clipboard or opened URLs with their accessors instead of system services.
 - The tester's clock stands still until `tt.Advance(d)` moves it, running the frames due meanwhile; advance it for animations, `After` delays, tooltips and separate clicks instead of sleeping.

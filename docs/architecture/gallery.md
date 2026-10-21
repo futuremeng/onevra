@@ -40,7 +40,7 @@ The settings toolbar action opens a Onevra Dialog over the current page. macOS S
 | --- | --- |
 | Content display / Markdown | MyGo `ui/markdown` over a cached [fixture](../../source/resources/markdown.md), with resource images, gallery-owned links and an interactive custom code block |
 | Content display / Chat | Conversation folding, bounded details, composer pickers, attachments, context meter and usage limits, and a simulated streamed reply started from Send or the titlebar; no model or file access |
-| Plugins / Terminal | MyGo shell session, retained across navigation and closed with Gallery |
+| Plugins / Terminal | MyGo shell session, retained across navigation and closed with Gallery; titlebar find and clear, and a menu mirroring the session into a second terminal |
 | Charts / Data charts | Bar, line, area, stacked bar, donut, bubble and split bar charts of the public chart component in fixed tiles, each with its own selection and title-row tools that update data, hide the legend, show the empty state and add or remove bubbles |
 | Layout & containers / Transforms | Editable Onevra controls and anchored popovers under composed transforms, plus a perspective card |
 | Layout & containers / Motion | Retargetable spring presets, replayable keyframes and animated poses |
@@ -49,7 +49,7 @@ The settings toolbar action opens a Onevra Dialog over the current page. macOS S
 
 The [chart examples](../../source/examples/gallery/internal/gallery/control_chart.go) use Onevra's public [chart component](components.md#charts) on one page with localized application-owned data. The [motion examples](../../source/examples/gallery/internal/gallery/mygo_motion.go) use MyGo's animation methods directly. Neither creates native resources, background loops or timers; animation lifetime follows the built elements and MyGo's reduced-motion preference.
 
-Terminal starts the user's default login shell on first entry. MyGo owns shell selection, the pseudo-terminal, emulation and input. Gallery owns asynchronous native-library loading and the retained session; headless views never start a shell. Packaging and the bundled-library path adapter belong to Gallery, not the library. See [app bundles](../build.md#app-bundles).
+Terminal starts the user's default login shell on first entry. MyGo owns shell selection, the pseudo-terminal, emulation, search and input. Gallery owns asynchronous native-library loading, the retained session and its find bar; headless views never start a shell. The mirror is a second terminal fed `Terminal.NewMirror` frames at the session's size, as a multiplexer's window is; what is typed there goes to the shell, and it closes with its menu item or the session. Packaging and the bundled-library path adapter belong to Gallery, not the library. See [app bundles](../build.md#app-bundles).
 
 ### Native resources
 

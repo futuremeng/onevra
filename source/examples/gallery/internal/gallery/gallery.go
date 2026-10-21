@@ -33,7 +33,7 @@ type Gallery struct {
 	controlStates  map[string]*controlState
 	toasts         components.ToastOptions
 	// Native startup supplies the factory; headless views never load libraries.
-	createTerminal func() (*terminal.Terminal, error)
+	createTerminal func(terminal.Options) (*terminal.Terminal, error)
 	createWebView  func() (*mygo.WebView, error)
 	audioOutput    bool
 	systemServices bool
@@ -69,6 +69,14 @@ func (g *Gallery) newWindow(hidden bool) *sidebar.Shell {
 	g.Shell.Window().OnClose(func(*mygo.CloseEvent) { g.commands.palette.ReleaseInputSource() })
 	g.Shell.Window().OnClosed(g.Close)
 	return g.Shell
+}
+
+// refresh rebuilds the gallery window for a change made outside its frames,
+// such as by a native callback; a headless gallery has no window.
+func (g *Gallery) refresh() {
+	if g.Shell != nil {
+		g.Shell.Window().Invalidate()
+	}
 }
 
 func (g *Gallery) Titlebar(c *ui.Context) {

@@ -7,6 +7,9 @@
     "minimumSystemVersion": "13.0",
     "infoPlist": { "LSUIElement": true }
   },
+  "linux": {
+    "webview": false
+  },
   "i18n": {
     "dir": "locales",
     "source": "en"

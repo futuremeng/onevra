@@ -108,7 +108,7 @@ func (s *Shell) nativeOptions() mygo.WindowOptions {
 	o := s.options
 	return mygo.WindowOptions{
 		Title: o.Title, Width: o.Width, Height: o.Height, MinWidth: o.MinWidth, MinHeight: o.MinHeight, Hidden: o.Hidden, StateKey: o.StateKey,
-		TitleBarStyle: mygo.TitleBarHidden, Frameless: runtime.GOOS == "windows",
+		TitleBarStyle: mygo.TitleBarHidden, HideWindowButtons: runtime.GOOS == "windows",
 		TrafficLightPosition: &mygo.Point{X: 16, Y: 16}, Content: ui.View(s.view),
 	}
 }
@@ -214,7 +214,7 @@ func (s *Shell) captionButtons(c *ui.Context) {
 		if w != nil && w.IsMaximized() {
 			icon, name = lucide.Copy(), m.Text("restoreWindow")
 		}
-		if captionButton(c, icon, name).Clicked() && w != nil {
+		if captionButton(c, icon, name).MaximizeButton().Clicked() && w != nil {
 			w.ToggleMaximize()
 		}
 		if captionButton(c, lucide.X(), m.Text("closeWindow")).Clicked() && w != nil {

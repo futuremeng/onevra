@@ -140,7 +140,7 @@ func TestIconNavigation(t *testing.T) {
 			ui.Column(c).Width(200).FillHeight().Children(func() { g.Left(c) })
 			ui.Column(c).Grow(1).FillHeight().Children(func() { g.View(c) })
 		})
-	}, 820, 700)
+	}, 820, 900)
 	if g.page != lucidePage {
 		t.Fatal("default page is not the icon library")
 	}

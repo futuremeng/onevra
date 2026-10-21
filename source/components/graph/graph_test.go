@@ -156,14 +156,14 @@ func TestZoomAndPan(t *testing.T) {
 	px, py := r.X+r.W/2, r.Y+r.H/2
 	gx := (float64(px-r.X) - h.state.camera.x) / h.state.camera.zoom
 	before := h.state.Zoom()
-	h.tt.Scroll(px, py, 0, -120)
+	h.tt.Wheel(px, py, 0, -120)
 	if got := h.state.Zoom(); math.Abs(float64(got/before)-1.5) > 1e-3 {
 		t.Fatalf("wheel zoom = %g, want ×1.5 of %g", got, before)
 	}
 	if after := (float64(px-r.X) - h.state.camera.x) / h.state.camera.zoom; math.Abs(after-gx) > 1e-6 {
 		t.Fatal("zoom did not stay anchored at the pointer")
 	}
-	// Tester scrolls carry no modifiers or precision; platforms report them.
+	// Tester scrolls carry no modifiers; platforms report them.
 	scroll := func(dx, dy float32, mods ui.Modifiers, precise bool) {
 		e, _ := gesture.Classify(ui.InputEvent{Kind: ui.InputScroll, X: px - r.X, Y: py - r.Y, DX: dx, DY: dy, Mods: mods, Precise: precise})
 		h.state.navigate(e)

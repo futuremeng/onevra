@@ -6,6 +6,9 @@
   "macos": {
     "minimumSystemVersion": "13.0"
   },
+  "linux": {
+    "webview": false
+  },
   "i18n": {
     "dir": "locales",
     "source": "en"

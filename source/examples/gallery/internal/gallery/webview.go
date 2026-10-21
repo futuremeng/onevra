@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"html/template"
 	"log"
+	"runtime"
 	"slices"
 	"strings"
 	"time"
@@ -19,12 +20,14 @@ import (
 // first entry and kept while other pages show; the view only places it.
 // loaded is the theme and language its page was last rendered for. covered
 // tells that a modal layer of the gallery is open over the window.
+// safariTab leaves Tab to fields, as Safari does, in the next view made.
 type webViewDemo struct {
-	view    *mygo.WebView
-	err     error
-	loaded  string
-	menu    bool
-	covered bool
+	view      *mygo.WebView
+	err       error
+	loaded    string
+	menu      bool
+	covered   bool
+	safariTab bool
 }
 
 func (d *webViewDemo) start(create func() (*mygo.WebView, error)) {
@@ -41,8 +44,13 @@ func (d *webViewDemo) close() {
 	d.view, d.err, d.loaded = nil, nil, ""
 }
 
+// newWebView names Gallery in the page's user agent, after the system web
+// engine's own.
 func (g *Gallery) newWebView() (*mygo.WebView, error) {
-	return g.Shell.Window().NewWebView(mygo.WebViewOptions{})
+	return g.Shell.Window().NewWebView(mygo.WebViewOptions{Page: mygo.PageOptions{
+		UserAgentSuffix: "OnevraGallery/" + galleryVersion,
+		SafariTabFocus:  g.mygoState("WebView", "Default", true).webView.safariTab,
+	}})
 }
 
 // webViewBaseURL gives the demonstration page a real origin, so the page's
@@ -69,6 +77,8 @@ button { background: {{.Accent}}; color: {{.AccentText}}; border-color: transpar
 	<button onclick="count.value = Number(count.value) + 1">{{.Count}}</button>
 	<output id="count">0</output>
 </div>
+<h2>{{.UserAgent}}</h2>
+<p><code id="agent"></code></p>
 <h2>{{.Cookies}}</h2>
 <p><code id="jar"></code></p>
 <div class="row">
@@ -83,6 +93,7 @@ function setCookie() {
 	showJar();
 }
 showJar();
+document.getElementById("agent").textContent = navigator.userAgent;
 </script>
 </body></html>`))
 
@@ -107,6 +118,7 @@ func webViewHTML(c *ui.Context) string {
 		"Body":        tr(c, "theSystemWebEngineRendersThisPageNativePopoversDialogsAnd"),
 		"Placeholder": tr(c, "typeIntoThePage"),
 		"Count":       tr(c, "count"),
+		"UserAgent":   tr(c, "webViewUserAgent"),
 		"Cookies":     tr(c, "webViewCookies"),
 		"CookieSet":   tr(c, "webViewCookieSet"),
 	})
@@ -142,6 +154,12 @@ func exampleWebView(c *ui.Context, s *demoState) {
 			components.Popover(c, anchor, &d.menu, func(panel ui.Element) {
 				components.Text(c, tr(c, "nativeUiPaintedAfterTheWebViewShowsOverItsPage")).Wrap().MaxWidth(t.Space(60))
 			})
+			// Tab focus is the page's from its creation: a change makes the
+			// web view again, which the page then loads into.
+			if runtime.GOOS == "darwin" && components.Checkbox(c, &d.safariTab, tr(c, "webViewSafariTab")).Changed() {
+				d.close()
+				c.Invalidate()
+			}
 		})
 		var frame ui.Element
 		if d.covered {

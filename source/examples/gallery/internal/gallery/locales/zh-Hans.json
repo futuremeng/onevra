@@ -1038,5 +1038,22 @@
   "glassUncoloredBar": "无着色栏",
   "glassContentHint": "玻璃沿边缘折射光线，并磨砂其中央下方的内容。",
   "glassBottomBar": "底栏",
-  "componentScrollEdgeBar": "滚动边缘栏"
+  "componentScrollEdgeBar": "滚动边缘栏",
+  "componentLoadingIndicators": "加载指示器",
+  "loadingPause": "暂停",
+  "terminalFind": "在终端中查找",
+  "terminalMatches": "第 {selected} 个，共 {total} 个",
+  "terminalOlderMatch": "较早的匹配",
+  "terminalNewerMatch": "较新的匹配",
+  "terminalEndFind": "关闭查找",
+  "terminalCopied": "已复制到剪贴板",
+  "terminalOptions": "终端选项",
+  "terminalMinimumContrast": "最低对比度",
+  "terminalMirror": "镜像会话",
+  "terminalMirrorLabel": "镜像的会话",
+  "terminalMirrorFailed": "无法镜像会话",
+  "notificationSender": "以 ONEO 的消息发送",
+  "webViewUserAgent": "用户代理",
+  "webViewSafariTab": "Tab 键仅切换输入框，与 Safari 相同",
+  "flyoutMaterial": "材质浮层"
 }

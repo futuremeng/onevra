@@ -47,7 +47,7 @@ func TestHandleRoutesInput(t *testing.T) {
 			func(ev ui.InputEvent) bool { others++; return ev.Kind == ui.InputPointerDown })
 	}, 200, 200)
 	tt.Frame()
-	tt.Scroll(50, 60, 0, -120)
+	tt.Wheel(50, 60, 0, -120)
 	if len(got) != 1 || got[0].Kind != Zoom || got[0].X != 50 || got[0].Y != 60 {
 		t.Fatalf("scroll delivered %+v", got)
 	}
