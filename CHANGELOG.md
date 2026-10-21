@@ -4,6 +4,8 @@ User-facing updates for Onevra library consumers.
 
 ## [Unreleased]
 
+## [0.2026.14] - 2026-10-21
+
 - Breaking: Require MyGo 0.6.0.
 - Breaking: Remove `chat.SwitchChip` in favor of `components.SwitchOptions.Compact`.
 - Breaking: Remove `components.IconButtonToolbarExpanding` in favor of `components.IconButtonToolbar`.
