@@ -1,53 +1,47 @@
 # Onevra
 
-Onevra is an independent Go component library built on MyGo. Read [ARCHITECTURE.md](ARCHITECTURE.md) in full before changing code, then read the relevant Subjects.
+Onevra is an independent Go component library built on MyGo. Read [ARCHITECTURE.md](ARCHITECTURE.md) in full before changing code, then the relevant Subjects.
 
-## Boundaries
+## Principles
 
-- Keep Go source, tests, examples, module files and application packaging configuration in `source/`. Run Go commands from that module directory; keep documentation at the repository root and in `docs/`, and the public documentation site's pages in `website/content/docs/`. The module path is `github.com/oneo-me/onevra/source`; follow the [publication versioning rules](docs/build.md#publication).
-
-- When Onevra implements a component, use that component instead of MyGo's equivalent styled widget in application and gallery UI. MyGo primitives and unstyled bases remain implementation building blocks; dedicated MyGo component demonstrations are the only styled-widget exception. Check `source/components/` and `source/shells/` before choosing a control.
-- Use all MyGo plugins directly, including Glass and future plugins; do not implement Onevra replacements.
-- Compose MyGo primitives and unstyled bases; do not create a parallel renderer, input system or theme manager.
+- Keep Go code, tests, examples and packaging in `source/`; run Go commands there.
+- Use Onevra's components, from `source/components/` and `source/shells/`, instead of MyGo's styled equivalents. Only MyGo component demonstrations are exempt.
+- Compose MyGo primitives, unstyled bases and plugins, including Glass, directly. Never build a parallel renderer, input system, theme manager or plugin replacement.
 - Keep public components product-neutral. Applications own business state, localized text, persistence and asynchronous work.
-- Prefer generic content slots for shared component customization over business-specific fields or variants. Keep domain-specific content and decisions in the application; preserve existing convenience APIs when adding slots.
-- Read upstream public signatures before using MyGo APIs. MyGo documentation: https://mygo.egoist.dev/docs; Markdown index: https://mygo.egoist.dev/llms.txt; complete Markdown: https://mygo.egoist.dev/llms-full.txt; individual pages: `/docs/*.md`. Version-matched documentation and implementation live in `docs/` and `ui/` under the directory returned by `GOWORK=off go list -m -f '{{.Dir}}' github.com/egoist/mygo` from `source/`; prefer these over the latest website when versions differ. Keep examples runnable independently of consumer applications.
-- On every MyGo upgrade, read the release notes and compare upstream changes against Onevra's own components and Shell, especially adapted collection behavior, input, accessibility, animation and native appearance. Adopt applicable fixes through upstream primitives rather than duplicating runtime internals; preserve intentional Onevra interaction contracts. Proactively run `GOWORK=off go generate ./examples/gallery/internal/gallery` from `source/` on every upgrade and review the generated inventory diff; do not rely on packaging to refresh it. By default, supplement the gallery catalog with runnable examples for every newly added component, window and application API, including methods and plugins the generator cannot discover; provide localized labels, lifecycle cleanup and relevant interaction coverage. Do not omit an example on your own judgment: the user decides which to keep, and only then record the reason for an exclusion in the decision map. Add regression tests where Onevra's own behavior changes, and report review conclusions and native-verification gaps.
-- Give every new public component a documentation page with a live example in `source/examples/website/examples/` and its `<GoAPI>` entries, in English and Chinese; follow [Adding a page](website/README.md#adding-a-page). The website's `bun run check` fails while any exported function lacks an API section.
-- Gallery and starter-application trays follow the [tray convention](docs/build.md#tray-convention); keep them aligned when changing any tray.
-- Use English for documentation and comments, except maintained translations and intentional multilingual fixtures.
-- Keep README.md and README.zh-CN.md equivalent with reciprocal language links.
+- Prefer generic content slots over business-specific fields or variants, and keep existing convenience APIs when adding slots.
+- Read MyGo's public signatures before using its APIs. Prefer `docs/` and `ui/` under `GOWORK=off go list -m -f '{{.Dir}}' github.com/egoist/mygo` (from `source/`) over the [latest website](https://mygo.egoist.dev/llms.txt).
+- On every MyGo upgrade, follow [Upgrading MyGo](docs/build.md#upgrading-mygo).
+- Give every new public component a website page with a live example and `<GoAPI>` entries in both languages; see [Adding a page](website/README.md#adding-a-page).
+- Keep Gallery and starter-application trays aligned with the [tray convention](docs/build.md#tray-convention).
 
-## Maintenance
+## Working with the user
 
-Update documentation in the same change only when its reader-needed facts change. Implementation edits alone do not require prose changes.
-
-- README.md and README.zh-CN.md cover the project introduction, basic usage and contributor onboarding. Link to deeper material instead of expanding the quick start.
-- The website's pages teach consumers: when public behavior or usage changes, update the affected page and example in both languages. API sections read doc comments, so keep those accurate rather than restating them.
-- ARCHITECTURE.md and docs/ explain system boundaries, core flows, design rationale and important constraints. Keep property definitions, defaults and local implementation details in code; do not duplicate them in prose or create a document per task.
-- skills/onevra/ guides Agents building applications on Onevra. Update it when basic usage, component replacement decisions, testing conventions or packaging requirements change; keep it concise and link to the module source for details.
-- CHANGELOG.md records what a library consumer notices or must do, under Unreleased. Write one short clause per outcome, starting with a verb and naming the public API, such as "Add `components.Honeycomb`."
-- Do not extend an entry with a colon, semicolon or "which" clause; behavior, options and migration details belong in documentation.
-- Omit refactors, source layout, tests, tooling, styling, copy tweaks and gallery-only changes. Merge related entries; never present an unreleased experiment as a removed released feature.
-- Prefix breaking changes with `Breaking:` and name at most the replacement. Record MyGo upgrades as the required version alone, first in its group.
-- Order each version's bullets by type: `Breaking:`, then Add, then other changes such as Change, Require or Animate, then Fix. Insert new entries into their group instead of appending.
-- Keep each version's bullets in one list without type subheadings or blank lines; retain blank lines around headings.
-- Update summaries, changelog entries and release notes describe only what was added, changed or removed. Unless the user explicitly requests it, omit Verification sections and all testing or validation details, including commands, results and verification gaps. Required checks still run as part of the work.
-
-Keep documentation and code on the same branch and reconcile definitions during merges. Each explanation has one owning location; link rather than repeat it.
-
-The 16 KiB overview and 24 KiB subject budgets are ceilings, not targets. Remove redundancy before splitting; add subjects only for distinct, lasting design questions. Keep Subjects and references current.
+- Never create sub-Agents or Git worktrees; work directly in the current checkout.
+- Do not commit, tag, publish or push without explicit authorization.
+- An explicit request to publish a named version authorizes [Authorized publication](docs/build.md#authorized-publication) end to end, including the tag-triggered GitHub Release.
+- Requests to prepare a release, edit documents or record release rules do not authorize publication. Application archives need separate inclusion.
+- Omit verification details from update summaries, changelog entries and release notes unless the user asks. Required checks still run.
 
 ## Verification
 
-Scale [development checks](docs/build.md#development-checks) to the change. While iterating, run only the affected packages, narrowed with `-run`; before handing off, run formatting, vet, the build and `go test ./...` once. Leave the full race check, native tests and other runs over a minute to the user: list the commands and state that they were not run. Documentation-only changes need no Go checks. Website changes run `bun run check`, `bun run typecheck` and `bun run build` from `website/`.
+Scale the [development checks](docs/build.md#development-checks) to the change.
 
-Add tests for public component behavior and contracts and for fixed bugs; extend existing tests before creating new ones. Gallery demonstrations, copy, styling adjustments and removals need no new tests. Keep tests fast: avoid real-time waits and repeated full-page frames.
+- While iterating, run only affected packages, narrowed with `-run`. Before handing off, run formatting, vet, the build and `go test ./...` once.
+- Leave the race check, native tests and runs over a minute to the user; list those commands as not run.
+- Website changes run `bun run check`, `bun run typecheck` and `bun run build` in `website/`. Documentation-only changes skip Go checks.
+- Test public component contracts and fixed bugs, extending existing tests first; avoid real-time waits and repeated full-page frames.
+- Interface changes need target-platform native review; report what remains unreviewed instead of compensating with tests.
 
-Interface changes need target-platform native review. Headless tests cannot replace it, so report what remains unreviewed rather than adding tests to compensate. Do not launch external terminals or Agents as a substitute.
+## Documentation
 
-For documentation, verify size budgets, Subjects coverage, relative links and heading anchors, and changelog structure. Run `git diff --check` from the repository root. Do not commit, tag, publish or push without explicit authorization.
-
-## Release requests
-
-An explicit request to publish a named version authorizes the preparation, release commit, annotated tag and pushes described in [Authorized publication](docs/build.md#authorized-publication); execute that workflow without asking again for each step. Requests to prepare a release, edit documentation or record the release rules do not authorize publication. Pushing the release tag also authorizes the [tag-triggered workflow](.github/workflows/release.yml) to create its GitHub Release page. Application archives require separate inclusion in the requested scope.
+- Update a document only when a fact its reader needs changes. Each fact has one owner; link rather than repeat.
+- Keep each document within its budget and written for its reader. Website API sections read doc comments; keep them accurate.
+- Update `skills/onevra/` when basic usage, component choices, testing or packaging change.
+- Repair documents you touch instead of only appending to them.
+- Keep `README.md` and `README.zh-CN.md` equivalent. Everything else, including comments, is English except maintained translations and multilingual fixtures.
+- Record consumer-visible outcomes under `Unreleased` as one verb-first clause naming the public API, with no colon, semicolon or "which" clause.
+- Omit refactors, layout, tests, tooling, styling, copy and gallery-only changes.
+- Prefix breaking changes with `Breaking:`, naming at most the replacement. Record a MyGo upgrade as the required version alone, first in its group.
+- Order each version's single list as `Breaking:`, Add, other verbs, then Fix; merge related entries.
+- Keep documentation on the code branch and reconcile it during merges.
+- Check budgets, Subjects, links, anchors and changelog structure; run `git diff --check` at the repository root.
