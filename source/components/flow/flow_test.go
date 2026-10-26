@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/egoist/mygo/ui"
+	"github.com/oneo-me/onevra/source/components/gesture"
 	"github.com/oneo-me/onevra/source/theme"
 )
 
@@ -191,3 +192,88 @@ func TestViewRelaysOutWhenDataChanges(t *testing.T) {
 		t.Fatal("empty state is missing")
 	}
 }
+
+func TestMapViewPansFromNodesAndKeepsClicks(t *testing.T) {
+	h := newHarness(t)
+	h.opts.Navigation = NavigationMap
+	h.settle()
+	v := &h.state.view
+	if v.navigation.ScrollMode() != gesture.ScrollZoom {
+		t.Fatal("NavigationMap did not reach the navigation")
+	}
+	// A press-drag that starts on a node pans the map, and stays a drag.
+	r, ok := h.tt.Find("Build")
+	if !ok {
+		t.Fatal("Build node missing")
+	}
+	cx, cy := r.X+r.W/2, r.Y+r.H/2
+	before := v.shown
+	h.tt.Press(cx, cy)
+	h.tt.Move(cx+30, cy+20)
+	h.tt.Move(cx+60, cy+40)
+	h.tt.Release(cx+60, cy+40)
+	h.settle()
+	if v.shown.x-before.x != 60 || v.shown.y-before.y != 40 {
+		t.Fatalf("map pan from a node moved the camera from %v to %v", before, v.shown)
+	}
+	if len(h.selected) != 0 {
+		t.Fatalf("a map pan selected %v", h.selected)
+	}
+	// Clicks and double-clicks on nodes keep their meaning: select, open,
+	// and no zoom — the zoom-on-double-click belongs to empty space. The
+	// pan moved the node on screen, so its center is recomputed.
+	if err := h.tt.Click("Build"); err != nil {
+		t.Fatal(err)
+	}
+	h.settle()
+	if len(h.selected) != 1 || h.selected[0] != "build" {
+		t.Fatalf("map mode click selected %v", h.selected)
+	}
+	r2, ok := h.tt.Find("Build")
+	if !ok {
+		t.Fatal("Build node missing after pan")
+	}
+	cx2, cy2 := r2.X+r2.W/2, r2.Y+r2.H/2
+	zoom := h.state.Zoom()
+	h.tt.ClickAt(cx2, cy2)
+	h.tt.ClickAt(cx2, cy2)
+	h.settle()
+	if len(h.opened) != 1 || h.opened[0] != "build" {
+		t.Fatalf("map mode double-click opened %v", h.opened)
+	}
+	if h.state.Zoom() != zoom {
+		t.Fatalf("double-click on a node zoomed from %v", zoom)
+	}
+	// Clicking empty space still clears.
+	h.tt.ClickAt(4, 690)
+	h.settle()
+	if last := h.selected[len(h.selected)-1]; last != "" {
+		t.Fatalf("empty click selected %q", last)
+	}
+}
+
+func TestDefaultModeDoesNotPanFromNodes(t *testing.T) {
+	h := newHarness(t)
+	v := &h.state.view
+	r, ok := h.tt.Find("Build")
+	if !ok {
+		t.Fatal("Build node missing")
+	}
+	cx, cy := r.X+r.W/2, r.Y+r.H/2
+	before := v.shown
+	h.tt.Press(cx, cy)
+	h.tt.Move(cx+30, cy+20)
+	h.tt.Release(cx+30, cy+20)
+	h.settle()
+	if v.shown != before {
+		t.Fatalf("default mode panned from a node: %v to %v", before, v.shown)
+	}
+	// MyGo counts a press and release on the same element as a click no
+	// matter how far the pointer travelled between them, so a drag that
+	// starts and ends inside a card selects it. NavigationMap exists to
+	// change exactly that: there the same gesture is a pan, never a click.
+	if len(h.selected) != 1 || h.selected[0] != "build" {
+		t.Fatalf("drag on a node selected %v", h.selected)
+	}
+}
+

@@ -1,6 +1,8 @@
 // Package gesture turns scroll and touchpad input into pan and zoom for
 // canvases such as graphs, maps and image viewers: a mouse wheel and a
 // touchpad pinch zoom, and two fingers dragged on a touchpad pan.
+// Navigation.SetScrollMode(ScrollZoom) switches to the map-like contract,
+// where every unmodified scroll zooms at the pointer.
 //
 // MyGo reports scrolling, not the device behind it, and does not deliver
 // touchpad magnification. On macOS a narrow AppKit adapter reads the scroll
@@ -53,6 +55,18 @@ const (
 	Zoom
 )
 
+// ScrollMode is what an unmodified scroll does.
+type ScrollMode uint8
+
+const (
+	// ScrollPan pans on a two-finger touchpad scroll and zooms on a wheel:
+	// the document-canvas default.
+	ScrollPan ScrollMode = iota
+	// ScrollZoom zooms at the pointer on every unmodified scroll, as maps
+	// and canvases expect.
+	ScrollZoom
+)
+
 // Event is a pan or zoom at X, Y, relative to the element's box.
 type Event struct {
 	Kind         Kind
@@ -71,11 +85,12 @@ const (
 	pinchZoomDistance = 48
 )
 
-// Classify maps a scroll to navigation. A touchpad pans unless Control or
-// Command is held, which zooms as a pinch does; a wheel zooms, except a
-// sideways wheel, or Shift with a vertical one on macOS, which pans across.
+// Classify maps a scroll to navigation under the default ScrollPan mode.
 // Call it while handling the event; ok is false for other input.
-func Classify(ev ui.InputEvent) (Event, bool) {
+func Classify(ev ui.InputEvent) (Event, bool) { return classify(ev, ScrollPan) }
+
+// classify maps a scroll to navigation under the given mode.
+func classify(ev ui.InputEvent, mode ScrollMode) (Event, bool) {
 	if ev.Kind != ui.InputScroll {
 		return Event{}, false
 	}
@@ -83,14 +98,17 @@ func Classify(ev ui.InputEvent) (Event, bool) {
 	out := Event{X: ev.X, Y: ev.Y, Device: device}
 	modified := ev.Mods&(ui.Ctrl|ui.Super) != 0
 	switch {
-	case device == Touchpad && !modified:
+	case device == Touchpad && !modified && mode == ScrollPan:
 		out.Kind, out.DX, out.DY = Pan, -ev.DX, -ev.DY
-	case device == Wheel && !modified && ev.DY == 0:
+	case device == Wheel && !modified && ev.DY == 0 && mode == ScrollPan:
 		out.Kind, out.DX = Pan, -ev.DX
 	default:
 		distance := float64(wheelZoomDistance)
 		if device == Touchpad {
-			distance, out.Pinch = pinchZoomDistance, true
+			distance = pinchZoomDistance
+			// Only modifiers make a pinch; a plain touchpad scroll
+			// zooming under ScrollZoom is not one.
+			out.Pinch = modified
 		}
 		out.Kind, out.Scale = Zoom, math.Exp(-float64(ev.DY)*math.Log(1.5)/distance)
 	}
@@ -103,11 +121,19 @@ func Classify(ev ui.InputEvent) (Event, bool) {
 type Navigation struct {
 	fn       func(Event)
 	services ui.Services
+	scroll   ScrollMode
 	// Where the element last saw the pointer, in its own box and in the
 	// native window, so a pinch there can be placed in the element.
 	x, y    float32
 	pointer nativePointer
 }
+
+// SetScrollMode chooses what an unmodified scroll does; the default is
+// ScrollPan. Call it on each build, like Handle.
+func (n *Navigation) SetScrollMode(m ScrollMode) { n.scroll = m }
+
+// ScrollMode returns the mode SetScrollMode installed.
+func (n *Navigation) ScrollMode() ScrollMode { return n.scroll }
 
 // Handle has el take its input through fn, as HandleInput does, after
 // sending scrolling and pinches to navigate. Navigation events reach
@@ -121,7 +147,7 @@ func (n *Navigation) Handle(c *ui.Context, el ui.Element, navigate func(Event), 
 		case ui.InputPointerMove, ui.InputPointerDown, ui.InputScroll:
 			n.track(ev.X, ev.Y)
 		}
-		if g, ok := Classify(ev); ok && n.fn != nil {
+		if g, ok := classify(ev, n.scroll); ok && n.fn != nil {
 			n.fn(g)
 			return true
 		}

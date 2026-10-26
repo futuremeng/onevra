@@ -13,6 +13,7 @@ import (
 
 	"github.com/egoist/mygo/ui"
 	"github.com/oneo-me/onevra/source/components"
+	"github.com/oneo-me/onevra/source/components/gesture"
 )
 
 // Direction is the way edges point.
@@ -63,6 +64,7 @@ type Data struct {
 // Label is the accessible description (a node and edge count by default).
 // Height sets a fixed height; zero fills the parent. NodeGap separates
 // nodes within a rank (default 40) and RankGap the ranks (default 72).
+// Navigation picks the scroll-and-drag contract (see NavigationMode).
 //
 // Selected is the application's selected node, which the view rings and
 // whose edges it emphasizes. Select is called on the UI thread when a node
@@ -75,11 +77,26 @@ type Options struct {
 	Label, EmptyText string
 	Height           float32
 	Direction        Direction
+	Navigation       NavigationMode
 	NodeGap, RankGap float32
 	Selected         string
 	Select, Open     func(id string)
 	Empty, Overlay   func(*ui.Context)
 }
+
+// NavigationMode is the view's scroll-and-drag contract.
+type NavigationMode uint8
+
+const (
+	// NavigationDefault pans with two fingers on a touchpad, zooms with
+	// the wheel and a pinch, and drags from empty space only.
+	NavigationDefault NavigationMode = iota
+	// NavigationMap is the map-like contract: every unmodified scroll
+	// zooms around the pointer, and a press-drag pans from anywhere,
+	// including over nodes. Clicks and double-clicks on nodes still
+	// select and open them.
+	NavigationMap
+)
 
 // State retains measured sizes, layout and camera between frames. Keep one
 // per diagram; its zero value is ready to use. Nil state uses element-local
@@ -114,11 +131,13 @@ func (s *State) Position(id string) (x, y float32, ok bool) {
 	return float32(s.result.x[i]), float32(s.result.y[i]), true
 }
 
-// View builds the diagram. Drag empty space or two fingers on a touchpad to
-// pan, use the wheel or a pinch to zoom around the pointer, and
-// double-click empty space to zoom in, or out with Shift. Nodes take the
-// keyboard focus in data order when the application can select or open
-// them, and the camera follows the focused node.
+// View builds the diagram. With the default Navigation, drag empty space
+// or two fingers on a touchpad to pan, use the wheel or a pinch to zoom
+// around the pointer, and double-click empty space to zoom in, or out with
+// Shift. With NavigationMap, every scroll zooms around the pointer and a
+// press-drag pans from anywhere. Nodes take the keyboard focus in data
+// order when the application can select or open them, and the camera
+// follows the focused node.
 func View(c *ui.Context, state *State, data Data, opts Options) ui.Element {
 	t := c.Theme()
 	root := ui.Box(c).Clip().MinWidth(0)
@@ -319,6 +338,13 @@ func (v *view) update(data Data, opts Options, reduce bool) {
 	v.init()
 	v.reduceMotion = reduce
 	v.selected, v.selectFn, v.direction = opts.Selected, opts.Select, opts.Direction
+	v.openFn = opts.Open
+	v.mapNav = opts.Navigation == NavigationMap
+	if v.mapNav {
+		v.navigation.SetScrollMode(gesture.ScrollZoom)
+	} else {
+		v.navigation.SetScrollMode(gesture.ScrollPan)
+	}
 	v.gaps = spacing{node: defaultNodeGap, rank: defaultRankGap, edge: edgeGap}
 	if opts.NodeGap > 0 {
 		v.gaps.node = float64(opts.NodeGap)

@@ -38,6 +38,52 @@ func TestClassify(t *testing.T) {
 	}
 }
 
+func TestScrollZoomMode(t *testing.T) {
+	scroll := func(dx, dy float32, mods ui.Modifiers, precise bool) Event {
+		e, ok := classify(ui.InputEvent{Kind: ui.InputScroll, X: 10, Y: 20, DX: dx, DY: dy, Mods: mods, Precise: precise}, ScrollZoom)
+		if !ok {
+			t.Fatal("scroll was not classified")
+		}
+		return e
+	}
+	// A plain touchpad scroll zooms at the pointer, and it is not a pinch.
+	if e := scroll(12, -30, 0, true); e.Kind != Zoom || e.Device != Touchpad || e.Pinch || e.X != 10 || e.Y != 20 {
+		t.Fatalf("touchpad scroll under ScrollZoom = %+v, want a zoom at the pointer", e)
+	}
+	// Touchpad scrolls scale by the pinch distance.
+	if e := scroll(0, -48, 0, true); math.Abs(e.Scale-1.5) > 1e-9 {
+		t.Fatalf("touchpad scroll = %+v, want ×1.5", e)
+	}
+	// A wheel zooms as it does under ScrollPan, and Control still pinches.
+	if e := scroll(0, -120, 0, false); e.Kind != Zoom || e.Pinch || math.Abs(e.Scale-1.5) > 1e-9 {
+		t.Fatalf("wheel = %+v, want ×1.5 zoom", e)
+	}
+	if e := scroll(0, 48, ui.Ctrl, true); e.Kind != Zoom || !e.Pinch || math.Abs(e.Scale-1/1.5) > 1e-9 {
+		t.Fatalf("Control-scroll = %+v, want ÷1.5 pinch zoom", e)
+	}
+	// A sideways scroll neither pans nor scales.
+	if e := scroll(40, 0, 0, true); e.Kind != Zoom || math.Abs(e.Scale-1) > 1e-9 {
+		t.Fatalf("sideways scroll = %+v, want a no-op zoom", e)
+	}
+}
+
+func TestSetScrollModeReachesHandle(t *testing.T) {
+	var nav Navigation
+	nav.SetScrollMode(ScrollZoom)
+	if nav.ScrollMode() != ScrollZoom {
+		t.Fatalf("SetScrollMode stored %v", nav.scroll)
+	}
+	var got []Event
+	tt := ui.NewTester(func(c *ui.Context) {
+		nav.Handle(c, ui.Box(c).Size(200, 200).Label("Canvas"), func(e Event) { got = append(got, e) }, nil)
+	}, 200, 200)
+	tt.Frame()
+	tt.Scroll(50, 60, 0, -120)
+	if len(got) != 1 || got[0].Kind != Zoom {
+		t.Fatalf("scroll delivered %+v, want one zoom", got)
+	}
+}
+
 func TestHandleRoutesInput(t *testing.T) {
 	var nav Navigation
 	var got []Event

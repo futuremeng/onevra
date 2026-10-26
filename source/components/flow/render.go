@@ -54,6 +54,7 @@ type view struct {
 	reduceMotion bool
 	selected     string
 	selectFn     func(string)
+	openFn       func(string)
 	hovered      string
 	focused      string
 
@@ -64,6 +65,7 @@ type view struct {
 	lastFrame     time.Time
 
 	panning, moved bool
+	mapNav         bool
 	pressClicks    int
 	startX, startY float64
 	lastX, lastY   float64
@@ -198,14 +200,18 @@ func (v *view) cursor() ui.Cursor {
 }
 
 // input pans when empty space is dragged, leaving presses on nodes to
-// them. Clicking empty space clears the selection and double-clicking it
-// zooms.
+// them. Under NavigationMap the view takes every press and routes the
+// clicks itself: a click on a node selects it, a double-click opens it,
+// empty space keeps its clear-and-zoom meanings, and a drag that moved is
+// a pan and never a click. Keyboard activation still runs through the
+// node's own click, which the view never claims. Clicking empty space
+// clears the selection and double-clicking it zooms.
 func (v *view) input(ev ui.InputEvent) bool {
 	x, y := float64(ev.X), float64(ev.Y)
 	switch ev.Kind {
 	case ui.InputPointerDown:
 		// Button 2 is the middle button.
-		if !v.ready || (ev.Button != 0 && ev.Button != 2) || v.hit(x, y) >= 0 {
+		if !v.ready || (ev.Button != 0 && ev.Button != 2) || (!v.mapNav && v.hit(x, y) >= 0) {
 			return false
 		}
 		v.panning, v.moved, v.pressClicks = true, false, ev.Clicks
@@ -232,14 +238,26 @@ func (v *view) input(ev ui.InputEvent) bool {
 		if v.moved || ev.Button != 0 {
 			return true
 		}
+		i := v.hit(x, y)
 		if v.pressClicks >= 2 {
-			factor := 2.0
-			if ev.Mods&ui.Shift != 0 {
-				factor = .5
+			switch {
+			case i < 0:
+				factor := 2.0
+				if ev.Mods&ui.Shift != 0 {
+					factor = .5
+				}
+				v.zoomAt(x, y, factor, true)
+			case v.mapNav && v.openFn != nil && v.pressClicks == 2:
+				// The engine counts one double-click, not one per press
+				// past the second; a third click stays silent.
+				v.openFn(v.nodes[i].id)
 			}
-			v.zoomAt(x, y, factor, true)
-		} else if v.selectFn != nil && v.selected != "" {
-			v.selectFn("")
+		} else if i < 0 {
+			if v.selectFn != nil && v.selected != "" {
+				v.selectFn("")
+			}
+		} else if v.mapNav && v.selectFn != nil {
+			v.selectFn(v.nodes[i].id)
 		}
 		return true
 	}

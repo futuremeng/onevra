@@ -4,6 +4,9 @@ User-facing updates for Onevra library consumers.
 
 ## [Unreleased]
 
+- Add `flow.Options.Navigation` with `flow.NavigationMap`, a map-like contract where scrolls zoom at the pointer and drags pan from anywhere.
+- Add `gesture.Navigation.SetScrollMode` with `gesture.ScrollZoom`.
+
 ## [0.2026.12] - 2026-10-18
 
 - Add `components.Avatar` and `components.AvatarGroup`.
