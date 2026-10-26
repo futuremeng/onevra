@@ -151,7 +151,7 @@ Formatting should produce no output. See [development checks](docs/build.md#deve
 
 ## Website
 
-The documentation site lives in [website/](website): guides and a page for every component, whose live examples are Go compiled to WebAssembly. The [Website workflow](.github/workflows/website.yml) deploys it to GitHub Pages. It needs Bun and Go 1.27.1 or later:
+The documentation site lives in [website/](website): guides and a page for every component, whose live examples are Go compiled to WebAssembly. The [Website workflow](.github/workflows/website.yml) deploys it to GitHub Pages. It needs Bun and Go 1.27.3 or later:
 
 ```sh
 cd website

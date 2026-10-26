@@ -151,7 +151,7 @@ GOWORK=off go build ./...
 
 ## 官网
 
-文档站点位于 [website/](website)：包含指南和每个组件的页面，页面中的实时示例由 Go 编译为 WebAssembly 运行。[Website workflow](.github/workflows/website.yml) 会将其部署到 GitHub Pages。运行它需要 Bun 和 Go 1.27.1 或更高版本：
+文档站点位于 [website/](website)：包含指南和每个组件的页面，页面中的实时示例由 Go 编译为 WebAssembly 运行。[Website workflow](.github/workflows/website.yml) 会将其部署到 GitHub Pages。运行它需要 Bun 和 Go 1.27.3 或更高版本：
 
 ```sh
 cd website

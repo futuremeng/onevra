@@ -7,7 +7,7 @@ The design and its constraints are in [Website design](../docs/architecture/webs
 ## Requirements
 
 - [Bun](https://bun.sh) 1.4 or newer.
-- [Go](https://go.dev) 1.27.1 or newer, which compiles the examples and reads the API.
+- [Go](https://go.dev) 1.27.3 or newer, which compiles the examples and reads the API.
 
 ## Commands
 

@@ -1,6 +1,6 @@
 # Development
 
-Use Go 1.27.1 or later. Run Go commands from `source/`; dependencies are pinned in [go.mod](../source/go.mod). No sibling project or workspace file is required.
+Use Go 1.27.3 or later. Run Go commands from `source/`; dependencies are pinned in [go.mod](../source/go.mod). No sibling project or workspace file is required.
 
 Native windows require a desktop session. Linux also needs GTK 3, Pango and OpenGL system libraries. See the [MyGo native guides](https://github.com/egoist/mygo/tree/0f79256101ac/docs/ui) for platform setup.
 

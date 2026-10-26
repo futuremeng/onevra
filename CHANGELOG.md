@@ -4,6 +4,8 @@ User-facing updates for Onevra library consumers.
 
 ## [Unreleased]
 
+- Require MyGo 0.6.4.
+
 ## [0.2026.15] - 2026-10-23
 
 - Require MyGo 0.6.3.
