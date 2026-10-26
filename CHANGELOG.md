@@ -5,6 +5,7 @@ User-facing updates for Onevra library consumers.
 ## [Unreleased]
 
 - Add `flow.Options.Navigation` with `flow.NavigationMap`, a map-like contract where scrolls zoom at the pointer and drags pan from anywhere.
+- Add `flow.Options.OnZoom`, a hook that turns wheel, scroll, pinch and map-mode empty double-click zoom into an application-owned depth change with the camera scale untouched.
 - Add `gesture.Navigation.SetScrollMode` with `gesture.ScrollZoom`.
 
 ## [0.2026.12] - 2026-10-18

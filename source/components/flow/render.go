@@ -66,6 +66,7 @@ type view struct {
 
 	panning, moved bool
 	mapNav         bool
+	onZoomFn       func(bool)
 	pressClicks    int
 	startX, startY float64
 	lastX, lastY   float64
@@ -246,7 +247,11 @@ func (v *view) input(ev ui.InputEvent) bool {
 				if ev.Mods&ui.Shift != 0 {
 					factor = .5
 				}
-				v.zoomAt(x, y, factor, true)
+				if v.onZoomFn != nil {
+					v.onZoomFn(factor > 1)
+				} else {
+					v.zoomAt(x, y, factor, true)
+				}
 			case v.mapNav && v.openFn != nil && v.pressClicks == 2:
 				// The engine counts one double-click, not one per press
 				// past the second; a third click stays silent.
@@ -276,6 +281,10 @@ func (v *view) navigate(e gesture.Event) {
 		v.shown = v.camera
 		v.userMoved = true
 	case gesture.Zoom:
+		if v.onZoomFn != nil {
+			v.onZoomFn(e.Scale > 1)
+			return
+		}
 		v.zoomAt(float64(e.X), float64(e.Y), e.Scale, false)
 	}
 }

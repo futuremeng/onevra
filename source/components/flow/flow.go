@@ -82,6 +82,12 @@ type Options struct {
 	Selected         string
 	Select, Open     func(id string)
 	Empty, Overlay   func(*ui.Context)
+	// OnZoom turns zoom gestures into an application-owned depth change:
+	// when set, the wheel, scroll, pinch and the map-mode double-click on
+	// empty space all call the hook (zoomIn says which way the gesture
+	// went) and the camera's scale stays untouched. Pan, node clicks and
+	// node double-clicks keep their meanings.
+	OnZoom func(zoomIn bool)
 }
 
 // NavigationMode is the view's scroll-and-drag contract.
@@ -135,9 +141,10 @@ func (s *State) Position(id string) (x, y float32, ok bool) {
 // or two fingers on a touchpad to pan, use the wheel or a pinch to zoom
 // around the pointer, and double-click empty space to zoom in, or out with
 // Shift. With NavigationMap, every scroll zooms around the pointer and a
-// press-drag pans from anywhere. Nodes take the keyboard focus in data
-// order when the application can select or open them, and the camera
-// follows the focused node.
+// press-drag pans from anywhere. With Options.OnZoom set, every zoom
+// gesture calls the hook instead of scaling the view. Nodes take the
+// keyboard focus in data order when the application can select or open
+// them, and the camera follows the focused node.
 func View(c *ui.Context, state *State, data Data, opts Options) ui.Element {
 	t := c.Theme()
 	root := ui.Box(c).Clip().MinWidth(0)
@@ -339,6 +346,7 @@ func (v *view) update(data Data, opts Options, reduce bool) {
 	v.reduceMotion = reduce
 	v.selected, v.selectFn, v.direction = opts.Selected, opts.Select, opts.Direction
 	v.openFn = opts.Open
+	v.onZoomFn = opts.OnZoom
 	v.mapNav = opts.Navigation == NavigationMap
 	if v.mapNav {
 		v.navigation.SetScrollMode(gesture.ScrollZoom)

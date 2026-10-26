@@ -252,6 +252,49 @@ func TestMapViewPansFromNodesAndKeepsClicks(t *testing.T) {
 	}
 }
 
+// TestOnZoomTakesZoomGestures settles the hook contract: with OnZoom set,
+// zoom gestures (wheel/scroll/pinch reach navigate as gesture.Zoom) call the
+// hook and never move the camera's scale, and the map-mode double-click on
+// empty space routes to the hook instead of zoomAt.
+func TestOnZoomTakesZoomGestures(t *testing.T) {
+	h := newHarness(t)
+	var got []bool
+	h.opts.Navigation = NavigationMap
+	h.opts.OnZoom = func(zoomIn bool) { got = append(got, zoomIn) }
+	h.settle()
+	v := &h.state.view
+	if v.onZoomFn == nil {
+		t.Fatal("OnZoom did not reach the view")
+	}
+	v.navigate(gesture.Event{Kind: gesture.Zoom, Scale: 1.25, X: 10, Y: 10})
+	v.navigate(gesture.Event{Kind: gesture.Zoom, Scale: .8, X: 10, Y: 10})
+	if len(got) != 2 || !got[0] || got[1] {
+		t.Fatalf("OnZoom saw %v, want [true false]", got)
+	}
+	if v.shown.zoom != 1 || v.camera.zoom != 1 {
+		t.Fatalf("camera zoomed to shown %v camera %v under OnZoom", v.shown.zoom, v.camera.zoom)
+	}
+	// Empty-space double-click routes to the hook (plain = deeper,
+	// Shift = shallower) and still leaves the scale alone.
+	h.tt.ClickAt(4, 690)
+	h.tt.ClickAt(4, 690)
+	h.settle()
+	if len(got) != 3 || !got[2] {
+		t.Fatalf("empty double-click reached OnZoom as %v, want a third true", got)
+	}
+	if h.state.Zoom() != 1 {
+		t.Fatalf("empty double-click scaled the view to %v under OnZoom", h.state.Zoom())
+	}
+	// Node clicks keep selecting and opening under the hook.
+	if err := h.tt.Click("Build"); err != nil {
+		t.Fatal(err)
+	}
+	h.settle()
+	if last := h.selected[len(h.selected)-1]; last != "build" {
+		t.Fatalf("OnZoom mode click selected %v", h.selected)
+	}
+}
+
 func TestDefaultModeDoesNotPanFromNodes(t *testing.T) {
 	h := newHarness(t)
 	v := &h.state.view
