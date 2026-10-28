@@ -67,6 +67,7 @@ type view struct {
 	panning, moved bool
 	mapNav         bool
 	onZoomFn       func(bool)
+	onZoomAtFn     func(x, y float32, zoomIn bool)
 	pressClicks    int
 	startX, startY float64
 	lastX, lastY   float64
@@ -247,9 +248,12 @@ func (v *view) input(ev ui.InputEvent) bool {
 				if ev.Mods&ui.Shift != 0 {
 					factor = .5
 				}
-				if v.onZoomFn != nil {
+				switch {
+				case v.onZoomAtFn != nil:
+					v.onZoomAtFn(float32(x), float32(y), factor > 1)
+				case v.onZoomFn != nil:
 					v.onZoomFn(factor > 1)
-				} else {
+				default:
 					v.zoomAt(x, y, factor, true)
 				}
 			case v.mapNav && v.openFn != nil && v.pressClicks == 2:
@@ -281,9 +285,18 @@ func (v *view) navigate(e gesture.Event) {
 		v.shown = v.camera
 		v.userMoved = true
 	case gesture.Zoom:
-		if v.onZoomFn != nil {
-			v.onZoomFn(e.Scale > 1)
-			return
+		// A pinch or modified scroll is the deliberate scale gesture: it
+		// moves the camera even when the application took the plain
+		// wheel and scroll as something else.
+		if !e.Pinch {
+			if v.onZoomAtFn != nil {
+				v.onZoomAtFn(e.X, e.Y, e.Scale > 1)
+				return
+			}
+			if v.onZoomFn != nil {
+				v.onZoomFn(e.Scale > 1)
+				return
+			}
 		}
 		v.zoomAt(float64(e.X), float64(e.Y), e.Scale, false)
 	}

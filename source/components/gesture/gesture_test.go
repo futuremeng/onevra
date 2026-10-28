@@ -24,8 +24,8 @@ func TestClassify(t *testing.T) {
 	if e := scroll(0, 48, ui.Ctrl, true); e.Kind != Zoom || !e.Pinch || math.Abs(e.Scale-1/1.5) > 1e-9 {
 		t.Fatalf("touchpad Control-scroll = %+v, want ÷1.5 pinch zoom", e)
 	}
-	if e := scroll(0, -120, ui.Super, false); e.Kind != Zoom || e.Pinch {
-		t.Fatalf("Command-wheel = %+v, want a wheel zoom", e)
+	if e := scroll(0, -120, ui.Super, false); e.Kind != Zoom || !e.Pinch {
+		t.Fatalf("Command-wheel = %+v, want a pinch zoom scaling the canvas", e)
 	}
 	if e := scroll(12, -30, 0, true); e.Kind != Pan || e.Device != Touchpad || e.DX != -12 || e.DY != 30 {
 		t.Fatalf("touchpad scroll = %+v, want a pan", e)
@@ -54,12 +54,16 @@ func TestScrollZoomMode(t *testing.T) {
 	if e := scroll(0, -48, 0, true); math.Abs(e.Scale-1.5) > 1e-9 {
 		t.Fatalf("touchpad scroll = %+v, want ×1.5", e)
 	}
-	// A wheel zooms as it does under ScrollPan, and Control still pinches.
+	// A wheel zooms as it does under ScrollPan, Control pinches, and a
+	// Super-scroll pinches as the deliberate scale gesture.
 	if e := scroll(0, -120, 0, false); e.Kind != Zoom || e.Pinch || math.Abs(e.Scale-1.5) > 1e-9 {
 		t.Fatalf("wheel = %+v, want ×1.5 zoom", e)
 	}
 	if e := scroll(0, 48, ui.Ctrl, true); e.Kind != Zoom || !e.Pinch || math.Abs(e.Scale-1/1.5) > 1e-9 {
 		t.Fatalf("Control-scroll = %+v, want ÷1.5 pinch zoom", e)
+	}
+	if e := scroll(0, -120, ui.Super, false); e.Kind != Zoom || !e.Pinch {
+		t.Fatalf("Super-wheel = %+v, want a pinch zoom", e)
 	}
 	// A sideways scroll neither pans nor scales.
 	if e := scroll(40, 0, 0, true); e.Kind != Zoom || math.Abs(e.Scale-1) > 1e-9 {

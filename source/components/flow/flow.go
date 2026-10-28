@@ -83,11 +83,16 @@ type Options struct {
 	Select, Open     func(id string)
 	Empty, Overlay   func(*ui.Context)
 	// OnZoom turns zoom gestures into an application-owned depth change:
-	// when set, the wheel, scroll, pinch and the map-mode double-click on
-	// empty space all call the hook (zoomIn says which way the gesture
-	// went) and the camera's scale stays untouched. Pan, node clicks and
-	// node double-clicks keep their meanings.
+	// when set, the wheel, scroll and the map-mode double-click on empty
+	// space all call the hook (zoomIn says which way the gesture went)
+	// and the camera's scale stays untouched. A pinch or a Control- or
+	// Super-scroll stays a camera zoom: it is the deliberate scale
+	// gesture. Pan, node clicks and node double-clicks keep their
+	// meanings.
 	OnZoom func(zoomIn bool)
+	// OnZoomAt is OnZoom with the point of the view the gesture happened
+	// at, and takes precedence over it.
+	OnZoomAt func(x, y float32, zoomIn bool)
 }
 
 // NavigationMode is the view's scroll-and-drag contract.
@@ -137,12 +142,40 @@ func (s *State) Position(id string) (x, y float32, ok bool) {
 	return float32(s.result.x[i]), float32(s.result.y[i]), true
 }
 
+// Camera returns the camera shown this frame: the diagram's offset and the
+// scale, in view coordinates.
+func (s *State) Camera() (x, y, zoom float32) {
+	return float32(s.shown.x), float32(s.shown.y), float32(s.shown.zoom)
+}
+
+// SetCamera places the camera immediately and keeps it there: the view
+// stays where it was put until Fit or another camera move.
+func (s *State) SetCamera(x, y, zoom float32) {
+	s.camera = camera{float64(x), float64(y), clamp(float64(zoom), minZoom, maxZoom)}
+	s.shown = s.camera
+	s.userMoved = true
+}
+
+// Hit returns the id of the node shown under a point of the view, or ""
+// when the point is empty space.
+func (s *State) Hit(x, y float32) string {
+	if i := s.hit(float64(x), float64(y)); i >= 0 {
+		return s.nodes[i].id
+	}
+	return ""
+}
+
+// Hovered returns the id of the node under the pointer, or "" when the
+// pointer is over empty space.
+func (s *State) Hovered() string { return s.hovered }
+
 // View builds the diagram. With the default Navigation, drag empty space
 // or two fingers on a touchpad to pan, use the wheel or a pinch to zoom
 // around the pointer, and double-click empty space to zoom in, or out with
 // Shift. With NavigationMap, every scroll zooms around the pointer and a
-// press-drag pans from anywhere. With Options.OnZoom set, every zoom
-// gesture calls the hook instead of scaling the view. Nodes take the
+// press-drag pans from anywhere. With Options.OnZoom or OnZoomAt set, every
+// unmodified zoom gesture calls the hook instead of scaling the view, while
+// a pinch or a Control/Super-scroll still scales the camera. Nodes take the
 // keyboard focus in data order when the application can select or open
 // them, and the camera follows the focused node.
 func View(c *ui.Context, state *State, data Data, opts Options) ui.Element {
@@ -347,6 +380,7 @@ func (v *view) update(data Data, opts Options, reduce bool) {
 	v.selected, v.selectFn, v.direction = opts.Selected, opts.Select, opts.Direction
 	v.openFn = opts.Open
 	v.onZoomFn = opts.OnZoom
+	v.onZoomAtFn = opts.OnZoomAt
 	v.mapNav = opts.Navigation == NavigationMap
 	if v.mapNav {
 		v.navigation.SetScrollMode(gesture.ScrollZoom)

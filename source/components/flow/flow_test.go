@@ -1,6 +1,7 @@
 package flow
 
 import (
+	"math"
 	"testing"
 	"time"
 
@@ -253,9 +254,10 @@ func TestMapViewPansFromNodesAndKeepsClicks(t *testing.T) {
 }
 
 // TestOnZoomTakesZoomGestures settles the hook contract: with OnZoom set,
-// zoom gestures (wheel/scroll/pinch reach navigate as gesture.Zoom) call the
-// hook and never move the camera's scale, and the map-mode double-click on
-// empty space routes to the hook instead of zoomAt.
+// unmodified zoom gestures (wheel and scroll reach navigate as
+// gesture.Zoom) call the hook and never move the camera's scale, and the
+// map-mode double-click on empty space routes to the hook instead of
+// zoomAt. Pinches keep scaling; see TestPinchScalesUnderOnZoom.
 func TestOnZoomTakesZoomGestures(t *testing.T) {
 	h := newHarness(t)
 	var got []bool
@@ -295,6 +297,127 @@ func TestOnZoomTakesZoomGestures(t *testing.T) {
 	}
 }
 
+// TestPinchScalesUnderOnZoom settles the split: with OnZoom set, plain
+// wheel and scroll reach the hook, but a pinch or modified scroll (which
+// the gesture layer marks as a pinch) scales the camera at the pointer.
+func TestPinchScalesUnderOnZoom(t *testing.T) {
+	h := newHarness(t)
+	var got []bool
+	h.opts.Navigation = NavigationMap
+	h.opts.OnZoom = func(zoomIn bool) { got = append(got, zoomIn) }
+	h.settle()
+	v := &h.state.view
+	before := v.shown
+	gx, gy := (300-before.x)/before.zoom, (300-before.y)/before.zoom
+	v.navigate(gesture.Event{Kind: gesture.Zoom, Scale: 1.5, X: 300, Y: 300, Pinch: true})
+	if len(got) != 0 {
+		t.Fatalf("a pinch reached OnZoom: %v", got)
+	}
+	if math.Abs(v.shown.zoom-1.5*before.zoom) > 1e-6 {
+		t.Fatalf("pinch scaled to %v, want %v", v.shown.zoom, 1.5*before.zoom)
+	}
+	if math.Abs(v.shown.x+gx*v.shown.zoom-300) > 1e-6 || math.Abs(v.shown.y+gy*v.shown.zoom-300) > 1e-6 {
+		t.Fatalf("pinch did not keep the point under the pointer: %+v", v.shown)
+	}
+	// A plain scroll still reaches the hook, untouched camera.
+	v.navigate(gesture.Event{Kind: gesture.Zoom, Scale: 2, X: 10, Y: 10})
+	if len(got) != 1 || !got[0] {
+		t.Fatalf("plain scroll reached OnZoom as %v, want [true]", got)
+	}
+	if math.Abs(v.shown.zoom-1.5*before.zoom) > 1e-6 {
+		t.Fatalf("the hook scaled the camera to %v", v.shown.zoom)
+	}
+}
+
+// TestOnZoomAtReceivesThePointer settles the hook precedence: OnZoomAt
+// wins over OnZoom, receives the point of the gesture, and pinches still
+// scale the camera.
+func TestOnZoomAtReceivesThePointer(t *testing.T) {
+	h := newHarness(t)
+	calls, x, y, in := 0, float32(0), float32(0), false
+	h.opts.Navigation = NavigationMap
+	h.opts.OnZoom = func(bool) { t.Fatal("OnZoomAt should take the gestures") }
+	h.opts.OnZoomAt = func(px, py float32, zoomIn bool) { calls++; x, y, in = px, py, zoomIn }
+	h.settle()
+	v := &h.state.view
+	if v.onZoomAtFn == nil {
+		t.Fatal("OnZoomAt did not reach the view")
+	}
+	v.navigate(gesture.Event{Kind: gesture.Zoom, Scale: 2, X: 30, Y: 40})
+	if calls != 1 || x != 30 || y != 40 || !in {
+		t.Fatalf("OnZoomAt saw %v calls at (%v,%v) zoomIn=%v", calls, x, y, in)
+	}
+	if h.state.Zoom() != 1 {
+		t.Fatalf("hook mode scaled the view to %v", h.state.Zoom())
+	}
+	// The map-mode double-click on empty space passes its point too.
+	h.tt.ClickAt(4, 690)
+	h.tt.ClickAt(4, 690)
+	h.settle()
+	if calls != 2 || x != 4 || y != 690 {
+		t.Fatalf("double-click reached OnZoomAt %v times at (%v,%v)", calls, x, y)
+	}
+	if h.state.Zoom() != 1 {
+		t.Fatalf("double-click under OnZoomAt scaled the view to %v", h.state.Zoom())
+	}
+	// A pinch still scales.
+	v.navigate(gesture.Event{Kind: gesture.Zoom, Scale: 1.5, X: 10, Y: 10, Pinch: true})
+	if h.state.Zoom() <= 1 {
+		t.Fatalf("pinch left the camera at %v under OnZoomAt", h.state.Zoom())
+	}
+}
+
+func TestCameraRoundTrip(t *testing.T) {
+	h := newHarness(t)
+	h.settle()
+	if _, _, z := h.state.Camera(); z != h.state.Zoom() {
+		t.Fatal("Camera disagrees with Zoom")
+	}
+	h.state.SetCamera(120, 60, 1.5)
+	h.settle()
+	if x, y, z := h.state.Camera(); x != 120 || y != 60 || z != 1.5 {
+		t.Fatalf("SetCamera round-trip = (%v,%v,%v)", x, y, z)
+	}
+	// A relayout does not steal the camera back.
+	h.data.Edges = append(h.data.Edges, Edge{Source: "test", Target: "fixed"})
+	h.settle()
+	if x, y, z := h.state.Camera(); x != 120 || y != 60 || z != 1.5 {
+		t.Fatalf("a relayout moved the camera to (%v,%v,%v)", x, y, z)
+	}
+	// Fit takes it, and an out-of-range scale is clamped.
+	h.state.Fit()
+	if h.state.view.userMoved {
+		t.Fatal("Fit left the camera user-placed")
+	}
+	h.state.SetCamera(0, 0, 10)
+	if _, _, z := h.state.Camera(); z != 2.5 {
+		t.Fatalf("SetCamera clamped zoom to %v, want 2.5", z)
+	}
+}
+
+func TestHitAndHovered(t *testing.T) {
+	h := newHarness(t)
+	h.settle()
+	r, ok := h.tt.Find("Build")
+	if !ok {
+		t.Fatal("Build node missing")
+	}
+	if id := h.state.Hit(r.X+r.W/2, r.Y+r.H/2); id != "build" {
+		t.Fatalf("Hit at the Build center = %q", id)
+	}
+	if id := h.state.Hit(4, 690); id != "" {
+		t.Fatalf("Hit on empty space = %q", id)
+	}
+	if id := h.state.Hovered(); id != "" {
+		t.Fatalf("Hovered before any pointer move = %q", id)
+	}
+	h.tt.Move(r.X+r.W/2, r.Y+r.H/2)
+	h.settle()
+	if id := h.state.Hovered(); id != "build" {
+		t.Fatalf("Hovered after moving over Build = %q", id)
+	}
+}
+
 func TestDefaultModeDoesNotPanFromNodes(t *testing.T) {
 	h := newHarness(t)
 	v := &h.state.view
@@ -319,4 +442,3 @@ func TestDefaultModeDoesNotPanFromNodes(t *testing.T) {
 		t.Fatalf("drag on a node selected %v", h.selected)
 	}
 }
-

@@ -5,8 +5,11 @@ User-facing updates for Onevra library consumers.
 ## [Unreleased]
 
 - Add `flow.Options.Navigation` with `flow.NavigationMap`, a map-like contract where scrolls zoom at the pointer and drags pan from anywhere.
-- Add `flow.Options.OnZoom`, a hook that turns wheel, scroll, pinch and map-mode empty double-click zoom into an application-owned depth change with the camera scale untouched.
+- Add `flow.Options.OnZoom`, a hook that turns wheel and scroll gestures into an application-owned depth change with the camera scale untouched. Pinches and Control/Super-scrolls stay camera zooms: they are the deliberate scale gestures.
+- Add `flow.Options.OnZoomAt`, the same hook with the point of the view the gesture happened at, taking precedence over `OnZoom`.
+- Add `flow.State.Camera` and `State.SetCamera` to read and place the camera, and `State.Hit` and `State.Hovered` to ask what is under a point or the pointer.
 - Add `gesture.Navigation.SetScrollMode` with `gesture.ScrollZoom`.
+- `gesture.Event.Pinch` now marks a Control- or Super-scroll on any device, not only on a touchpad, as the deliberate scale gesture.
 
 ## [0.2026.12] - 2026-10-18
 

@@ -73,8 +73,8 @@ type Event struct {
 	X, Y, DX, DY float32
 	Scale        float64
 	Device       Device
-	// Pinch marks a zoom by a touchpad pinch, or Control-scroll on a
-	// touchpad.
+	// Pinch marks a zoom meant as scaling the canvas: a touchpad pinch,
+	// or a Control- or Super-scroll on any device.
 	Pinch bool
 }
 
@@ -106,10 +106,11 @@ func classify(ev ui.InputEvent, mode ScrollMode) (Event, bool) {
 		distance := float64(wheelZoomDistance)
 		if device == Touchpad {
 			distance = pinchZoomDistance
-			// Only modifiers make a pinch; a plain touchpad scroll
-			// zooming under ScrollZoom is not one.
-			out.Pinch = modified
 		}
+		// Only modifiers make a pinch: a touchpad pinch, or a Control-
+		// or Super-scroll on any device. A plain scroll zooming under
+		// ScrollZoom is not one.
+		out.Pinch = modified
 		out.Kind, out.Scale = Zoom, math.Exp(-float64(ev.DY)*math.Log(1.5)/distance)
 	}
 	return out, true
